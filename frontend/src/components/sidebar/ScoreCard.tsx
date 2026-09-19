@@ -1,5 +1,15 @@
 import React from 'react';
-import { Sparkles, TrendingUp, AlertTriangle, ShieldCheck, Coffee, Pill, ShoppingCart, GraduationCap, ShoppingBag } from 'lucide-react';
+import {
+  Sparkles,
+  TrendingUp,
+  AlertTriangle,
+  ShieldCheck,
+  Coffee,
+  Pill,
+  ShoppingCart,
+  GraduationCap,
+  ShoppingBag,
+} from 'lucide-react';
 import { useAnalyticsStore } from '../../store/useAnalyticsStore';
 import { AnimatedCounter } from '../ui/AnimatedCounter';
 import { BusinessCategory } from '../../types';
@@ -20,19 +30,19 @@ export const ScoreCard: React.FC = () => {
   const score = inspection?.makon_score ?? 0;
   const status = inspection?.status ?? 'TAHLIL QILINMOQDA';
 
-  // Dynamic status colors
+  // Dynamic theme colors
   let color = '#10B981';
-  let badgeBg = 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30';
-  let rimGlow = 'rim-glow-emerald';
+  let badgeBg = 'bg-emerald-500/10 text-emerald-300 border-emerald-500/30';
+  let gaugeShadow = 'drop-shadow(0 0 10px rgba(16, 185, 129, 0.35))';
 
   if (score < 50) {
     color = '#EF4444';
-    badgeBg = 'bg-rose-500/10 text-rose-400 border-rose-500/30';
-    rimGlow = '';
+    badgeBg = 'bg-rose-500/10 text-rose-300 border-rose-500/30';
+    gaugeShadow = 'drop-shadow(0 0 10px rgba(239, 68, 68, 0.35))';
   } else if (score < 80) {
     color = '#06B6D4';
-    badgeBg = 'bg-cyan-500/10 text-cyan-400 border-cyan-500/30';
-    rimGlow = 'rim-glow-cyan';
+    badgeBg = 'bg-cyan-500/10 text-cyan-300 border-cyan-500/30';
+    gaugeShadow = 'drop-shadow(0 0 10px rgba(6, 182, 212, 0.35))';
   }
 
   // Circular gauge calculations
@@ -41,15 +51,15 @@ export const ScoreCard: React.FC = () => {
   const strokeDashoffset = circumference - (score / 100) * circumference;
 
   return (
-    <div className={`bg-[#0E1017] border border-[#222735] rounded-2xl p-4 sm:p-5 relative overflow-hidden transition-all duration-300 ${rimGlow} shadow-xl`}>
-      {/* Subtle radial corner illumination */}
+    <div className="relative space-y-3.5">
+      {/* Subtle corner light fold */}
       <div
-        className="absolute -top-16 -right-16 w-48 h-48 rounded-full blur-3xl opacity-20 pointer-events-none transition-all duration-700"
+        className="absolute -top-12 -right-12 w-36 h-36 rounded-full blur-3xl opacity-15 pointer-events-none transition-all duration-700"
         style={{ backgroundColor: color }}
       />
 
-      {/* Header with Title and Status */}
-      <div className="flex items-center justify-between mb-3.5 relative z-10">
+      {/* Header: Title and Status Pill */}
+      <div className="flex items-center justify-between relative z-10">
         <div>
           <span className="text-[10px] font-bold tracking-widest text-gray-400 uppercase">
             Spatial Intelligence Rating
@@ -59,22 +69,27 @@ export const ScoreCard: React.FC = () => {
             <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
           </h2>
         </div>
-        <div className={`px-2.5 py-1 rounded-full text-[11px] font-bold border ${badgeBg} flex items-center gap-1.5 shadow-sm whitespace-nowrap flex-shrink-0`}>
+        <div
+          className={`px-2.5 py-1 rounded-full text-[11px] font-bold border ${badgeBg} flex items-center gap-1.5 shadow-sm whitespace-nowrap flex-shrink-0 backdrop-blur-md`}
+        >
           <span className="w-1.5 h-1.5 rounded-full animate-ping" style={{ backgroundColor: color }} />
           <span>{status}</span>
         </div>
       </div>
 
-      {/* Main Gauge + Verdict */}
-      <div className="flex items-center gap-4 relative z-10 pb-3 border-b border-[#222735]">
+      {/* Score Hero: Animated Circular Gauge + Summary */}
+      <div className="flex items-center gap-4 relative z-10 pb-3 border-b border-white/[0.08]">
         {/* Animated Circular Gauge */}
-        <div className="relative w-24 h-24 sm:w-26 sm:h-26 flex-shrink-0 flex items-center justify-center">
+        <div
+          className="relative w-22 h-22 sm:w-24 sm:h-24 flex-shrink-0 flex items-center justify-center transition-all duration-500"
+          style={{ filter: gaugeShadow }}
+        >
           <svg className="w-full h-full transform -rotate-90" viewBox="0 0 120 120">
             <circle
               cx="60"
               cy="60"
               r={radius}
-              className="stroke-[#191D2B]"
+              className="stroke-white/[0.08]"
               strokeWidth="9"
               fill="transparent"
             />
@@ -92,18 +107,18 @@ export const ScoreCard: React.FC = () => {
             />
           </svg>
           <div className="absolute flex flex-col items-center justify-center text-center select-none">
-            <span className="text-2xl sm:text-3xl font-black tracking-tight text-white font-mono">
+            <span className="text-2xl sm:text-3xl font-black tracking-tight text-white font-mono leading-none">
               {loading ? (
                 <span className="animate-pulse">--</span>
               ) : (
                 <AnimatedCounter value={score} decimals={1} />
               )}
             </span>
-            <span className="text-[8px] text-gray-400 font-bold tracking-wider uppercase -mt-0.5">/ 100</span>
+            <span className="text-[8px] text-gray-400 font-bold tracking-wider uppercase mt-1">/ 100</span>
           </div>
         </div>
 
-        {/* Verdict and Metadata */}
+        {/* Verdict & Catchment Metadata */}
         <div className="flex-1 space-y-1.5 min-w-0">
           <div className="text-xs leading-relaxed">
             {score >= 80 ? (
@@ -131,8 +146,8 @@ export const ScoreCard: React.FC = () => {
         </div>
       </div>
 
-      {/* Integrated Quick Filter Strips */}
-      <div className="pt-3 space-y-2.5 relative z-10">
+      {/* Interactive Controls: Category Pills & Radius Slider */}
+      <div className="space-y-2.5 relative z-10">
         {/* Category Pills */}
         <div className="flex items-center gap-1.5 overflow-x-auto pb-0.5 scrollbar-none">
           {CATEGORIES.map((cat) => {
@@ -141,33 +156,33 @@ export const ScoreCard: React.FC = () => {
               <button
                 key={cat.id}
                 onClick={() => setCategory(cat.id)}
-                className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all active:scale-[0.97] ${
+                className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all duration-150 active:scale-[0.97] ${
                   isSelected
-                    ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/50 shadow-sm shadow-emerald-950'
-                    : 'bg-[#161925] text-gray-400 border border-[#222735] hover:text-white hover:border-[#2E3547]'
+                    ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/50 shadow-sm shadow-emerald-950/40'
+                    : 'bg-white/5 text-gray-400 border border-white/10 hover:text-white hover:border-white/20'
                 }`}
               >
-                <span className={isSelected ? 'text-emerald-400' : 'text-gray-500'}>{cat.icon}</span>
+                <span className={isSelected ? 'text-emerald-400' : 'text-gray-400'}>{cat.icon}</span>
                 <span>{cat.label}</span>
               </button>
             );
           })}
         </div>
 
-        {/* Radius Pills */}
+        {/* Radius Segmented Buttons */}
         <div className="flex items-center justify-between gap-2 pt-0.5">
           <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Tahlil Radiusi:</span>
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1 bg-[#13151F] p-0.5 rounded-xl border border-white/[0.08]">
             {RADII.map((r) => {
               const isSelected = radiusMeters === r;
               return (
                 <button
                   key={r}
                   onClick={() => setRadiusMeters(r)}
-                  className={`px-2.5 py-1 rounded-lg text-xs font-mono font-bold transition-all ${
+                  className={`px-2.5 py-1 rounded-lg text-xs font-mono font-bold transition-all duration-150 active:scale-[0.97] ${
                     isSelected
-                      ? 'bg-emerald-500 text-black shadow-sm'
-                      : 'bg-[#161925] text-gray-400 border border-[#222735] hover:text-white'
+                      ? 'bg-emerald-500 text-black shadow-sm font-black'
+                      : 'text-gray-400 hover:text-white'
                   }`}
                 >
                   {r}m
@@ -180,3 +195,5 @@ export const ScoreCard: React.FC = () => {
     </div>
   );
 };
+
+export default ScoreCard;

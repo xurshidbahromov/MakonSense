@@ -20,15 +20,15 @@ export const MetricsBreakdown: React.FC = () => {
   const rScore = factors?.residential_density_score ?? 0;
 
   return (
-    <div className="bg-[#0E1017] border border-[#222735] rounded-2xl p-4 sm:p-5 space-y-4 shadow-xl">
+    <div className="bg-[#0D1019]/90 border border-white/[0.08] rounded-2xl p-4 sm:p-5 space-y-4 shadow-xl">
       {/* Tab Navigation Pill Header */}
-      <div className="flex items-center gap-1 bg-[#13151D] p-1 rounded-xl border border-[#222735]">
+      <div className="flex items-center gap-1 bg-[#131622] p-1 rounded-xl border border-white/[0.06]">
         <button
           onClick={() => setActiveTab('factors')}
           className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-lg text-xs font-semibold transition-all active:scale-[0.98] ${
             activeTab === 'factors'
               ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-sm'
-              : 'text-gray-400 hover:text-white hover:bg-[#1A1E2C]'
+              : 'text-gray-400 hover:text-white hover:bg-white/5'
           }`}
         >
           <Layers className="w-3.5 h-3.5" />
@@ -40,7 +40,7 @@ export const MetricsBreakdown: React.FC = () => {
           className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-lg text-xs font-semibold transition-all active:scale-[0.98] ${
             activeTab === 'competitors'
               ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 shadow-sm'
-              : 'text-gray-400 hover:text-white hover:bg-[#1A1E2C]'
+              : 'text-gray-400 hover:text-white hover:bg-white/5'
           }`}
         >
           <ShieldAlert className="w-3.5 h-3.5" />
@@ -52,7 +52,7 @@ export const MetricsBreakdown: React.FC = () => {
           className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-lg text-xs font-semibold transition-all active:scale-[0.98] ${
             activeTab === 'traffic'
               ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 shadow-sm'
-              : 'text-gray-400 hover:text-white hover:bg-[#1A1E2C]'
+              : 'text-gray-400 hover:text-white hover:bg-white/5'
           }`}
         >
           <Activity className="w-3.5 h-3.5" />
@@ -64,7 +64,7 @@ export const MetricsBreakdown: React.FC = () => {
           className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-lg text-xs font-semibold transition-all active:scale-[0.98] ${
             activeTab === 'compare'
               ? 'bg-purple-500/20 text-purple-300 border border-purple-500/40 shadow-sm'
-              : 'text-gray-400 hover:text-white hover:bg-[#1A1E2C]'
+              : 'text-gray-400 hover:text-white hover:bg-white/5'
           }`}
         >
           <GitCompare className="w-3.5 h-3.5" />

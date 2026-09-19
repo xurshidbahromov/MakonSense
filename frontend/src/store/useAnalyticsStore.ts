@@ -21,6 +21,7 @@ interface AnalyticsState {
   auditReport: AuditReport | null;
   auditLoading: boolean;
   basemapMode: 'dark' | 'satellite';
+  pitchMode: '2d' | '3d';
 
   // Actions
   setSelectedCoords: (coords: Coordinates) => void;
@@ -28,6 +29,7 @@ interface AnalyticsState {
   setRadiusMeters: (r: number) => void;
   toggleLayer: (key: keyof LayerVisibility) => void;
   setBasemapMode: (mode: 'dark' | 'satellite') => void;
+  togglePitchMode: () => void;
   setReportModalOpen: (open: boolean) => void;
   inspectPoint: (coords?: Coordinates) => Promise<void>;
   generateAuditReport: () => Promise<void>;
@@ -56,9 +58,16 @@ export const useAnalyticsStore = create<AnalyticsState>((set, get) => ({
   auditReport: null,
   auditLoading: false,
   basemapMode: 'dark',
+  pitchMode: '3d',
 
   setBasemapMode: (mode: 'dark' | 'satellite') => {
     set({ basemapMode: mode });
+  },
+
+  togglePitchMode: () => {
+    set((state) => ({
+      pitchMode: state.pitchMode === '3d' ? '2d' : '3d',
+    }));
   },
 
   setSelectedCoords: (coords: Coordinates) => {
