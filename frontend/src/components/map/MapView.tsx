@@ -5,6 +5,7 @@ import { GeoJsonLayer, ScatterplotLayer, PolygonLayer } from '@deck.gl/layers';
 import { useAnalyticsStore } from '../../store/useAnalyticsStore';
 import { LayerControl } from './LayerControl';
 import { HexFeature } from '../../types';
+import { Train, ShoppingBag, MapPin, Sparkles } from 'lucide-react';
 
 // CARTO Dark Matter vector/raster style for MapLibre
 const DARK_MAP_STYLE = {
@@ -33,7 +34,6 @@ const DARK_MAP_STYLE = {
   ],
 };
 
-// Helper: Generate geodesic circle coordinates for scan radius
 function createCircleGeoJSON(centerLat: number, centerLon: number, radiusMeters: number, points = 64) {
   const coords: [number, number][] = [];
   const km = radiusMeters / 1000;
@@ -58,6 +58,13 @@ function createCircleGeoJSON(centerLat: number, centerLon: number, radiusMeters:
   };
 }
 
+interface HoverInfo {
+  x: number;
+  y: number;
+  object?: any;
+  type?: 'poi' | 'transit' | 'hex';
+}
+
 export const MapView: React.FC = () => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
@@ -68,22 +75,20 @@ export const MapView: React.FC = () => {
   const [hexagons, setHexagons] = useState<HexFeature[]>([]);
   const [pois, setPois] = useState<any[]>([]);
   const [transit, setTransit] = useState<any[]>([]);
+  const [hoverInfo, setHoverInfo] = useState<HoverInfo | null>(null);
 
-  // 1. Fetch Map Data (Hexagons, POIs, Transit)
+  // 1. Fetch Map Data
   useEffect(() => {
-    // Hexagons
     fetch('/api/v1/analytics/hexagons')
       .then((res) => (res.ok ? res.json() : []))
       .then((data) => setHexagons(data))
       .catch(() => {});
 
-    // POIs
     fetch('/api/v1/poi/geojson')
       .then((res) => (res.ok ? res.json() : { features: [] }))
       .then((data) => setPois(data.features || []))
       .catch(() => {});
 
-    // Transit
     fetch('/api/v1/poi/transit/geojson')
       .then((res) => (res.ok ? res.json() : { features: [] }))
       .then((data) => setTransit(data.features || []))
@@ -104,10 +109,8 @@ export const MapView: React.FC = () => {
       attributionControl: false,
     });
 
-    // Navigation Controls
     map.addControl(new maplibregl.NavigationControl({ showCompass: true }), 'bottom-right');
 
-    // Deck.gl Overlay
     const deckOverlay = new MapboxOverlay({
       interleaved: false,
       layers: [],
@@ -115,7 +118,6 @@ export const MapView: React.FC = () => {
     map.addControl(deckOverlay as any);
     deckOverlayRef.current = deckOverlay;
 
-    // Click to Inspect Listener
     map.on('click', (e) => {
       setSelectedCoords({
         latitude: e.lngLat.lat,
@@ -166,6 +168,13 @@ export const MapView: React.FC = () => {
           pickable: true,
           autoHighlight: true,
           highlightColor: [255, 255, 255, 80],
+          onHover: (info: any) => {
+            if (info.object) {
+              setHoverInfo({ x: info.x, y: info.y, object: info.object, type: 'hex' });
+            } else {
+              setHoverInfo(null);
+            }
+          },
           onClick: (info: any) => {
             if (info.object && info.object.center) {
               setSelectedCoords({
@@ -186,9 +195,9 @@ export const MapView: React.FC = () => {
           id: 'scan-radius-layer',
           data: circleData,
           filled: true,
-          getFillColor: [16, 185, 129, 25],
+          getFillColor: [16, 185, 129, 20],
           stroked: true,
-          getLineColor: [16, 185, 129, 220],
+          getLineColor: [16, 185, 129, 200],
           getLineWidth: 2,
           lineWidthUnits: 'pixels',
         })
@@ -204,10 +213,17 @@ export const MapView: React.FC = () => {
           getPosition: (d: any) => d.geometry.coordinates,
           getRadius: 55,
           getFillColor: [6, 182, 212, 230], // Cyan
-          getLineColor: [255, 255, 255, 200],
+          getLineColor: [255, 255, 255, 220],
           getLineWidth: 2,
           lineWidthUnits: 'pixels',
           pickable: true,
+          onHover: (info: any) => {
+            if (info.object) {
+              setHoverInfo({ x: info.x, y: info.y, object: info.object, type: 'transit' });
+            } else {
+              setHoverInfo(null);
+            }
+          },
         })
       );
     }
@@ -230,17 +246,38 @@ export const MapView: React.FC = () => {
           getLineWidth: 1.5,
           lineWidthUnits: 'pixels',
           pickable: true,
+          onHover: (info: any) => {
+            if (info.object) {
+              setHoverInfo({ x: info.x, y: info.y, object: info.object, type: 'poi' });
+            } else {
+              setHoverInfo(null);
+            }
+          },
         })
       );
     }
 
-    // Layer E: Selected Target Marker Pin
+    // Layer E: Selected Target Marker Pin (Concentric Circles)
+    layers.push(
+      new ScatterplotLayer({
+        id: 'selected-point-outer',
+        data: [{ position: [selectedCoords.longitude, selectedCoords.latitude] }],
+        getPosition: (d: any) => d.position,
+        getRadius: 70,
+        getFillColor: [16, 185, 129, 45],
+        stroked: true,
+        getLineColor: [16, 185, 129, 180],
+        getLineWidth: 2,
+        lineWidthUnits: 'pixels',
+      })
+    );
+
     layers.push(
       new ScatterplotLayer({
         id: 'selected-point-marker',
         data: [{ position: [selectedCoords.longitude, selectedCoords.latitude] }],
         getPosition: (d: any) => d.position,
-        getRadius: 35,
+        getRadius: 28,
         getFillColor: [16, 185, 129, 255],
         getLineColor: [255, 255, 255, 255],
         getLineWidth: 3,
@@ -252,14 +289,58 @@ export const MapView: React.FC = () => {
   }, [hexagons, pois, transit, selectedCoords, radiusMeters, activeLayers, category]);
 
   return (
-    <div className="relative w-full h-full overflow-hidden bg-[#090A0F]">
+    <div className="relative w-full h-full overflow-hidden bg-[#06070B]">
       <div ref={mapContainerRef} className="w-full h-full" />
       <LayerControl />
 
+      {/* Floating Hover Tooltip */}
+      {hoverInfo && hoverInfo.object && (
+        <div
+          className="absolute z-30 pointer-events-none transform -translate-x-1/2 -translate-y-full -mt-3 bg-[#0D0F17]/95 backdrop-blur-md border border-[#222735] px-3 py-2 rounded-xl shadow-2xl text-xs text-white max-w-xs space-y-0.5 animate-in fade-in zoom-in-95 duration-150"
+          style={{ left: hoverInfo.x, top: hoverInfo.y }}
+        >
+          {hoverInfo.type === 'transit' ? (
+            <div>
+              <div className="flex items-center gap-1.5 font-bold text-cyan-400">
+                <Train className="w-3.5 h-3.5" />
+                <span>{hoverInfo.object.properties?.name}</span>
+              </div>
+              <div className="text-[10px] text-gray-400 font-medium">
+                {hoverInfo.object.properties?.line_name || 'Toshkent Metropoliteni'}
+              </div>
+              <div className="text-[10px] text-gray-300 font-mono mt-0.5">
+                Oqim ko'rsatkichi: <strong className="text-cyan-300">{hoverInfo.object.properties?.passenger_flow_score}/100</strong>
+              </div>
+            </div>
+          ) : hoverInfo.type === 'poi' ? (
+            <div>
+              <div className="flex items-center gap-1.5 font-bold text-emerald-400">
+                <ShoppingBag className="w-3.5 h-3.5" />
+                <span>{hoverInfo.object.properties?.name}</span>
+              </div>
+              <div className="text-[10px] text-gray-400 capitalize">
+                Toifa: {hoverInfo.object.properties?.category}
+                {hoverInfo.object.properties?.brand && ` • ${hoverInfo.object.properties?.brand}`}
+              </div>
+            </div>
+          ) : hoverInfo.type === 'hex' ? (
+            <div>
+              <div className="font-bold text-white flex items-center gap-1">
+                <Sparkles className="w-3 h-3 text-emerald-400" />
+                <span>H3 Geksagonal Hudud</span>
+              </div>
+              <div className="text-[10px] text-gray-300 font-mono">
+                MakonScore Salohiyati: <strong className="text-emerald-400">{hoverInfo.object.score}/100</strong>
+              </div>
+            </div>
+          ) : null}
+        </div>
+      )}
+
       {/* Interactive Helper Banner */}
-      <div className="absolute bottom-4 left-4 z-20 bg-[#13151D]/90 backdrop-blur-md border border-[#222735] px-3 py-2 rounded-xl text-xs text-gray-300 flex items-center gap-2 shadow-xl pointer-events-none">
+      <div className="absolute bottom-4 left-4 z-20 bg-[#0D0F17]/90 backdrop-blur-md border border-[#222735] px-3.5 py-2 rounded-xl text-xs text-gray-300 flex items-center gap-2 shadow-xl pointer-events-none">
         <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-        <span>Xaritadagi istalgan nuqtani tanlang — MakonScore soniyalarda hisoblanadi</span>
+        <span>Xaritadagi istalgan joyni bosing yoki yuqoridan qidiring — MakonScore soniyalarda hisoblanadi</span>
       </div>
     </div>
   );

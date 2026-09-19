@@ -16,7 +16,7 @@ export const App: React.FC = () => {
   }, []);
 
   return (
-    <div className="h-screen w-screen flex flex-col bg-[#090A0F] text-gray-100 font-sans overflow-hidden">
+    <div className="h-screen w-screen flex flex-col bg-[#06070B] text-gray-100 font-sans overflow-hidden">
       {/* Top Navigation & Brand Header */}
       <Header />
 
