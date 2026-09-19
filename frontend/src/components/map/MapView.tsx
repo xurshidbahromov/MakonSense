@@ -7,27 +7,76 @@ import { LayerControl } from './LayerControl';
 import { HexFeature } from '../../types';
 import { Train, ShoppingBag, MapPin, Sparkles } from 'lucide-react';
 
-// CARTO Dark Matter vector/raster style for MapLibre
-const DARK_MAP_STYLE = {
+// 1. ESRI World Dark Gray Canvas: High-performance, clean, dark, 100% WATERMARK FREE
+const ESRI_DARK_STYLE = {
   version: 8,
   sources: {
-    'carto-dark': {
+    'esri-dark-base': {
       type: 'raster',
       tiles: [
-        'https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png',
-        'https://b.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png',
-        'https://c.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png',
-        'https://d.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png',
+        'https://services.arcgisonline.com/arcgis/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}',
       ],
       tileSize: 256,
-      attribution: '&copy; <a href="https://carto.com/">CARTO</a> &copy; OpenStreetMap',
+      attribution: '&copy; Esri, HERE, Garmin, OpenStreetMap contributors',
+    },
+    'esri-dark-labels': {
+      type: 'raster',
+      tiles: [
+        'https://services.arcgisonline.com/arcgis/rest/services/Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}',
+      ],
+      tileSize: 256,
     },
   },
   layers: [
     {
-      id: 'carto-dark-layer',
+      id: 'esri-dark-base-layer',
       type: 'raster',
-      source: 'carto-dark',
+      source: 'esri-dark-base',
+      minzoom: 0,
+      maxzoom: 20,
+    },
+    {
+      id: 'esri-dark-labels-layer',
+      type: 'raster',
+      source: 'esri-dark-labels',
+      minzoom: 0,
+      maxzoom: 20,
+    },
+  ],
+};
+
+// 2. ESRI World Satellite Imagery: High-resolution satellite photography
+const ESRI_SATELLITE_STYLE = {
+  version: 8,
+  sources: {
+    'esri-satellite': {
+      type: 'raster',
+      tiles: [
+        'https://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+      ],
+      tileSize: 256,
+      attribution: '&copy; Esri, Maxar, Earthstar Geographics',
+    },
+    'esri-satellite-labels': {
+      type: 'raster',
+      tiles: [
+        'https://services.arcgisonline.com/arcgis/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}',
+      ],
+      tileSize: 256,
+    },
+  },
+  layers: [
+    {
+      id: 'esri-satellite-layer',
+      type: 'raster',
+      source: 'esri-satellite',
+      minzoom: 0,
+      maxzoom: 20,
+    },
+    {
+      id: 'esri-satellite-labels-layer',
+      type: 'raster',
+      source: 'esri-satellite-labels',
       minzoom: 0,
       maxzoom: 20,
     },
@@ -70,7 +119,7 @@ export const MapView: React.FC = () => {
   const mapRef = useRef<maplibregl.Map | null>(null);
   const deckOverlayRef = useRef<MapboxOverlay | null>(null);
 
-  const { selectedCoords, setSelectedCoords, radiusMeters, activeLayers, category } = useAnalyticsStore();
+  const { selectedCoords, setSelectedCoords, radiusMeters, activeLayers, category, basemapMode } = useAnalyticsStore();
 
   const [hexagons, setHexagons] = useState<HexFeature[]>([]);
   const [pois, setPois] = useState<any[]>([]);
@@ -99,9 +148,11 @@ export const MapView: React.FC = () => {
   useEffect(() => {
     if (!mapContainerRef.current || mapRef.current) return;
 
+    const initialStyle = basemapMode === 'satellite' ? ESRI_SATELLITE_STYLE : ESRI_DARK_STYLE;
+
     const map = new maplibregl.Map({
       container: mapContainerRef.current,
-      style: DARK_MAP_STYLE as any,
+      style: initialStyle as any,
       center: [selectedCoords.longitude, selectedCoords.latitude],
       zoom: 13.5,
       pitch: 35,
@@ -133,7 +184,14 @@ export const MapView: React.FC = () => {
     };
   }, []);
 
-  // 3. Smooth fly-to when selectedCoords changes
+  // 3. Handle Basemap Mode switch (Dark vs Satellite)
+  useEffect(() => {
+    if (!mapRef.current) return;
+    const targetStyle = basemapMode === 'satellite' ? ESRI_SATELLITE_STYLE : ESRI_DARK_STYLE;
+    mapRef.current.setStyle(targetStyle as any);
+  }, [basemapMode]);
+
+  // 4. Smooth fly-to when selectedCoords changes
   useEffect(() => {
     if (!mapRef.current) return;
     mapRef.current.flyTo({
@@ -144,7 +202,7 @@ export const MapView: React.FC = () => {
     });
   }, [selectedCoords.latitude, selectedCoords.longitude]);
 
-  // 4. Update Deck.gl Layers
+  // 5. Update Deck.gl Layers
   useEffect(() => {
     if (!deckOverlayRef.current) return;
 
@@ -197,7 +255,7 @@ export const MapView: React.FC = () => {
           filled: true,
           getFillColor: [16, 185, 129, 20],
           stroked: true,
-          getLineColor: [16, 185, 129, 200],
+          getLineColor: [16, 185, 129, 220],
           getLineWidth: 2,
           lineWidthUnits: 'pixels',
         })

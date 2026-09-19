@@ -19,12 +19,14 @@ interface AnalyticsState {
   reportModalOpen: boolean;
   auditReport: AuditReport | null;
   auditLoading: boolean;
+  basemapMode: 'dark' | 'satellite';
 
   // Actions
   setSelectedCoords: (coords: Coordinates) => void;
   setCategory: (cat: BusinessCategory) => void;
   setRadiusMeters: (r: number) => void;
   toggleLayer: (key: keyof LayerVisibility) => void;
+  setBasemapMode: (mode: 'dark' | 'satellite') => void;
   setReportModalOpen: (open: boolean) => void;
   inspectPoint: (coords?: Coordinates) => Promise<void>;
   generateAuditReport: () => Promise<void>;
@@ -50,6 +52,11 @@ export const useAnalyticsStore = create<AnalyticsState>((set, get) => ({
   reportModalOpen: false,
   auditReport: null,
   auditLoading: false,
+  basemapMode: 'dark',
+
+  setBasemapMode: (mode: 'dark' | 'satellite') => {
+    set({ basemapMode: mode });
+  },
 
   setSelectedCoords: (coords: Coordinates) => {
     set({ selectedCoords: coords });

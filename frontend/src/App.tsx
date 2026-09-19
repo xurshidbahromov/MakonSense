@@ -3,7 +3,6 @@ import { Header } from './components/layout/Header';
 import { MapView } from './components/map/MapView';
 import { ScoreCard } from './components/sidebar/ScoreCard';
 import { MetricsBreakdown } from './components/sidebar/MetricsBreakdown';
-import { FilterPanel } from './components/sidebar/FilterPanel';
 import { AuditReportModal } from './components/sidebar/AuditReportModal';
 import { useAnalyticsStore } from './store/useAnalyticsStore';
 
@@ -28,15 +27,12 @@ export const App: React.FC = () => {
         </div>
 
         {/* Analytics & Insights Sidebar */}
-        <aside className="w-full md:w-[440px] lg:w-[480px] h-1/2 md:h-full border-t md:border-t-0 md:border-l border-[#222735] bg-[#0D0F16] flex flex-col overflow-y-auto p-4 space-y-4 z-20 select-none shadow-2xl">
-          {/* 1. Main Score Card */}
+        <aside className="w-full md:w-[440px] lg:w-[480px] h-1/2 md:h-full border-t md:border-t-0 md:border-l border-[#222735] bg-[#0A0C12] flex flex-col overflow-y-auto p-4 space-y-4 z-20 select-none shadow-2xl">
+          {/* 1. Main Score Card + Integrated Quick Filter Strip */}
           <ScoreCard />
 
-          {/* 2. Four Key Factors Breakdown */}
+          {/* 2. Four Key Factors Breakdown & Tabs (Omillar, Raqobat, Trafik, A/B) */}
           <MetricsBreakdown />
-
-          {/* 3. Category & Radius Filters */}
-          <FilterPanel />
         </aside>
       </main>
 
