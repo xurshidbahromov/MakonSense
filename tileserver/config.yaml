@@ -1,0 +1,18 @@
+# Martin Tile Server Configuration
+# https://maplibre.org/martin/config-file.html
+
+keep_alive: 75
+listen_addresses: '0.0.0.0:3000'
+worker_processes: 4
+
+postgres:
+  connection_string: '${DATABASE_URL}'
+  default_srid: 4326
+  pool_size: 10
+  auto_publish:
+    tables:
+      from_schemas:
+        - public
+    functions:
+      from_schemas:
+        - public

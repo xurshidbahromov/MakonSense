@@ -1,0 +1,84 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgis/postgis:16-3.4
+    container_name: makonsense-db
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-makon_admin}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-makon_secure_password}
+      POSTGRES_DB: ${POSTGRES_DB:-makonsense_db}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./backend/db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - makon-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U makon_admin -d makonsense_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  martin:
+    image: maplibre/martin:latest
+    container_name: makonsense-martin
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-makon_admin}:${POSTGRES_PASSWORD:-makon_secure_password}@db:5432/${POSTGRES_DB:-makonsense_db}
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./tileserver/config.yaml:/config/config.yaml:ro
+    command: ["--config", "/config/config.yaml"]
+    networks:
+      - makon-network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: makonsense-api
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-makon_admin}:${POSTGRES_PASSWORD:-makon_secure_password}@db:5432/${POSTGRES_DB:-makonsense_db}
+      SYNC_DATABASE_URL: postgresql://${POSTGRES_USER:-makon_admin}:${POSTGRES_PASSWORD:-makon_secure_password}@db:5432/${POSTGRES_DB:-makonsense_db}
+      PORT: 8000
+      ENV: production
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+    networks:
+      - makon-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: makonsense-web
+    restart: always
+    depends_on:
+      - backend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    networks:
+      - makon-network
+
+volumes:
+  pgdata:
+
+networks:
+  makon-network:
+    driver: bridge
