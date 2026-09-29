@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { LandingPage } from './components/landing/LandingPage';
 import { Header } from './components/layout/Header';
 import { MapView } from './components/map/MapView';
 import { ScoreCard } from './components/sidebar/ScoreCard';
@@ -7,13 +8,19 @@ import { AuditReportModal } from './components/sidebar/AuditReportModal';
 import { useAnalyticsStore } from './store/useAnalyticsStore';
 
 export const App: React.FC = () => {
-  const { inspectPoint } = useAnalyticsStore();
+  const { currentView, inspectPoint } = useAnalyticsStore();
 
   useEffect(() => {
     // Initial inspection on app load
     inspectPoint();
   }, []);
 
+  // 1. If user is on the Landing / Front-Door experience
+  if (currentView === 'landing') {
+    return <LandingPage />;
+  }
+
+  // 2. If user is inside the Interactive GIS Spatial Intelligence Workspace
   return (
     <div className="h-screen w-screen flex flex-col bg-[#06070B] text-gray-100 font-sans overflow-hidden">
       {/* Top Navigation & Brand Header */}

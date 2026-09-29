@@ -22,6 +22,7 @@ interface AnalyticsState {
   auditLoading: boolean;
   basemapMode: 'dark' | 'satellite';
   pitchMode: '2d' | '3d';
+  currentView: 'landing' | 'app';
 
   // Actions
   setSelectedCoords: (coords: Coordinates) => void;
@@ -30,6 +31,7 @@ interface AnalyticsState {
   toggleLayer: (key: keyof LayerVisibility) => void;
   setBasemapMode: (mode: 'dark' | 'satellite') => void;
   togglePitchMode: () => void;
+  setCurrentView: (view: 'landing' | 'app') => void;
   setReportModalOpen: (open: boolean) => void;
   inspectPoint: (coords?: Coordinates) => Promise<void>;
   generateAuditReport: () => Promise<void>;
@@ -59,6 +61,7 @@ export const useAnalyticsStore = create<AnalyticsState>((set, get) => ({
   auditLoading: false,
   basemapMode: 'dark',
   pitchMode: '3d',
+  currentView: (typeof window !== 'undefined' && window.location.hash === '#app') ? 'app' : 'landing',
 
   setBasemapMode: (mode: 'dark' | 'satellite') => {
     set({ basemapMode: mode });
@@ -68,6 +71,13 @@ export const useAnalyticsStore = create<AnalyticsState>((set, get) => ({
     set((state) => ({
       pitchMode: state.pitchMode === '3d' ? '2d' : '3d',
     }));
+  },
+
+  setCurrentView: (view: 'landing' | 'app') => {
+    if (typeof window !== 'undefined') {
+      window.location.hash = view === 'app' ? '#app' : '';
+    }
+    set({ currentView: view });
   },
 
   setSelectedCoords: (coords: Coordinates) => {
