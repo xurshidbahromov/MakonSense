@@ -32,33 +32,33 @@ export const FootTrafficDynamics: React.FC = () => {
   return (
     <div className="space-y-4 select-none">
       {/* Header Metric */}
-      <div className="bg-[#1A1E2C]/80 border border-[#222735] rounded-xl p-3.5 flex items-center justify-between">
+      <div className="bg-[#F8FAF9] border border-[#0C4137]/[0.08] rounded-xl p-3.5 flex items-center justify-between">
         <div className="flex items-center gap-2.5">
-          <div className="p-2 rounded-lg bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
-            <Activity className="w-4 h-4" />
+          <div className="p-2 rounded-lg bg-[#E6FBF6] text-[#0C4137] border border-[#06D6A0]/30">
+            <Activity className="w-4 h-4 text-[#06D6A0]" />
           </div>
           <div>
-            <span className="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Kunlik Piyodalar Grafigi</span>
-            <div className="text-xs font-bold text-white flex items-center gap-1.5">
+            <span className="text-[10px] uppercase font-bold text-neutral-400 tracking-wider">Kunlik Piyodalar Grafigi</span>
+            <div className="text-xs font-bold text-[#0C4137] flex items-center gap-1.5">
               <span>Hafta davomida barqaror oqim</span>
-              <TrendingUp className="w-3 h-3 text-emerald-400" />
+              <TrendingUp className="w-3 h-3 text-[#06D6A0]" />
             </div>
           </div>
         </div>
         <div className="text-right">
-          <span className="text-[10px] text-gray-400 block">Kechki pik oqim:</span>
-          <span className="text-sm font-mono font-bold text-emerald-400">18:00 - 20:30</span>
+          <span className="text-[10px] text-neutral-400 block font-medium">Kechki pik oqim:</span>
+          <span className="text-sm font-mono font-bold text-[#0C4137]">18:00 - 20:30</span>
         </div>
       </div>
 
       {/* Hourly Flow Bar Chart */}
-      <div className="bg-[#161925] border border-[#222735] rounded-xl p-4 space-y-3">
+      <div className="bg-white border border-[#0C4137]/[0.08] rounded-xl p-4 space-y-3 shadow-sm">
         <div className="flex items-center justify-between text-xs">
-          <span className="font-semibold text-gray-300 flex items-center gap-1.5">
-            <Clock className="w-3.5 h-3.5 text-cyan-400" />
+          <span className="font-bold text-[#0C4137] flex items-center gap-1.5">
+            <Clock className="w-3.5 h-3.5 text-[#06D6A0]" />
             Soatlik Oqim Kuchayishi (24h)
           </span>
-          <span className="text-[10px] font-mono text-cyan-400">
+          <span className="text-[10px] font-mono text-[#06D6A0] font-bold">
             {selectedHour}da {Math.min(100, Math.round((HOURLY_FLOW.find(h => h.hour === selectedHour)?.flow || 80) * scale))}% quvvat
           </span>
         </div>
@@ -79,14 +79,14 @@ export const FootTrafficDynamics: React.FC = () => {
                 <div
                   className={`w-full rounded-t transition-all duration-300 ${
                     isSelected
-                      ? 'bg-gradient-to-t from-emerald-500 to-teal-300 shadow-lg shadow-emerald-500/30'
+                      ? 'bg-[#0C4137] shadow-sm'
                       : isPeak
-                      ? 'bg-gradient-to-t from-cyan-600 to-cyan-400 opacity-80 group-hover:opacity-100'
-                      : 'bg-[#222735] group-hover:bg-[#2E3547]'
+                      ? 'bg-[#06D6A0]'
+                      : 'bg-neutral-200 group-hover:bg-neutral-300'
                   }`}
                   style={{ height: `${adjustedFlow}%` }}
                 />
-                <span className="text-[8px] font-mono text-gray-500 group-hover:text-gray-300 transform -rotate-45 origin-left hidden sm:block">
+                <span className="text-[8px] font-mono text-neutral-400 group-hover:text-[#0C4137] transform -rotate-45 origin-left hidden sm:block">
                   {item.hour.substring(0, 2)}
                 </span>
               </div>
@@ -95,19 +95,19 @@ export const FootTrafficDynamics: React.FC = () => {
         </div>
 
         {/* Key Time Windows */}
-        <div className="grid grid-cols-2 gap-2 pt-2 border-t border-[#222735]">
-          <div className="bg-[#13151D] p-2.5 rounded-lg border border-[#222735] flex items-center gap-2">
-            <Flame className="w-4 h-4 text-amber-400 flex-shrink-0" />
+        <div className="grid grid-cols-2 gap-2 pt-2 border-t border-[#0C4137]/[0.06]">
+          <div className="bg-[#F8FAF9] p-2.5 rounded-lg border border-[#0C4137]/[0.06] flex items-center gap-2">
+            <Flame className="w-4 h-4 text-amber-500 flex-shrink-0" />
             <div>
-              <span className="text-[10px] text-gray-400 font-medium block">Tushlik To'lqini:</span>
-              <span className="text-xs font-bold text-white font-mono">12:00 — 14:00</span>
+              <span className="text-[10px] text-neutral-500 font-medium block">Tushlik To'lqini:</span>
+              <span className="text-xs font-bold text-[#0C4137] font-mono">12:00 — 14:00</span>
             </div>
           </div>
-          <div className="bg-[#13151D] p-2.5 rounded-lg border border-[#222735] flex items-center gap-2">
-            <Calendar className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+          <div className="bg-[#F8FAF9] p-2.5 rounded-lg border border-[#0C4137]/[0.06] flex items-center gap-2">
+            <Calendar className="w-4 h-4 text-[#06D6A0] flex-shrink-0" />
             <div>
-              <span className="text-[10px] text-gray-400 font-medium block">Dam olish kunlari:</span>
-              <span className="text-xs font-bold text-emerald-400 font-mono">+24% Oqim</span>
+              <span className="text-[10px] text-neutral-500 font-medium block">Dam olish kunlari:</span>
+              <span className="text-xs font-bold text-[#06D6A0] font-mono">+24% Oqim</span>
             </div>
           </div>
         </div>
@@ -115,3 +115,5 @@ export const FootTrafficDynamics: React.FC = () => {
     </div>
   );
 };
+
+export default FootTrafficDynamics;

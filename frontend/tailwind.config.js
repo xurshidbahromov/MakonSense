@@ -7,20 +7,34 @@ export default {
   theme: {
     extend: {
       colors: {
+        monestra: {
+          brunswick: '#0C4137',
+          'brunswick-dark': '#072822',
+          'brunswick-light': '#145A4D',
+          emerald: '#06D6A0',
+          'emerald-dark': '#05B385',
+          'emerald-light': '#52E3BE',
+          polar: '#E6FBF6',
+          'polar-light': '#F2FDFB',
+          canvas: '#FBFBFD',
+          surface: '#FFFFFF',
+          border: 'rgba(12, 65, 55, 0.08)',
+        },
         makon: {
-          bg: '#090A0F',
-          card: '#13151D',
-          border: '#222735',
-          elevated: '#1A1E2C',
-          subtle: '#2E3547',
-          muted: '#8A94A6',
-          text: '#F3F4F6',
-          // Data accents
-          emerald: '#10B981',
-          cyan: '#06B6D4',
-          amber: '#F59E0B',
-          rose: '#EF4444',
-          indigo: '#6366F1'
+          bg: '#FBFBFD',
+          card: '#FFFFFF',
+          border: '#E5E9E7',
+          elevated: '#FFFFFF',
+          subtle: '#F4F7F6',
+          muted: '#64748B',
+          text: '#0C4137',
+          emerald: '#06D6A0',
+          brunswick: '#0C4137',
+          polar: '#E6FBF6',
+          cyan: '#0284C7',
+          amber: '#D97706',
+          rose: '#E11D48',
+          indigo: '#4F46E5'
         }
       },
       fontFamily: {

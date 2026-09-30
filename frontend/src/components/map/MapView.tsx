@@ -8,10 +8,13 @@ import { HexFeature } from '../../types';
 import { haversineDistance } from '../../utils/clientSpatialEngine';
 import { Train, ShoppingBag, MapPin, Sparkles, Navigation, Layers } from 'lucide-react';
 
-// 1. OpenFreeMap Dark: Native Vector Style, 100% Free, No Watermark, 3D Buildings, Complete Tashkent
+// 1. OpenFreeMap Positron Light: Clean Minimal Light Vector Style (No Watermark, Complete Tashkent)
+const OPENFREEMAP_LIGHT_STYLE = 'https://tiles.openfreemap.org/styles/positron';
+
+// 2. OpenFreeMap Dark: Native Dark Vector Style
 const OPENFREEMAP_DARK_STYLE = 'https://tiles.openfreemap.org/styles/dark';
 
-// 2. ESRI World Satellite Imagery: High-Resolution Satellite Photography
+// 3. ESRI World Satellite Imagery: High-Resolution Satellite Photography
 const ESRI_SATELLITE_STYLE = {
   version: 8,
   sources: {
@@ -33,6 +36,12 @@ const ESRI_SATELLITE_STYLE = {
       maxzoom: 20,
     },
   ],
+};
+
+const getBasemapStyle = (mode: 'light' | 'dark' | 'satellite') => {
+  if (mode === 'satellite') return ESRI_SATELLITE_STYLE as any;
+  if (mode === 'dark') return OPENFREEMAP_DARK_STYLE;
+  return OPENFREEMAP_LIGHT_STYLE;
 };
 
 function createCircleGeoJSON(centerLat: number, centerLon: number, radiusMeters: number, points = 64) {
@@ -59,14 +68,6 @@ function createCircleGeoJSON(centerLat: number, centerLon: number, radiusMeters:
   };
 }
 
-interface HoverInfo {
-  x: number;
-  y: number;
-  object?: any;
-  type?: 'poi' | 'transit' | 'hex';
-  distanceMeters?: number;
-}
-
 export const MapView: React.FC = () => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
@@ -75,8 +76,8 @@ export const MapView: React.FC = () => {
   const {
     selectedCoords,
     setSelectedCoords,
-    radiusMeters,
     activeLayers,
+    radiusMeters,
     category,
     basemapMode,
     pitchMode,
@@ -85,13 +86,19 @@ export const MapView: React.FC = () => {
   const [hexagons, setHexagons] = useState<HexFeature[]>([]);
   const [pois, setPois] = useState<any[]>([]);
   const [transit, setTransit] = useState<any[]>([]);
-  const [hoverInfo, setHoverInfo] = useState<HoverInfo | null>(null);
+  const [hoverInfo, setHoverInfo] = useState<{
+    x: number;
+    y: number;
+    object: any;
+    type: 'hex' | 'poi' | 'transit';
+    distanceMeters?: number;
+  } | null>(null);
 
-  // 1. Fetch Map GeoJSON Data
+  // 1. Fetch live GeoJSON datasets from PostGIS
   useEffect(() => {
-    fetch('/api/v1/analytics/hexagons')
-      .then((res) => (res.ok ? res.json() : []))
-      .then((data) => setHexagons(data))
+    fetch('/api/v1/spatial/hexagons')
+      .then((res) => (res.ok ? res.json() : { features: [] }))
+      .then((data) => setHexagons(data.features || []))
       .catch(() => {});
 
     fetch('/api/v1/poi/geojson')
@@ -109,7 +116,7 @@ export const MapView: React.FC = () => {
   useEffect(() => {
     if (!mapContainerRef.current || mapRef.current) return;
 
-    const initialStyle = basemapMode === 'satellite' ? (ESRI_SATELLITE_STYLE as any) : OPENFREEMAP_DARK_STYLE;
+    const initialStyle = getBasemapStyle(basemapMode);
 
     const map = new maplibregl.Map({
       container: mapContainerRef.current,
@@ -145,11 +152,10 @@ export const MapView: React.FC = () => {
     };
   }, []);
 
-  // 3. Basemap Style Switch (Dark Vector vs Satellite)
+  // 3. Basemap Style Switch (Light Positron vs Dark Vector vs Satellite)
   useEffect(() => {
     if (!mapRef.current) return;
-    const targetStyle = basemapMode === 'satellite' ? (ESRI_SATELLITE_STYLE as any) : OPENFREEMAP_DARK_STYLE;
-    mapRef.current.setStyle(targetStyle);
+    mapRef.current.setStyle(getBasemapStyle(basemapMode));
   }, [basemapMode]);
 
   // 4. Perspective Mode Switch (2D Orthographic vs 3D Isometric)
@@ -190,16 +196,16 @@ export const MapView: React.FC = () => {
           data: hexagons,
           getPolygon: (d: HexFeature) => d.coordinates[0],
           getFillColor: (d: HexFeature) => {
-            if (d.tier === 'high') return [16, 185, 129, 45];   // Emerald 18% fill
-            if (d.tier === 'medium') return [6, 182, 212, 35];  // Cyan 14% fill
-            return [239, 68, 68, 25];                           // Rose 10% fill
+            if (d.tier === 'high') return [6, 214, 160, 50];   // Emerald 20% fill
+            if (d.tier === 'medium') return [12, 65, 55, 30];  // Brunswick 12% fill
+            return [239, 68, 68, 25];                          // Rose 10% fill
           },
-          getLineColor: [30, 41, 59, 140],
+          getLineColor: [12, 65, 55, 50],
           getLineWidth: 1,
           lineWidthUnits: 'pixels',
           pickable: true,
           autoHighlight: true,
-          highlightColor: [255, 255, 255, 80],
+          highlightColor: [6, 214, 160, 80],
           onHover: (info: any) => {
             if (info.object) {
               setHoverInfo({ x: info.x, y: info.y, object: info.object, type: 'hex' });
@@ -227,9 +233,9 @@ export const MapView: React.FC = () => {
           id: 'scan-radius-layer',
           data: circleData,
           filled: true,
-          getFillColor: [16, 185, 129, 12], // Translucent radar fill
+          getFillColor: [6, 214, 160, 16], // Translucent emerald radar fill
           stroked: true,
-          getLineColor: [16, 185, 129, 210], // Crisp glowing neon border
+          getLineColor: [6, 214, 160, 200], // Crisp glowing emerald border
           getLineWidth: 1.5,
           lineWidthUnits: 'pixels',
         })
@@ -248,9 +254,9 @@ export const MapView: React.FC = () => {
           getRadius: 13,
           radiusMinPixels: 9,
           radiusMaxPixels: 16,
-          getFillColor: [6, 182, 212, 35],
+          getFillColor: [6, 214, 160, 35],
           stroked: true,
-          getLineColor: [6, 182, 212, 120],
+          getLineColor: [6, 214, 160, 120],
           getLineWidth: 1,
           lineWidthUnits: 'pixels',
           pickable: false,
@@ -267,9 +273,9 @@ export const MapView: React.FC = () => {
           getRadius: 6.5,
           radiusMinPixels: 5,
           radiusMaxPixels: 9,
-          getFillColor: [6, 182, 212, 245], // Electric cyan
+          getFillColor: [12, 65, 55, 245],
           stroked: true,
-          getLineColor: [255, 255, 255, 255],
+          getLineColor: [6, 214, 160, 255],
           getLineWidth: 2,
           lineWidthUnits: 'pixels',
           pickable: true,
@@ -288,33 +294,8 @@ export const MapView: React.FC = () => {
       );
     }
 
-    // Layer D: Direct Competitors Halo (Warning rings around active category)
+    // Layer D: POIs & Competitors
     if (activeLayers.pois && pois.length > 0) {
-      const directComps = pois.filter(
-        (p: any) => p.properties?.category?.toLowerCase() === category.toLowerCase()
-      );
-
-      if (directComps.length > 0) {
-        layers.push(
-          new ScatterplotLayer({
-            id: 'competitor-halo-layer',
-            data: directComps,
-            getPosition: (d: any) => d.geometry.coordinates,
-            radiusUnits: 'pixels',
-            getRadius: 14,
-            radiusMinPixels: 10,
-            radiusMaxPixels: 18,
-            getFillColor: [245, 158, 11, 40], // Amber warning field
-            stroked: true,
-            getLineColor: [245, 158, 11, 200],
-            getLineWidth: 1.5,
-            lineWidthUnits: 'pixels',
-            pickable: false,
-          })
-        );
-      }
-
-      // POIs & Anchors & Competitors Core Pins
       layers.push(
         new ScatterplotLayer({
           id: 'poi-layer',
@@ -322,21 +303,19 @@ export const MapView: React.FC = () => {
           getPosition: (d: any) => d.geometry.coordinates,
           radiusUnits: 'pixels',
           getRadius: (d: any) => {
-            const cat = d.properties?.category?.toLowerCase();
-            if (cat === category.toLowerCase()) return 7.5; // Competitor
-            if (['mall', 'bazaar', 'university'].includes(cat)) return 7; // Anchor
-            return 5.5; // General
+            const isCompetitor = d.properties?.category === category;
+            return isCompetitor ? 6.5 : 4.5;
           },
           radiusMinPixels: 4,
           radiusMaxPixels: 9,
           getFillColor: (d: any) => {
-            const cat = d.properties?.category?.toLowerCase();
-            if (cat === category.toLowerCase()) return [245, 158, 11, 255]; // Amber Competitor
-            if (['mall', 'bazaar', 'university'].includes(cat)) return [16, 185, 129, 255]; // Emerald Anchor
-            return [129, 140, 248, 200]; // Indigo General
+            const isCompetitor = d.properties?.category === category;
+            if (isCompetitor) return [245, 158, 11, 230]; // Amber for competitors
+            if (d.properties?.category === 'supermarket') return [16, 185, 129, 200];
+            return [99, 102, 241, 180];
           },
           stroked: true,
-          getLineColor: [255, 255, 255, 255],
+          getLineColor: [255, 255, 255, 220],
           getLineWidth: 1.5,
           lineWidthUnits: 'pixels',
           pickable: true,
@@ -355,36 +334,36 @@ export const MapView: React.FC = () => {
       );
     }
 
-    // Layer E: Selected Target Marker Pin (Concentric Pulsing Radar Target)
+    // Layer E: Selected Target Marker Pin (Tactile concentric indicator)
     layers.push(
       new ScatterplotLayer({
-        id: 'selected-point-outer',
+        id: 'selected-point-outer-pulse',
         data: [{ position: [selectedCoords.longitude, selectedCoords.latitude] }],
         getPosition: (d: any) => d.position,
         radiusUnits: 'pixels',
-        getRadius: 20,
-        radiusMinPixels: 16,
-        radiusMaxPixels: 26,
-        getFillColor: [16, 185, 129, 40],
+        getRadius: 16,
+        radiusMinPixels: 12,
+        radiusMaxPixels: 22,
+        getFillColor: [6, 214, 160, 45],
         stroked: true,
-        getLineColor: [16, 185, 129, 220],
-        getLineWidth: 2,
+        getLineColor: [6, 214, 160, 200],
+        getLineWidth: 1.5,
         lineWidthUnits: 'pixels',
       })
     );
 
     layers.push(
       new ScatterplotLayer({
-        id: 'selected-point-marker',
+        id: 'selected-point-core',
         data: [{ position: [selectedCoords.longitude, selectedCoords.latitude] }],
         getPosition: (d: any) => d.position,
         radiusUnits: 'pixels',
         getRadius: 6.5,
         radiusMinPixels: 5,
         radiusMaxPixels: 9,
-        getFillColor: [16, 185, 129, 255],
+        getFillColor: [12, 65, 55, 255],
         stroked: true,
-        getLineColor: [255, 255, 255, 255],
+        getLineColor: [6, 214, 160, 255],
         getLineWidth: 2.5,
         lineWidthUnits: 'pixels',
       })
@@ -394,7 +373,7 @@ export const MapView: React.FC = () => {
   }, [hexagons, pois, transit, selectedCoords, radiusMeters, activeLayers, category]);
 
   return (
-    <div className="relative w-full h-full overflow-hidden bg-[#06070B]">
+    <div className="relative w-full h-full overflow-hidden bg-[#FBFBFD]">
       {/* MapLibre Canvas Container */}
       <div ref={mapContainerRef} className="w-full h-full" />
 
@@ -404,54 +383,54 @@ export const MapView: React.FC = () => {
       {/* Floating Glass Hover Tooltip */}
       {hoverInfo && hoverInfo.object && (
         <div
-          className="absolute z-30 pointer-events-none transform -translate-x-1/2 -translate-y-full -mt-3 bg-[#0D0F17]/95 backdrop-blur-xl border border-white/10 px-3.5 py-2.5 rounded-xl shadow-2xl text-xs text-white max-w-xs space-y-1 animate-in fade-in zoom-in-95 duration-150"
+          className="absolute z-30 pointer-events-none transform -translate-x-1/2 -translate-y-full -mt-3 bg-white/95 backdrop-blur-xl border border-[#0C4137]/[0.1] px-3.5 py-2.5 rounded-xl shadow-xl text-xs text-[#0C4137] max-w-xs space-y-1 animate-in fade-in zoom-in-95 duration-150"
           style={{ left: hoverInfo.x, top: hoverInfo.y }}
         >
           {hoverInfo.type === 'transit' ? (
             <div>
-              <div className="flex items-center gap-1.5 font-bold text-cyan-400">
-                <Train className="w-3.5 h-3.5" />
+              <div className="flex items-center gap-1.5 font-bold text-[#0C4137]">
+                <Train className="w-3.5 h-3.5 text-[#06D6A0]" />
                 <span>{hoverInfo.object.properties?.name}</span>
               </div>
-              <div className="text-[10px] text-gray-400">
+              <div className="text-[10px] text-neutral-500">
                 {hoverInfo.object.properties?.line_name || 'Toshkent Metropoliteni'}
               </div>
-              <div className="flex items-center justify-between text-[10px] text-gray-300 font-mono mt-1 pt-1 border-t border-white/10">
-                <span>Tranzit salohiyati: <strong className="text-cyan-300">{hoverInfo.object.properties?.passenger_flow_score}/100</strong></span>
+              <div className="flex items-center justify-between text-[10px] text-neutral-600 font-mono mt-1 pt-1 border-t border-[#0C4137]/[0.08]">
+                <span>Tranzit salohiyati: <strong className="text-[#06D6A0]">{hoverInfo.object.properties?.passenger_flow_score}/100</strong></span>
                 {hoverInfo.distanceMeters !== undefined && (
-                  <span className="text-emerald-400 font-bold ml-2">~{Math.round(hoverInfo.distanceMeters)}m</span>
+                  <span className="text-[#0C4137] font-bold ml-2">~{Math.round(hoverInfo.distanceMeters)}m</span>
                 )}
               </div>
             </div>
           ) : hoverInfo.type === 'poi' ? (
             <div>
-              <div className="flex items-center gap-1.5 font-bold text-white">
-                <ShoppingBag className="w-3.5 h-3.5 text-emerald-400" />
+              <div className="flex items-center gap-1.5 font-bold text-[#0C4137]">
+                <ShoppingBag className="w-3.5 h-3.5 text-[#06D6A0]" />
                 <span className="truncate">{hoverInfo.object.properties?.name}</span>
               </div>
-              <div className="text-[10px] text-gray-400 capitalize flex items-center gap-2">
+              <div className="text-[10px] text-neutral-500 capitalize flex items-center gap-2">
                 <span>Toifa: {hoverInfo.object.properties?.category}</span>
                 {hoverInfo.object.properties?.brand && (
-                  <span className="px-1.5 py-0.2 rounded bg-white/5 border border-white/10 font-mono text-[9px] text-amber-300">
+                  <span className="px-1.5 py-0.2 rounded bg-amber-50 border border-amber-200 font-mono text-[9px] text-amber-700">
                     {hoverInfo.object.properties?.brand}
                   </span>
                 )}
               </div>
               {hoverInfo.distanceMeters !== undefined && (
-                <div className="text-[10px] text-gray-300 font-mono mt-1 pt-1 border-t border-white/10 flex items-center justify-between">
+                <div className="text-[10px] text-neutral-600 font-mono mt-1 pt-1 border-t border-[#0C4137]/[0.08] flex items-center justify-between">
                   <span>Masofa:</span>
-                  <span className="text-cyan-300 font-bold">~{Math.round(hoverInfo.distanceMeters)} metr</span>
+                  <span className="text-[#0C4137] font-bold">~{Math.round(hoverInfo.distanceMeters)} metr</span>
                 </div>
               )}
             </div>
           ) : hoverInfo.type === 'hex' ? (
             <div>
-              <div className="font-bold text-white flex items-center gap-1.5">
-                <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+              <div className="font-bold text-[#0C4137] flex items-center gap-1.5">
+                <Sparkles className="w-3.5 h-3.5 text-[#06D6A0]" />
                 <span>H3 Fazoviy Klaster</span>
               </div>
-              <div className="text-[10px] text-gray-300 font-mono mt-0.5">
-                MakonScore Salohiyati: <strong className="text-emerald-400">{hoverInfo.object.score}/100</strong>
+              <div className="text-[10px] text-neutral-600 font-mono mt-0.5">
+                MakonScore Salohiyati: <strong className="text-[#06D6A0]">{hoverInfo.object.score}/100</strong>
               </div>
             </div>
           ) : null}
@@ -459,12 +438,12 @@ export const MapView: React.FC = () => {
       )}
 
       {/* Floating Status & Instruction Chip */}
-      <div className="absolute bottom-4 left-4 z-20 bg-[#0D0F17]/90 backdrop-blur-xl border border-white/10 px-3.5 py-2 rounded-xl text-xs text-gray-300 flex items-center gap-2.5 shadow-2xl pointer-events-none">
+      <div className="absolute bottom-4 left-4 z-20 bg-white/90 backdrop-blur-xl border border-[#0C4137]/[0.1] px-3.5 py-2 rounded-xl text-xs text-[#0C4137] flex items-center gap-2.5 shadow-lg pointer-events-none">
         <span className="relative flex h-2 w-2">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-          <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#06D6A0] opacity-75" />
+          <span className="relative inline-flex rounded-full h-2 w-2 bg-[#06D6A0]" />
         </span>
-        <span className="font-medium">
+        <span className="font-semibold">
           Xaritadagi istalgan nuqtani bosing yoki yuqoridan qidiring — MakonScore soniyalarda hisoblanadi
         </span>
       </div>

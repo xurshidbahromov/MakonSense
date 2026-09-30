@@ -22,7 +22,7 @@ export const App: React.FC = () => {
 
   // 2. If user is inside the Interactive GIS Spatial Intelligence Workspace
   return (
-    <div className="h-screen w-screen flex flex-col bg-[#06070B] text-gray-100 font-sans overflow-hidden">
+    <div className="h-screen w-screen flex flex-col bg-[#FBFBFD] text-[#0C4137] font-sans overflow-hidden">
       {/* Top Navigation & Brand Header */}
       <Header />
 
@@ -34,14 +34,14 @@ export const App: React.FC = () => {
         </div>
 
         {/* Analytics & Insights Sidebar (Pinned Score Header + Scrollable Factor Tabs) */}
-        <aside className="w-full md:w-[420px] lg:w-[460px] h-1/2 md:h-full border-t md:border-t-0 md:border-l border-white/[0.08] bg-[#080A10]/95 backdrop-blur-2xl flex flex-col z-20 select-none shadow-2xl overflow-hidden">
+        <aside className="w-full md:w-[420px] lg:w-[460px] h-1/2 md:h-full border-t md:border-t-0 md:border-l border-[#0C4137]/[0.08] bg-white/95 backdrop-blur-2xl flex flex-col z-20 select-none shadow-xl overflow-hidden">
           {/* 1. Pinned Score Header — Guaranteed to never scroll away */}
-          <div className="flex-shrink-0 p-3.5 sm:p-4 border-b border-white/[0.06] bg-gradient-to-b from-[#0F121C] to-[#090B12]">
+          <div className="flex-shrink-0 p-3.5 sm:p-4 border-b border-[#0C4137]/[0.08] bg-[#F8FAF9]">
             <ScoreCard />
           </div>
 
           {/* 2. Scrollable Deep Analytics & Breakdown Tabs */}
-          <div className="flex-1 overflow-y-auto p-3.5 sm:p-4 space-y-4">
+          <div className="flex-1 overflow-y-auto p-3.5 sm:p-4 space-y-4 bg-[#FBFBFD]/60">
             <MetricsBreakdown />
           </div>
         </aside>

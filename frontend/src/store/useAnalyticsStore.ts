@@ -20,7 +20,7 @@ interface AnalyticsState {
   reportModalOpen: boolean;
   auditReport: AuditReport | null;
   auditLoading: boolean;
-  basemapMode: 'dark' | 'satellite';
+  basemapMode: 'light' | 'dark' | 'satellite';
   pitchMode: '2d' | '3d';
   currentView: 'landing' | 'app';
 
@@ -29,7 +29,7 @@ interface AnalyticsState {
   setCategory: (cat: BusinessCategory) => void;
   setRadiusMeters: (r: number) => void;
   toggleLayer: (key: keyof LayerVisibility) => void;
-  setBasemapMode: (mode: 'dark' | 'satellite') => void;
+  setBasemapMode: (mode: 'light' | 'dark' | 'satellite') => void;
   togglePitchMode: () => void;
   setCurrentView: (view: 'landing' | 'app') => void;
   setReportModalOpen: (open: boolean) => void;
@@ -59,11 +59,11 @@ export const useAnalyticsStore = create<AnalyticsState>((set, get) => ({
   reportModalOpen: false,
   auditReport: null,
   auditLoading: false,
-  basemapMode: 'dark',
+  basemapMode: 'light',
   pitchMode: '3d',
   currentView: (typeof window !== 'undefined' && window.location.hash === '#app') ? 'app' : 'landing',
 
-  setBasemapMode: (mode: 'dark' | 'satellite') => {
+  setBasemapMode: (mode: 'light' | 'dark' | 'satellite') => {
     set({ basemapMode: mode });
   },
 
