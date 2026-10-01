@@ -137,16 +137,7 @@ export const LandingNavbar: React.FC = () => {
             };
 
             const labelContent = (
-              <span className="flex items-center gap-1.5">
-                {isSelected ? (
-                  <motion.span
-                    layoutId="dynamic-island-active-droplet"
-                    transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
-                    className="w-1.5 h-1.5 rounded-full bg-[#06D6A0] inline-block flex-shrink-0"
-                  />
-                ) : (
-                  <span className="w-1.5 h-1.5 rounded-full bg-transparent inline-block flex-shrink-0" />
-                )}
+              <>
                 <span>{tab.label}</span>
                 {tab.hasDropdown && (
                   <ChevronDown
@@ -157,7 +148,7 @@ export const LandingNavbar: React.FC = () => {
                     }`}
                   />
                 )}
-              </span>
+              </>
             );
 
             return (
@@ -215,333 +206,260 @@ export const LandingNavbar: React.FC = () => {
                   </button>
                 )}
 
-                {/* Solutions Dropdown Menu (Water droplet drip reveal, aligned with link) */}
-                <AnimatePresence>
-                  {isSolutions && solutionsOpen && (
-                    <motion.div
-                      initial={{ opacity: 0, y: -12, scaleY: 0.88, scaleX: 0.96 }}
-                      animate={{ opacity: 1, y: 0, scaleY: 1, scaleX: 1 }}
-                      exit={{ opacity: 0, y: -8, scaleY: 0.9, transition: { duration: 0.14 } }}
-                      transition={{ type: 'spring', stiffness: 360, damping: 24, mass: 0.7 }}
-                      onMouseEnter={() => setSolutionsOpen(true)}
-                      onMouseLeave={() => setSolutionsOpen(false)}
-                      style={{
-                        transformOrigin: '28px 0px',
-                        backdropFilter: 'blur(28px) saturate(190%)',
-                        WebkitBackdropFilter: 'blur(28px) saturate(190%)',
-                      }}
-                      className="apple-glass-dropdown absolute top-full left-0 mt-3 w-[400px] sm:w-[440px] rounded-[24px] p-3 space-y-1.5 z-50 before:content-[''] before:absolute before:-top-4 before:left-0 before:right-0 before:h-4"
-                    >
-                      {/* Water Droplet Drip Connector (Suv tomchisi) */}
-                      <div className="absolute -top-3 left-6 flex flex-col items-center pointer-events-none z-20">
-                        <svg
-                          width="16"
-                          height="14"
-                          viewBox="0 0 16 14"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="overflow-visible drop-shadow-[0_2px_4px_rgba(12,65,55,0.08)]"
-                        >
-                          <path
-                            d="M8 0C8 0 3 5 3 8.5C3 11.5 5.2 14 8 14C10.8 14 13 11.5 13 8.5C13 5 8 0 8 0Z"
-                            fill="rgba(255, 255, 255, 0.95)"
-                          />
-                          <path
-                            d="M6 7.5C6 6.2 6.8 5.2 8 4.8"
-                            stroke="#06D6A0"
-                            strokeWidth="1.2"
-                            strokeLinecap="round"
-                          />
-                        </svg>
-                      </div>
-
-                      <div className="px-3 pt-1 pb-2 flex items-center justify-between text-[11px] font-mono uppercase tracking-wider text-neutral-400 font-semibold border-b border-black/[0.04]">
-                        <span>Sohaviy Geomarketing Tahlili</span>
-                        <span className="text-[#06D6A0] font-bold">Sun’iy Intellekt</span>
-                      </div>
-
-                      <a
-                        href="#solutions"
-                        onClick={() => setSolutionsOpen(false)}
-                        className="flex items-center gap-3 px-3.5 py-2.5 rounded-[16px] hover:bg-black/[0.035] transition-all duration-200 ease-out group cursor-pointer"
-                      >
-                        {/* Centered Icon Container (Centered on X and Y) */}
-                        <div className="w-7 h-7 flex items-center justify-center flex-shrink-0">
-                          <Coffee className="w-5 h-5 text-[#0C4137] transition-transform duration-200 ease-out group-hover:scale-105" />
-                        </div>
-
-                        {/* Text Content with subtle nudge */}
-                        <div className="flex-1 min-w-0 pr-2">
-                          <div className="text-[13px] font-bold text-[#0C4137] tracking-tight group-hover:translate-x-1 transition-transform duration-200 ease-out">
-                            HoReCa, Kafe & Restoranlar
-                          </div>
-                          <div className="text-[11px] text-neutral-500 leading-snug mt-0.5 group-hover:translate-x-1 transition-transform duration-200 ease-out">
-                            Piyoda tranzit oqimi, pik soatlar va raqobat tahlili
-                          </div>
-                        </div>
-
-                        {/* Arrow with comfortable right breathing room */}
-                        <div className="w-5 h-5 flex items-center justify-center flex-shrink-0 mr-1.5">
-                          <ArrowRight className="w-3.5 h-3.5 text-[#0C4137] opacity-0 -translate-x-1 group-hover:opacity-40 group-hover:translate-x-0 transition-all duration-200 ease-out" />
-                        </div>
-                      </a>
-
-                      <a
-                        href="#solutions"
-                        onClick={() => setSolutionsOpen(false)}
-                        className="flex items-center gap-3 px-3.5 py-2.5 rounded-[16px] hover:bg-black/[0.035] transition-all duration-200 ease-out group cursor-pointer"
-                      >
-                        {/* Centered Icon Container */}
-                        <div className="w-7 h-7 flex items-center justify-center flex-shrink-0">
-                          <ShoppingBag className="w-5 h-5 text-[#0C4137] transition-transform duration-200 ease-out group-hover:scale-105" />
-                        </div>
-
-                        {/* Text Content */}
-                        <div className="flex-1 min-w-0 pr-2">
-                          <div className="text-[13px] font-bold text-[#0C4137] tracking-tight group-hover:translate-x-1 transition-transform duration-200 ease-out">
-                            Supermarket & Chakana Savdo
-                          </div>
-                          <div className="text-[11px] text-neutral-500 leading-snug mt-0.5 group-hover:translate-x-1 transition-transform duration-200 ease-out">
-                            Aholi zichligi, xarid quvvati va to‘lov layoqati
-                          </div>
-                        </div>
-
-                        {/* Arrow */}
-                        <div className="w-5 h-5 flex items-center justify-center flex-shrink-0 mr-1.5">
-                          <ArrowRight className="w-3.5 h-3.5 text-[#0C4137] opacity-0 -translate-x-1 group-hover:opacity-40 group-hover:translate-x-0 transition-all duration-200 ease-out" />
-                        </div>
-                      </a>
-
-                      <a
-                        href="#solutions"
-                        onClick={() => setSolutionsOpen(false)}
-                        className="flex items-center gap-3 px-3.5 py-2.5 rounded-[16px] hover:bg-black/[0.035] transition-all duration-200 ease-out group cursor-pointer"
-                      >
-                        {/* Centered Icon Container */}
-                        <div className="w-7 h-7 flex items-center justify-center flex-shrink-0">
-                          <Pill className="w-5 h-5 text-[#0C4137] transition-transform duration-200 ease-out group-hover:scale-105" />
-                        </div>
-
-                        {/* Text Content */}
-                        <div className="flex-1 min-w-0 pr-2">
-                          <div className="text-[13px] font-bold text-[#0C4137] tracking-tight group-hover:translate-x-1 transition-transform duration-200 ease-out">
-                            Dorixona, Tibbiyot & Optika
-                          </div>
-                          <div className="text-[11px] text-neutral-500 leading-snug mt-0.5 group-hover:translate-x-1 transition-transform duration-200 ease-out">
-                            Monopol radius, retseptli tranzit va bemorlar oqimi
-                          </div>
-                        </div>
-
-                        {/* Arrow */}
-                        <div className="w-5 h-5 flex items-center justify-center flex-shrink-0 mr-1.5">
-                          <ArrowRight className="w-3.5 h-3.5 text-[#0C4137] opacity-0 -translate-x-1 group-hover:opacity-40 group-hover:translate-x-0 transition-all duration-200 ease-out" />
-                        </div>
-                      </a>
-
-                      <a
-                        href="#solutions"
-                        onClick={() => setSolutionsOpen(false)}
-                        className="flex items-center gap-3 px-3.5 py-2.5 rounded-[16px] hover:bg-black/[0.035] transition-all duration-200 ease-out group cursor-pointer"
-                      >
-                        {/* Centered Icon Container */}
-                        <div className="w-7 h-7 flex items-center justify-center flex-shrink-0">
-                          <Building className="w-5 h-5 text-[#0C4137] transition-transform duration-200 ease-out group-hover:scale-105" />
-                        </div>
-
-                        {/* Text Content */}
-                        <div className="flex-1 min-w-0 pr-2">
-                          <div className="text-[13px] font-bold text-[#0C4137] tracking-tight group-hover:translate-x-1 transition-transform duration-200 ease-out">
-                            Ko‘chmas Mulk & Tijoriy Bino
-                          </div>
-                          <div className="text-[11px] text-neutral-500 leading-snug mt-0.5 group-hover:translate-x-1 transition-transform duration-200 ease-out">
-                            ROI prognozi, ijara stavkalari va qaytish muddati
-                          </div>
-                        </div>
-
-                        {/* Arrow */}
-                        <div className="w-5 h-5 flex items-center justify-center flex-shrink-0 mr-1.5">
-                          <ArrowRight className="w-3.5 h-3.5 text-[#0C4137] opacity-0 -translate-x-1 group-hover:opacity-40 group-hover:translate-x-0 transition-all duration-200 ease-out" />
-                        </div>
-                      </a>
-
-                      {/* Interactive Bottom CTA Footer (Clear Blur Glass) */}
-                      <div
-                        onClick={() => {
-                          setSolutionsOpen(false);
-                          setCurrentView('app');
-                        }}
-                        className="mt-1.5 px-3.5 py-2.5 rounded-[14px] bg-white/40 hover:bg-white/70 backdrop-blur-md border border-white/60 shadow-[inset_0_1px_1px_rgba(255,255,255,0.8)] flex items-center justify-between group cursor-pointer transition-all duration-200"
-                      >
-                        <div className="flex items-center gap-2.5 group-hover:translate-x-0.5 transition-transform duration-200 ease-out">
-                          <Sparkles className="w-4 h-4 text-[#0C4137]/80" />
-                          <span className="text-xs font-semibold text-[#0C4137]">
-                            O‘z biznesingiz bo‘yicha bepul tahlil oling
-                          </span>
-                        </div>
-                        <ArrowRight className="w-3.5 h-3.5 text-[#0C4137]/70 group-hover:translate-x-0.5 transition-transform duration-200 ease-out mr-1" />
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-
-                {/* Regions Dropdown Menu (Water droplet drip reveal, aligned with link) */}
-                <AnimatePresence>
-                  {isRegions && regionsOpen && (
-                    <motion.div
-                      initial={{ opacity: 0, y: -12, scaleY: 0.88, scaleX: 0.96 }}
-                      animate={{ opacity: 1, y: 0, scaleY: 1, scaleX: 1 }}
-                      exit={{ opacity: 0, y: -8, scaleY: 0.9, transition: { duration: 0.14 } }}
-                      transition={{ type: 'spring', stiffness: 360, damping: 24, mass: 0.7 }}
-                      onMouseEnter={() => setRegionsOpen(true)}
-                      onMouseLeave={() => setRegionsOpen(false)}
-                      style={{
-                        transformOrigin: '32px 0px',
-                        backdropFilter: 'blur(28px) saturate(190%)',
-                        WebkitBackdropFilter: 'blur(28px) saturate(190%)',
-                      }}
-                      className="apple-glass-dropdown absolute top-full left-0 sm:left-[-12px] mt-3 w-[420px] sm:w-[460px] rounded-[24px] p-3.5 space-y-2 z-50 before:content-[''] before:absolute before:-top-4 before:left-0 before:right-0 before:h-4"
-                    >
-                      {/* Water Droplet Drip Connector (Suv tomchisi) */}
-                      <div className="absolute -top-3 left-7 flex flex-col items-center pointer-events-none z-20">
-                        <svg
-                          width="16"
-                          height="14"
-                          viewBox="0 0 16 14"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="overflow-visible drop-shadow-[0_2px_4px_rgba(12,65,55,0.08)]"
-                        >
-                          <path
-                            d="M8 0C8 0 3 5 3 8.5C3 11.5 5.2 14 8 14C10.8 14 13 11.5 13 8.5C13 5 8 0 8 0Z"
-                            fill="rgba(255, 255, 255, 0.95)"
-                          />
-                          <path
-                            d="M6 7.5C6 6.2 6.8 5.2 8 4.8"
-                            stroke="#06D6A0"
-                            strokeWidth="1.2"
-                            strokeLinecap="round"
-                          />
-                        </svg>
-                      </div>
-
-                      <div className="px-2 pt-1 pb-1 flex items-center justify-between text-[11px] font-mono uppercase tracking-wider text-neutral-400 font-semibold border-b border-black/[0.04]">
-                        <span>Butun O‘zbekiston Qamrovi</span>
-                        <span className="text-[#0C4137] font-bold">14 Ta Hudud</span>
-                      </div>
-
-                      <div className="grid grid-cols-2 gap-1.5">
-                        <div
-                          onClick={() => {
-                            setRegionsOpen(false);
-                            setCurrentView('app');
-                          }}
-                          className="flex items-center gap-2.5 px-3 py-2.5 rounded-[14px] hover:bg-black/[0.035] transition-all duration-200 cursor-pointer group"
-                        >
-                          <div className="w-5 h-5 flex items-center justify-center flex-shrink-0">
-                            <MapPin className="w-3.5 h-3.5 text-[#0C4137]/70 transition-transform duration-200 ease-out group-hover:scale-110" />
-                          </div>
-                          <div className="flex-1 min-w-0 group-hover:translate-x-0.5 transition-transform duration-200 ease-out">
-                            <div className="text-xs font-bold text-[#0C4137]">Toshkent shahri</div>
-                            <div className="text-[10px] text-neutral-400">Markaziy hab • 52k+ bino</div>
-                          </div>
-                        </div>
-
-                        <div
-                          onClick={() => {
-                            setRegionsOpen(false);
-                            setCurrentView('app');
-                          }}
-                          className="flex items-center gap-2.5 px-3 py-2.5 rounded-[14px] hover:bg-black/[0.035] transition-all duration-200 cursor-pointer group"
-                        >
-                          <div className="w-5 h-5 flex items-center justify-center flex-shrink-0">
-                            <MapPin className="w-3.5 h-3.5 text-[#0C4137]/70 transition-transform duration-200 ease-out group-hover:scale-110" />
-                          </div>
-                          <div className="flex-1 min-w-0 group-hover:translate-x-0.5 transition-transform duration-200 ease-out">
-                            <div className="text-xs font-bold text-[#0C4137]">Samarqand</div>
-                            <div className="text-[10px] text-neutral-400">Sayyohlik & Retail • 38k+</div>
-                          </div>
-                        </div>
-
-                        <div
-                          onClick={() => {
-                            setRegionsOpen(false);
-                            setCurrentView('app');
-                          }}
-                          className="flex items-center gap-2.5 px-3 py-2.5 rounded-[14px] hover:bg-black/[0.035] transition-all duration-200 cursor-pointer group"
-                        >
-                          <div className="w-5 h-5 flex items-center justify-center flex-shrink-0">
-                            <MapPin className="w-3.5 h-3.5 text-[#0C4137]/70 transition-transform duration-200 ease-out group-hover:scale-110" />
-                          </div>
-                          <div className="flex-1 min-w-0 group-hover:translate-x-0.5 transition-transform duration-200 ease-out">
-                            <div className="text-xs font-bold text-[#0C4137]">Farg‘ona vodiysi</div>
-                            <div className="text-[10px] text-neutral-400">Aholi zichligi • 72k+</div>
-                          </div>
-                        </div>
-
-                        <div
-                          onClick={() => {
-                            setRegionsOpen(false);
-                            setCurrentView('app');
-                          }}
-                          className="flex items-center gap-2.5 px-3 py-2.5 rounded-[14px] hover:bg-black/[0.035] transition-all duration-200 cursor-pointer group"
-                        >
-                          <div className="w-5 h-5 flex items-center justify-center flex-shrink-0">
-                            <MapPin className="w-3.5 h-3.5 text-[#0C4137]/70 transition-transform duration-200 ease-out group-hover:scale-110" />
-                          </div>
-                          <div className="flex-1 min-w-0 group-hover:translate-x-0.5 transition-transform duration-200 ease-out">
-                            <div className="text-xs font-bold text-[#0C4137]">Buxoro & Navoiy</div>
-                            <div className="text-[10px] text-neutral-400">Sanoat & Biznes • 31k+</div>
-                          </div>
-                        </div>
-
-                        <div
-                          onClick={() => {
-                            setRegionsOpen(false);
-                            setCurrentView('app');
-                          }}
-                          className="flex items-center gap-2.5 px-3 py-2.5 rounded-[14px] hover:bg-black/[0.035] transition-all duration-200 cursor-pointer group"
-                        >
-                          <div className="w-5 h-5 flex items-center justify-center flex-shrink-0">
-                            <MapPin className="w-3.5 h-3.5 text-[#0C4137]/70 transition-transform duration-200 ease-out group-hover:scale-110" />
-                          </div>
-                          <div className="flex-1 min-w-0 group-hover:translate-x-0.5 transition-transform duration-200 ease-out">
-                            <div className="text-xs font-bold text-[#0C4137]">Qashqadaryo & Surxondaryo</div>
-                            <div className="text-[10px] text-neutral-400">Janubiy tranzit • 44k+</div>
-                          </div>
-                        </div>
-
-                        <div
-                          onClick={() => {
-                            setRegionsOpen(false);
-                            setCurrentView('app');
-                          }}
-                          className="flex items-center gap-2.5 px-3 py-2.5 rounded-[14px] hover:bg-black/[0.035] transition-all duration-200 cursor-pointer group"
-                        >
-                          <div className="w-5 h-5 flex items-center justify-center flex-shrink-0">
-                            <MapPin className="w-3.5 h-3.5 text-[#0C4137]/70 transition-transform duration-200 ease-out group-hover:scale-110" />
-                          </div>
-                          <div className="flex-1 min-w-0 group-hover:translate-x-0.5 transition-transform duration-200 ease-out">
-                            <div className="text-xs font-bold text-[#0C4137]">Qoraqalpog‘iston & Xorazm</div>
-                            <div className="text-[10px] text-neutral-400">G‘arbiy zonalar • 29k+</div>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="pt-2 border-t border-black/[0.04] text-[11px] text-neutral-500 px-2 flex items-center justify-between">
-                        <span className="flex items-center gap-1.5 font-medium text-neutral-500">
-                          <span className="w-1.5 h-1.5 rounded-full bg-[#0C4137]/40" />
-                          208 ta tuman fazoviy monitoringda
-                        </span>
-                        <span className="font-mono text-[10px] text-[#0C4137] font-bold bg-white/60 backdrop-blur-sm border border-white/70 px-2 py-0.5 rounded-full shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]">
-                          524,476 ta bino
-                        </span>
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
               </div>
             );
           })}
+
+          {/* ========================================================= */}
+          {/* UNIFIED FULL-WIDTH LIQUID DROPDOWN (Island 2 Extension)    */}
+          {/* Matches navbar width, drips downward as one continuous body */}
+          {/* ========================================================= */}
+          <AnimatePresence mode="wait">
+            {solutionsOpen && (
+              <motion.div
+                key="solutions-dropdown"
+                initial={{ opacity: 0, y: -16, scaleY: 0.65, scaleX: 0.98 }}
+                animate={{ opacity: 1, y: 0, scaleY: 1, scaleX: 1 }}
+                exit={{ opacity: 0, y: -12, scaleY: 0.7, scaleX: 0.98, transition: { duration: 0.14 } }}
+                transition={{ type: 'spring', stiffness: 360, damping: 25, mass: 0.75 }}
+                onMouseEnter={() => setSolutionsOpen(true)}
+                onMouseLeave={() => setSolutionsOpen(false)}
+                style={{
+                  transformOrigin: 'top center',
+                  backdropFilter: 'blur(28px) saturate(190%)',
+                  WebkitBackdropFilter: 'blur(28px) saturate(190%)',
+                }}
+                className="apple-glass-dropdown absolute top-full left-0 right-0 mt-2 w-full rounded-[26px] p-3.5 space-y-2 z-50 before:content-[''] before:absolute before:-top-3 before:left-0 before:right-0 before:h-3"
+              >
+                <div className="px-2 pt-0.5 pb-1.5 flex items-center justify-between text-[11px] font-mono uppercase tracking-wider text-neutral-400 font-semibold border-b border-black/[0.04]">
+                  <span>Sohaviy Geomarketing Tahlili</span>
+                  <span className="text-[#06D6A0] font-bold">Sun’iy Intellekt</span>
+                </div>
+
+                <div className="grid grid-cols-2 gap-1.5">
+                  <a
+                    href="#solutions"
+                    onClick={() => setSolutionsOpen(false)}
+                    className="flex items-center gap-3 px-3 py-2.5 rounded-[14px] hover:bg-black/[0.035] transition-all duration-200 ease-out group cursor-pointer"
+                  >
+                    <div className="w-7 h-7 flex items-center justify-center flex-shrink-0">
+                      <Coffee className="w-5 h-5 text-[#0C4137] transition-transform duration-200 ease-out group-hover:scale-105" />
+                    </div>
+                    <div className="flex-1 min-w-0 pr-1">
+                      <div className="text-[13px] font-bold text-[#0C4137] tracking-tight group-hover:translate-x-0.5 transition-transform duration-200 ease-out">
+                        HoReCa & Restoranlar
+                      </div>
+                      <div className="text-[11px] text-neutral-500 leading-snug mt-0.5">
+                        Piyoda tranzit va raqobat tahlili
+                      </div>
+                    </div>
+                  </a>
+
+                  <a
+                    href="#solutions"
+                    onClick={() => setSolutionsOpen(false)}
+                    className="flex items-center gap-3 px-3 py-2.5 rounded-[14px] hover:bg-black/[0.035] transition-all duration-200 ease-out group cursor-pointer"
+                  >
+                    <div className="w-7 h-7 flex items-center justify-center flex-shrink-0">
+                      <ShoppingBag className="w-5 h-5 text-[#0C4137] transition-transform duration-200 ease-out group-hover:scale-105" />
+                    </div>
+                    <div className="flex-1 min-w-0 pr-1">
+                      <div className="text-[13px] font-bold text-[#0C4137] tracking-tight group-hover:translate-x-0.5 transition-transform duration-200 ease-out">
+                        Supermarket & Retail
+                      </div>
+                      <div className="text-[11px] text-neutral-500 leading-snug mt-0.5">
+                        Aholi zichligi va xarid quvvati
+                      </div>
+                    </div>
+                  </a>
+
+                  <a
+                    href="#solutions"
+                    onClick={() => setSolutionsOpen(false)}
+                    className="flex items-center gap-3 px-3 py-2.5 rounded-[14px] hover:bg-black/[0.035] transition-all duration-200 ease-out group cursor-pointer"
+                  >
+                    <div className="w-7 h-7 flex items-center justify-center flex-shrink-0">
+                      <Pill className="w-5 h-5 text-[#0C4137] transition-transform duration-200 ease-out group-hover:scale-105" />
+                    </div>
+                    <div className="flex-1 min-w-0 pr-1">
+                      <div className="text-[13px] font-bold text-[#0C4137] tracking-tight group-hover:translate-x-0.5 transition-transform duration-200 ease-out">
+                        Dorixona & Tibbiyot
+                      </div>
+                      <div className="text-[11px] text-neutral-500 leading-snug mt-0.5">
+                        Monopol radius va bemorlar oqimi
+                      </div>
+                    </div>
+                  </a>
+
+                  <a
+                    href="#solutions"
+                    onClick={() => setSolutionsOpen(false)}
+                    className="flex items-center gap-3 px-3 py-2.5 rounded-[14px] hover:bg-black/[0.035] transition-all duration-200 ease-out group cursor-pointer"
+                  >
+                    <div className="w-7 h-7 flex items-center justify-center flex-shrink-0">
+                      <Building className="w-5 h-5 text-[#0C4137] transition-transform duration-200 ease-out group-hover:scale-105" />
+                    </div>
+                    <div className="flex-1 min-w-0 pr-1">
+                      <div className="text-[13px] font-bold text-[#0C4137] tracking-tight group-hover:translate-x-0.5 transition-transform duration-200 ease-out">
+                        Tijoriy Ko‘chmas Mulk
+                      </div>
+                      <div className="text-[11px] text-neutral-500 leading-snug mt-0.5">
+                        ROI prognozi va ijara stavkalari
+                      </div>
+                    </div>
+                  </a>
+                </div>
+
+                {/* Interactive Bottom CTA Footer */}
+                <div
+                  onClick={() => {
+                    setSolutionsOpen(false);
+                    setCurrentView('app');
+                  }}
+                  className="mt-1 px-3.5 py-2 rounded-[14px] bg-white/40 hover:bg-white/70 backdrop-blur-md border border-white/60 shadow-[inset_0_1px_1px_rgba(255,255,255,0.8)] flex items-center justify-between group cursor-pointer transition-all duration-200"
+                >
+                  <div className="flex items-center gap-2 group-hover:translate-x-0.5 transition-transform duration-200 ease-out">
+                    <Sparkles className="w-3.5 h-3.5 text-[#0C4137]/80" />
+                    <span className="text-xs font-semibold text-[#0C4137]">
+                      O‘z biznesingiz bo‘yicha bepul geomarketing tahlilini sinab ko‘ring
+                    </span>
+                  </div>
+                  <ArrowRight className="w-3.5 h-3.5 text-[#0C4137]/70 group-hover:translate-x-0.5 transition-transform duration-200 ease-out" />
+                </div>
+              </motion.div>
+            )}
+
+            {regionsOpen && (
+              <motion.div
+                key="regions-dropdown"
+                initial={{ opacity: 0, y: -16, scaleY: 0.65, scaleX: 0.98 }}
+                animate={{ opacity: 1, y: 0, scaleY: 1, scaleX: 1 }}
+                exit={{ opacity: 0, y: -12, scaleY: 0.7, scaleX: 0.98, transition: { duration: 0.14 } }}
+                transition={{ type: 'spring', stiffness: 360, damping: 25, mass: 0.75 }}
+                onMouseEnter={() => setRegionsOpen(true)}
+                onMouseLeave={() => setRegionsOpen(false)}
+                style={{
+                  transformOrigin: 'top center',
+                  backdropFilter: 'blur(28px) saturate(190%)',
+                  WebkitBackdropFilter: 'blur(28px) saturate(190%)',
+                }}
+                className="apple-glass-dropdown absolute top-full left-0 right-0 mt-2 w-full rounded-[26px] p-3.5 space-y-2 z-50 before:content-[''] before:absolute before:-top-3 before:left-0 before:right-0 before:h-3"
+              >
+                <div className="px-2 pt-0.5 pb-1.5 flex items-center justify-between text-[11px] font-mono uppercase tracking-wider text-neutral-400 font-semibold border-b border-black/[0.04]">
+                  <span>Butun O‘zbekiston Qamrovi</span>
+                  <span className="text-[#0C4137] font-bold">14 Ta Hudud</span>
+                </div>
+
+                <div className="grid grid-cols-2 gap-1.5">
+                  <div
+                    onClick={() => {
+                      setRegionsOpen(false);
+                      setCurrentView('app');
+                    }}
+                    className="flex items-center gap-2.5 px-3 py-2 rounded-[14px] hover:bg-black/[0.035] transition-all duration-200 cursor-pointer group"
+                  >
+                    <div className="w-5 h-5 flex items-center justify-center flex-shrink-0">
+                      <MapPin className="w-3.5 h-3.5 text-[#0C4137]/70 transition-transform duration-200 ease-out group-hover:scale-110" />
+                    </div>
+                    <div className="flex-1 min-w-0 group-hover:translate-x-0.5 transition-transform duration-200 ease-out">
+                      <div className="text-xs font-bold text-[#0C4137]">Toshkent shahri</div>
+                      <div className="text-[10px] text-neutral-400">Markaziy hab • 52k+ bino</div>
+                    </div>
+                  </div>
+
+                  <div
+                    onClick={() => {
+                      setRegionsOpen(false);
+                      setCurrentView('app');
+                    }}
+                    className="flex items-center gap-2.5 px-3 py-2 rounded-[14px] hover:bg-black/[0.035] transition-all duration-200 cursor-pointer group"
+                  >
+                    <div className="w-5 h-5 flex items-center justify-center flex-shrink-0">
+                      <MapPin className="w-3.5 h-3.5 text-[#0C4137]/70 transition-transform duration-200 ease-out group-hover:scale-110" />
+                    </div>
+                    <div className="flex-1 min-w-0 group-hover:translate-x-0.5 transition-transform duration-200 ease-out">
+                      <div className="text-xs font-bold text-[#0C4137]">Samarqand</div>
+                      <div className="text-[10px] text-neutral-400">Sayyohlik & Retail • 38k+</div>
+                    </div>
+                  </div>
+
+                  <div
+                    onClick={() => {
+                      setRegionsOpen(false);
+                      setCurrentView('app');
+                    }}
+                    className="flex items-center gap-2.5 px-3 py-2 rounded-[14px] hover:bg-black/[0.035] transition-all duration-200 cursor-pointer group"
+                  >
+                    <div className="w-5 h-5 flex items-center justify-center flex-shrink-0">
+                      <MapPin className="w-3.5 h-3.5 text-[#0C4137]/70 transition-transform duration-200 ease-out group-hover:scale-110" />
+                    </div>
+                    <div className="flex-1 min-w-0 group-hover:translate-x-0.5 transition-transform duration-200 ease-out">
+                      <div className="text-xs font-bold text-[#0C4137]">Farg‘ona vodiysi</div>
+                      <div className="text-[10px] text-neutral-400">Aholi zichligi • 72k+</div>
+                    </div>
+                  </div>
+
+                  <div
+                    onClick={() => {
+                      setRegionsOpen(false);
+                      setCurrentView('app');
+                    }}
+                    className="flex items-center gap-2.5 px-3 py-2 rounded-[14px] hover:bg-black/[0.035] transition-all duration-200 cursor-pointer group"
+                  >
+                    <div className="w-5 h-5 flex items-center justify-center flex-shrink-0">
+                      <MapPin className="w-3.5 h-3.5 text-[#0C4137]/70 transition-transform duration-200 ease-out group-hover:scale-110" />
+                    </div>
+                    <div className="flex-1 min-w-0 group-hover:translate-x-0.5 transition-transform duration-200 ease-out">
+                      <div className="text-xs font-bold text-[#0C4137]">Buxoro & Navoiy</div>
+                      <div className="text-[10px] text-neutral-400">Sanoat & Biznes • 31k+</div>
+                    </div>
+                  </div>
+
+                  <div
+                    onClick={() => {
+                      setRegionsOpen(false);
+                      setCurrentView('app');
+                    }}
+                    className="flex items-center gap-2.5 px-3 py-2 rounded-[14px] hover:bg-black/[0.035] transition-all duration-200 cursor-pointer group"
+                  >
+                    <div className="w-5 h-5 flex items-center justify-center flex-shrink-0">
+                      <MapPin className="w-3.5 h-3.5 text-[#0C4137]/70 transition-transform duration-200 ease-out group-hover:scale-110" />
+                    </div>
+                    <div className="flex-1 min-w-0 group-hover:translate-x-0.5 transition-transform duration-200 ease-out">
+                      <div className="text-xs font-bold text-[#0C4137]">Qashqadaryo & Surxondaryo</div>
+                      <div className="text-[10px] text-neutral-400">Janubiy tranzit • 44k+</div>
+                    </div>
+                  </div>
+
+                  <div
+                    onClick={() => {
+                      setRegionsOpen(false);
+                      setCurrentView('app');
+                    }}
+                    className="flex items-center gap-2.5 px-3 py-2 rounded-[14px] hover:bg-black/[0.035] transition-all duration-200 cursor-pointer group"
+                  >
+                    <div className="w-5 h-5 flex items-center justify-center flex-shrink-0">
+                      <MapPin className="w-3.5 h-3.5 text-[#0C4137]/70 transition-transform duration-200 ease-out group-hover:scale-110" />
+                    </div>
+                    <div className="flex-1 min-w-0 group-hover:translate-x-0.5 transition-transform duration-200 ease-out">
+                      <div className="text-xs font-bold text-[#0C4137]">Qoraqalpog‘iston & Xorazm</div>
+                      <div className="text-[10px] text-neutral-400">G‘arbiy zonalar • 29k+</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="pt-1.5 border-t border-black/[0.04] text-[11px] text-neutral-500 px-2 flex items-center justify-between">
+                  <span className="flex items-center gap-1.5 font-medium text-neutral-500">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#0C4137]/40" />
+                    208 ta tuman fazoviy monitoringda
+                  </span>
+                  <span className="font-mono text-[10px] text-[#0C4137] font-bold bg-white/60 backdrop-blur-sm border border-white/70 px-2 py-0.5 rounded-full shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]">
+                    524,476 ta bino
+                  </span>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </nav>
 
         {/* ========================================================= */}
