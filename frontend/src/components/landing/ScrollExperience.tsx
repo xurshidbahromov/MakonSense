@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import { motion, useInView } from 'motion/react';
+import { ArrowDownRight } from 'lucide-react';
 import { useAnalyticsStore } from '../../store/useAnalyticsStore';
 
 const STAGES = [
@@ -86,9 +87,10 @@ export const ScrollExperience: React.FC = () => {
                 <p className="text-[16px] leading-relaxed text-[#A4A9A5] dark:text-[#A4A9A5] max-w-lg">
                   {stage.description}
                 </p>
-                <p className="mt-4 text-xs text-[#A4A9A5]/70 font-mono">
-                  ↳ {stage.detail}
-                </p>
+                <div className="mt-4 flex items-center gap-1.5 text-xs text-[#A4A9A5] font-mono">
+                  <ArrowDownRight size={13} className="text-[#0E9F6E] flex-shrink-0" />
+                  <span>{stage.detail}</span>
+                </div>
               </div>
 
               {/* Stat */}

@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import { motion, useInView } from 'motion/react';
+import { X, Check } from 'lucide-react';
 import { useAnalyticsStore } from '../../store/useAnalyticsStore';
 
 const PROBLEMS = [
@@ -69,8 +70,8 @@ export const ProblemSolution: React.FC = () => {
             </p>
             <ul className="space-y-5">
               {PROBLEMS.map((p, i) => (
-                <li key={i} className="flex items-start gap-4">
-                  <span className="mt-[3px] text-[#A4A9A5] text-lg leading-none flex-shrink-0">✕</span>
+                <li key={i} className="flex items-start gap-3.5">
+                  <X size={15} className="mt-1 text-[#A4A9A5] flex-shrink-0" />
                   <span className="text-[16px] leading-snug text-[#A4A9A5] dark:text-[#A4A9A5]">
                     {p}
                   </span>
@@ -91,8 +92,8 @@ export const ProblemSolution: React.FC = () => {
             </p>
             <ul className="space-y-5">
               {SOLUTIONS.map((s, i) => (
-                <li key={i} className="flex items-start gap-4">
-                  <span className="mt-[3px] text-[#0E9F6E] text-lg leading-none flex-shrink-0">→</span>
+                <li key={i} className="flex items-start gap-3.5">
+                  <Check size={15} strokeWidth={2.5} className="mt-1 text-[#0E9F6E] flex-shrink-0" />
                   <span className="text-[16px] leading-snug text-[#111111] dark:text-[#FDFDFD] font-medium">
                     {s}
                   </span>

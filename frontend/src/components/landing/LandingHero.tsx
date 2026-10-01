@@ -421,9 +421,12 @@ export const LandingHero: React.FC = () => {
 
                   {/* AI Recommendation Summary */}
                   <div className="mt-4 p-2.5 rounded-xl bg-black/[0.02] dark:bg-white/[0.025] border border-black/[0.04] dark:border-white/[0.04] flex items-center justify-between gap-3">
-                    <p className="text-[11px] text-neutral-600 dark:text-neutral-400 leading-snug line-clamp-1">
-                      💡 {activePreset.recommendation}
-                    </p>
+                    <div className="flex items-center gap-2 min-w-0">
+                      <Sparkles size={13} className="text-[#0E9F6E] flex-shrink-0" />
+                      <p className="text-[11px] text-neutral-600 dark:text-neutral-400 leading-snug line-clamp-1 truncate">
+                        {activePreset.recommendation}
+                      </p>
+                    </div>
                     <button
                       onClick={() => handleLaunch(activePreset.coords)}
                       className="text-[11px] font-semibold text-[#0E9F6E] hover:underline whitespace-nowrap flex items-center gap-1 cursor-pointer flex-shrink-0"

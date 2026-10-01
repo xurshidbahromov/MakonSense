@@ -91,12 +91,12 @@ export const LandingNavbar: React.FC = () => {
             }}
             className={`pointer-events-auto h-[50px] rounded-full transition-all duration-500 flex items-center gap-2 cursor-pointer select-none ${
               scrolled
-                ? 'px-3.5 sm:px-4 border border-white/60 bg-white/65 backdrop-blur-2xl backdrop-saturate-[180%] shadow-[inset_0_1px_1px_rgba(255,255,255,0.9),0_4px_16px_rgba(0,0,0,0.02)] hover:bg-white/75 hover:border-white/80'
+                ? 'px-3.5 sm:px-4 border border-black/[0.08] dark:border-white/[0.1] bg-white/80 dark:bg-[#161616]/85 backdrop-blur-2xl backdrop-saturate-[180%] shadow-[inset_0_1px_1px_rgba(255,255,255,0.9),0_4px_16px_rgba(0,0,0,0.03)] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_12px_32px_rgba(0,0,0,0.6)] hover:bg-white/90 dark:hover:bg-[#1c1c1c]/90'
                 : 'px-1 bg-transparent border-transparent shadow-none hover:opacity-85'
             }`}
           >
             <img
-              src={isDarkMode ? '/brand/logo_icon_white.png' : '/brand/logo_icon.png'}
+              src="/brand/logo_icon.png"
               alt="MakonSense Icon"
               className="h-[23px] sm:h-[24.5px] w-auto object-contain flex-shrink-0"
             />
@@ -124,7 +124,7 @@ export const LandingNavbar: React.FC = () => {
           <div
             className={`absolute inset-0 rounded-full transition-all duration-500 pointer-events-none -z-10 ${
               scrolled
-                ? 'opacity-100 border border-white/60 bg-white/45 backdrop-blur-2xl backdrop-saturate-[180%] shadow-[inset_0_1px_1px_rgba(255,255,255,0.9),0_4px_16px_rgba(0,0,0,0.02)] hover:border-white/80'
+                ? 'opacity-100 border border-black/[0.08] dark:border-white/[0.1] bg-white/75 dark:bg-[#161616]/85 backdrop-blur-2xl backdrop-saturate-[180%] shadow-[inset_0_1px_1px_rgba(255,255,255,0.9),0_4px_16px_rgba(0,0,0,0.03)] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_12px_32px_rgba(0,0,0,0.6)]'
                 : 'opacity-0 border-transparent bg-transparent shadow-none'
             }`}
           />
@@ -169,7 +169,7 @@ export const LandingNavbar: React.FC = () => {
                   <ChevronDown
                     className={`w-3.5 h-3.5 transition-transform duration-200 opacity-50 ${
                       (isSolutions && solutionsOpen) || (isRegions && regionsOpen)
-                        ? 'rotate-180 opacity-100 text-[#111111]'
+                        ? 'rotate-180 opacity-100 text-[#111111] dark:text-white'
                         : ''
                     }`}
                   />
@@ -179,7 +179,7 @@ export const LandingNavbar: React.FC = () => {
 
             return (
               <div key={tab.id} className="relative">
-                {/* Framer Motion Sliding Active Pill (Zero-shadow, pure minimalist flat white tile) */}
+                {/* Framer Motion Sliding Active Pill */}
                 {isSelected && (
                   <motion.div
                     layoutId="dynamic-island-active-pill"
@@ -187,13 +187,11 @@ export const LandingNavbar: React.FC = () => {
                       duration: 0.18,
                       ease: [0.22, 1, 0.36, 1],
                     }}
-                    className={`absolute inset-0 z-0 rounded-full ${
-                      isDarkMode ? 'bg-white/20' : 'bg-white'
-                    }`}
+                    className="absolute inset-0 z-0 rounded-full bg-white shadow-[0_2px_8px_rgba(0,0,0,0.08)] dark:bg-white/[0.12] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.15)]"
                   />
                 )}
 
-                {/* Framer Motion Hover Ghost Pill (Feather-light 140ms) */}
+                {/* Framer Motion Hover Ghost Pill */}
                 {isHovered && !isSelected && (
                   <motion.div
                     layoutId="dynamic-island-hover-pill"
@@ -201,7 +199,7 @@ export const LandingNavbar: React.FC = () => {
                       duration: 0.14,
                       ease: [0.22, 1, 0.36, 1],
                     }}
-                    className="absolute inset-0 z-0 bg-black/[0.025] dark:bg-white/[0.06] rounded-full"
+                    className="absolute inset-0 z-0 bg-black/[0.03] dark:bg-white/[0.06] rounded-full"
                   />
                 )}
 
@@ -213,7 +211,7 @@ export const LandingNavbar: React.FC = () => {
                     className={`relative z-10 flex items-center gap-1.5 px-4 py-2 text-[14px] rounded-full transition-colors duration-150 cursor-pointer whitespace-nowrap ${
                       isSelected
                         ? isDarkMode ? 'text-white font-semibold' : 'text-[#111111] font-semibold'
-                        : isDarkMode ? 'text-neutral-300 hover:text-white font-medium' : 'text-neutral-500 hover:text-neutral-900 font-medium'
+                        : isDarkMode ? 'text-neutral-300 hover:text-white font-medium' : 'text-neutral-600 hover:text-[#111111] font-medium'
                     }`}
                   >
                     {labelContent}
@@ -225,7 +223,7 @@ export const LandingNavbar: React.FC = () => {
                     className={`relative z-10 flex items-center gap-1.5 px-4 py-2 text-[14px] rounded-full transition-colors duration-150 cursor-pointer whitespace-nowrap ${
                       isSelected
                         ? isDarkMode ? 'text-white font-semibold' : 'text-[#111111] font-semibold'
-                        : isDarkMode ? 'text-neutral-300 hover:text-white font-medium' : 'text-neutral-500 hover:text-neutral-900 font-medium'
+                        : isDarkMode ? 'text-neutral-300 hover:text-white font-medium' : 'text-neutral-600 hover:text-[#111111] font-medium'
                     }`}
                   >
                     {labelContent}
@@ -497,7 +495,7 @@ export const LandingNavbar: React.FC = () => {
           transition={{ type: 'spring', stiffness: 450, damping: 26 }}
           className={`pointer-events-auto hidden sm:flex items-center h-[50px] rounded-full transition-all duration-500 ${
             scrolled
-              ? 'pl-2 sm:pl-2.5 pr-3.5 sm:pr-4 border border-white/60 bg-white/45 backdrop-blur-2xl backdrop-saturate-[180%] shadow-[inset_0_1px_1px_rgba(255,255,255,0.9),0_4px_16px_rgba(0,0,0,0.02)] hover:border-white/80 gap-1.5 sm:gap-2'
+              ? 'pl-2 sm:pl-2.5 pr-3.5 sm:pr-4 border border-black/[0.08] dark:border-white/[0.1] bg-white/75 dark:bg-[#161616]/85 backdrop-blur-2xl backdrop-saturate-[180%] shadow-[inset_0_1px_1px_rgba(255,255,255,0.9),0_4px_16px_rgba(0,0,0,0.03)] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_12px_32px_rgba(0,0,0,0.6)] gap-1.5 sm:gap-2'
               : 'pl-1 pr-1 bg-transparent border-transparent shadow-none gap-2 sm:gap-2.5'
           }`}
         >
@@ -505,7 +503,7 @@ export const LandingNavbar: React.FC = () => {
           <motion.button
             whileTap={{ scale: 0.92 }}
             onClick={() => toggleDarkMode()}
-            className="w-[34px] h-[34px] rounded-full bg-white/40 hover:bg-white/70 backdrop-blur-md border border-white/60 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)] flex items-center justify-center text-neutral-600 hover:text-black transition-all cursor-pointer select-none"
+            className="w-[34px] h-[34px] rounded-full bg-black/[0.04] hover:bg-black/[0.08] dark:bg-white/[0.08] dark:hover:bg-white/[0.14] border border-black/[0.06] dark:border-white/[0.1] flex items-center justify-center text-neutral-600 dark:text-neutral-300 transition-all cursor-pointer select-none"
             title="Mavzu rejimi"
           >
             {isDarkMode ? (
@@ -518,7 +516,7 @@ export const LandingNavbar: React.FC = () => {
           {/* Log In Link */}
           <button
             onClick={() => setCurrentView('app')}
-            className="text-neutral-600 hover:text-[#111111] font-medium text-[13.5px] px-2.5 sm:px-3 py-1.5 rounded-full hover:bg-white/40 transition-all cursor-pointer"
+            className="text-neutral-600 hover:text-[#111111] dark:text-neutral-300 dark:hover:text-white font-medium text-[13.5px] px-2.5 sm:px-3 py-1.5 rounded-full hover:bg-black/[0.04] dark:hover:bg-white/[0.08] transition-all cursor-pointer"
           >
             Kirish
           </button>
@@ -540,13 +538,13 @@ export const LandingNavbar: React.FC = () => {
         <div className="pointer-events-auto md:hidden">
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className={`rounded-full transition-all duration-500 text-neutral-700 flex items-center justify-center cursor-pointer ${
+            className={`rounded-full transition-all duration-500 text-neutral-700 dark:text-neutral-200 flex items-center justify-center cursor-pointer ${
               scrolled
-                ? 'h-[50px] w-[50px] border border-white/60 bg-white/45 backdrop-blur-2xl backdrop-saturate-[180%] shadow-[inset_0_1px_1px_rgba(255,255,255,0.9),0_4px_16px_rgba(0,0,0,0.02)] hover:bg-white/65 hover:border-white/80'
-                : 'h-[44px] w-[44px] bg-transparent border-transparent shadow-none hover:bg-black/[0.04]'
+                ? 'h-[50px] w-[50px] border border-black/[0.08] dark:border-white/[0.1] bg-white/75 dark:bg-[#161616]/85 backdrop-blur-2xl backdrop-saturate-[180%] shadow-sm hover:bg-white/90 dark:hover:bg-[#1c1c1c]/90'
+                : 'h-[44px] w-[44px] bg-transparent border-transparent shadow-none hover:bg-black/[0.04] dark:hover:bg-white/[0.06]'
             }`}
           >
-            {mobileMenuOpen ? <X className="w-4 h-4 text-[#111111]" /> : <Menu className="w-4 h-4 text-[#111111]" />}
+            {mobileMenuOpen ? <X className="w-4 h-4 text-[#111111] dark:text-white" /> : <Menu className="w-4 h-4 text-[#111111] dark:text-white" />}
           </button>
         </div>
       </div>
@@ -559,47 +557,43 @@ export const LandingNavbar: React.FC = () => {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -8, scale: 0.98 }}
             transition={{ type: 'spring', stiffness: 450, damping: 30 }}
-            style={{
-              backdropFilter: 'blur(28px) saturate(190%)',
-              WebkitBackdropFilter: 'blur(28px) saturate(190%)',
-            }}
-            className="apple-glass-dropdown pointer-events-auto md:hidden mx-4 mt-2 rounded-[24px] p-4 space-y-2"
+            className="apple-glass-dropdown pointer-events-auto md:hidden mx-4 mt-2 rounded-[24px] p-4 space-y-2 border border-black/[0.08] dark:border-white/[0.1]"
           >
             <a
               href="#features"
               onClick={() => setMobileMenuOpen(false)}
-              className="block px-3.5 py-2 text-xs font-semibold text-[#111111] rounded-xl hover:bg-white/50 hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.8)] transition-all"
+              className="block px-3.5 py-2 text-xs font-semibold text-[#111111] dark:text-white rounded-xl hover:bg-black/[0.04] dark:hover:bg-white/[0.06] transition-all"
             >
               Shahar Radari
             </a>
             <a
               href="#solutions"
               onClick={() => setMobileMenuOpen(false)}
-              className="block px-3.5 py-2 text-xs font-semibold text-[#111111] rounded-xl hover:bg-white/50 hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.8)] transition-all"
+              className="block px-3.5 py-2 text-xs font-semibold text-[#111111] dark:text-white rounded-xl hover:bg-black/[0.04] dark:hover:bg-white/[0.06] transition-all"
             >
               Yechimlar (HoReCa, Retail, Dorixona)
             </a>
             <a
               href="#compare"
               onClick={() => setMobileMenuOpen(false)}
-              className="block px-3.5 py-2 text-xs font-semibold text-[#111111] rounded-xl hover:bg-white/50 hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.8)] transition-all"
+              className="block px-3.5 py-2 text-xs font-semibold text-[#111111] dark:text-white rounded-xl hover:bg-black/[0.04] dark:hover:bg-white/[0.06] transition-all"
             >
               A/B Taqqoslash
             </a>
             <a
               href="#calculator"
               onClick={() => setMobileMenuOpen(false)}
-              className="block px-3.5 py-2 text-xs font-semibold text-[#111111] rounded-xl hover:bg-white/50 hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.8)] transition-all"
+              className="block px-3.5 py-2 text-xs font-semibold text-[#111111] dark:text-white rounded-xl hover:bg-black/[0.04] dark:hover:bg-white/[0.06] transition-all"
             >
               Moliya & ROI
             </a>
-            <div className="pt-2 border-t border-black/[0.04] flex flex-col gap-2">
+            <div className="pt-2 border-t border-black/[0.04] dark:border-white/[0.06] flex flex-col gap-2">
               <button
                 onClick={() => {
                   setMobileMenuOpen(false);
                   setCurrentView('app');
                 }}
-                className="w-full py-2.5 rounded-full bg-[#111111] hover:bg-neutral-800 text-white font-semibold text-xs text-center transition-all shadow-sm"
+                className="w-full py-2.5 rounded-full bg-[#111111] hover:bg-neutral-800 text-white dark:bg-[#FDFDFD] dark:text-[#111111] dark:hover:bg-neutral-200 font-semibold text-xs text-center transition-all shadow-sm"
               >
                 Platformaga Kirish
               </button>

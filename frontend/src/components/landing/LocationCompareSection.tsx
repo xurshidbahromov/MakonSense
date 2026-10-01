@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { motion, useInView } from 'motion/react';
+import { Check } from 'lucide-react';
 import { useAnalyticsStore } from '../../store/useAnalyticsStore';
 
 interface CompareLocation {
@@ -114,8 +115,9 @@ export const LocationCompareSection: React.FC = () => {
                       {loc.grade}
                     </span>
                     {loc.isWinner && (
-                      <span className="font-mono text-[10px] tracking-[0.12em] uppercase text-[#0E9F6E]">
-                        ✓ Tavsiya etiladi
+                      <span className="inline-flex items-center gap-1 font-mono text-[10px] tracking-[0.12em] uppercase text-[#0E9F6E]">
+                        <Check size={11} strokeWidth={2.5} />
+                        Tavsiya etiladi
                       </span>
                     )}
                   </div>
