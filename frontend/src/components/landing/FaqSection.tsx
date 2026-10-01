@@ -13,13 +13,13 @@ const FAQS: FaqItem[] = [
     id: "makonscore-calc",
     tag: "Algoritm",
     q: "MakonScore ko‘rsatkichi qanday hisoblanadi va u nimaga asoslanadi?",
-    a: "MakonScore (0 dan 100 gacha) — Toshkent shahri fazoviy ma’lumotlar bazasi asosida 4 ta fundamental omil bo‘yicha hisoblanadi: Piyodalar va metro tranziti (30%), Yirik tortish markazlari (25%), Toifadosh raqobat bosimi (-25% jarima) va Turar-joy massivlari aholi qamrovi (20%). Barcha hisob-kitoblar PostGIS va Uber H3 geksagonal algoritmlari orqali xolis amalga oshiriladi.",
+    a: "MakonScore (0 dan 100 gacha) — O‘zbekiston fazoviy ma’lumotlar bazasi asosida 4 ta fundamental omil bo‘yicha hisoblanadi: Piyodalar va transport tranziti (30%), Yirik savdo tortish markazlari (25%), Toifadosh raqobat bosimi (-25% jarima) va Turar-joy massivlari aholi qamrovi (20%). Barcha hisob-kitoblar PostGIS va Uber H3 geksagonal algoritmlari orqali xolis amalga oshiriladi.",
   },
   {
     id: "coverage",
     tag: "Hududlar",
-    q: "Toshkentning qaysi tumanlari va hududlari qamrab olingan?",
-    a: "Hozirda butun Toshkent shahrining barcha 12 ta ma’muriy tumani (Chilonzor, Yunusobod, Mirobod, Yakkasaroy, Shayxontohur, Mirzo Ulug‘bek, Sergeli, Uchtepa, Olmazor, Bektemir, Yashnobod, Yangihayot), 48 ta metro bekati, barcha yirik bozorlar, supermarketlar va savdo markazlari to‘liq kiritilgan.",
+    q: "MakonSense O‘zbekistonning qaysi hududlari va viloyatlarini qamrab olgan?",
+    a: "Platforma butun O‘zbekiston Respublikasining barcha 14 ta ma’muriy hududini (Toshkent shahri va viloyati, Samarqand, Farg‘ona, Andijon, Namangan, Buxoro, Navoiy, Qashqadaryo, Surxondaryo, Xorazm, Jizzax, Sirdaryo va Qoraqalpog‘iston Respublikasi), 208 ta shahar va tumanini, 500,000+ dan ortiq bino va savdo obyektlarini to‘liq qamrab oladi.",
   },
   {
     id: "pdf-audit",

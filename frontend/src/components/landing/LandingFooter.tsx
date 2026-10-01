@@ -3,10 +3,10 @@ import { ArrowRight, MapPin, Search, ShieldCheck, Database, Layers, CheckCircle2
 import { useAnalyticsStore } from '../../store/useAnalyticsStore';
 
 const PRESET_LOCATIONS = [
-  { name: 'Amir Temur Xiyoboni', lat: 41.3123, lon: 69.2797 },
-  { name: 'Chilonzor 9-Mavze', lat: 41.2728, lon: 69.2062 },
-  { name: 'Tashkent City', lat: 41.3142, lon: 69.2483 },
-  { name: 'Oybek Metrosi', lat: 41.2981, lon: 69.2783 },
+  { name: 'Amir Temur (Toshkent)', lat: 41.3123, lon: 69.2797 },
+  { name: 'Universitet Xiyoboni (Samarqand)', lat: 39.6542, lon: 66.9597 },
+  { name: 'Sayilgoh Ko‘chasi (Farg‘ona)', lat: 40.3864, lon: 71.7864 },
+  { name: 'Lab-i Hovuz Markazi (Buxoro)', lat: 39.7747, lon: 64.4286 },
 ];
 
 export const LandingFooter: React.FC = () => {
@@ -35,7 +35,7 @@ export const LandingFooter: React.FC = () => {
               </div>
 
               <h2 className="text-3xl sm:text-5xl font-black text-[#0C4137] tracking-tight leading-[1.1]">
-                Toshkentdagi manzilingizni tekshirishga tayyormisiz? <br />
+                O‘zbekistondagi manzilingizni tekshirishga tayyormisiz? <br />
                 <span className="text-neutral-400">Bir zumda MakonScore hisoblang.</span>
               </h2>
 
@@ -47,11 +47,11 @@ export const LandingFooter: React.FC = () => {
               <div className="flex flex-wrap items-center gap-3 pt-2">
                 <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-[8px] bg-[#F7F9F8] border border-[#0C4137]/[0.08] text-xs font-medium text-[#0C4137]">
                   <Database className="w-3.5 h-3.5 text-[#06D6A0]" />
-                  <span>150,000+ Toshkent binolari</span>
+                  <span>500,000+ O‘zbekiston binolari</span>
                 </div>
                 <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-[8px] bg-[#F7F9F8] border border-[#0C4137]/[0.08] text-xs font-medium text-[#0C4137]">
                   <Layers className="w-3.5 h-3.5 text-[#06D6A0]" />
-                  <span>48 ta metro bekati tahlili</span>
+                  <span>14 ta viloyat • 208 ta tuman</span>
                 </div>
                 <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-[8px] bg-[#E6FBF6] border border-[#06D6A0]/30 text-xs font-semibold text-[#0C4137]">
                   <ShieldCheck className="w-3.5 h-3.5 text-[#06D6A0]" />

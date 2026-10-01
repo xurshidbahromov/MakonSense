@@ -39,7 +39,7 @@ const COMPARISON_PAIRS = [
     locA: {
       id: 'center',
       name: 'Amir Temur Xiyoboni',
-      district: 'Yunusobod / Mirobod markazi',
+      district: 'Toshkent markazi (Yunusobod / Mirobod)',
       category: 'HoReCa & Kafe',
       lat: 41.3123,
       lon: 69.2797,
@@ -61,7 +61,7 @@ const COMPARISON_PAIRS = [
     locB: {
       id: 'chilonzor',
       name: 'Chilonzor 9-Mavze',
-      district: 'Katta turar-joy massivi',
+      district: 'Katta turar-joy massivi (Toshkent)',
       category: 'HoReCa & Kafe',
       lat: 41.2728,
       lon: 69.2062,
@@ -131,6 +131,55 @@ const COMPARISON_PAIRS = [
     },
     verdict:
       'Yuqori marjali premium mahsulotlar uchun Tashkent City ideal. Ommaviy chakana savdo va arzon narx segmenti uchun Samarqand Darvoza barqaror aylanma kafolatlaydi.',
+  },
+  {
+    title: 'Viloyatlar Xabi: Samarqand vs Farg‘ona',
+    locA: {
+      id: 'samarqand_univ',
+      name: 'Universitet Xiyoboni, Samarqand',
+      district: 'Samarqand shahri, Ta’lim & Sayyohlik markazi',
+      category: 'HoReCa & Qandolat',
+      lat: 39.6542,
+      lon: 66.9597,
+      score: 91.0,
+      status: 'A-GRADE VILOYAT XABI',
+      footTraffic: '15,200+ yo‘lovchi / kun',
+      metroDist: 'Markaziy avtobus arteriyasi (80m)',
+      competitors: 2,
+      competitorStatus: 'Monopol sharoit (erkin talab)',
+      households: '2,900 xonadon + 14,000 talaba',
+      monthlyRevenue: '$18,000 – $24,500 / oy',
+      paybackMonths: '7 – 8 oy',
+      advantages: [
+        'Talabalar va xorijiy sayyohlar kross-oqimi',
+        'Kechki soatlarda shahar yoshlarining asosiy sayrgohi',
+        'Samarqand markazida premium kafelar tanqisligi',
+      ],
+    },
+    locB: {
+      id: 'fargona_markaz',
+      name: 'Sayilgoh Ko‘chasi, Farg‘ona',
+      district: 'Farg‘ona shahri, Savdo piyodalar xabi',
+      category: 'HoReCa & Qandolat',
+      lat: 40.3864,
+      lon: 71.7864,
+      score: 84.5,
+      status: 'YUQORI SALOHIYATLI HUDUD',
+      footTraffic: '12,400+ yo‘lovchi / kun',
+      metroDist: 'Markaziy vokzal (450m)',
+      competitors: 3,
+      competitorStatus: 'Mahalliy kafelar klasteri',
+      households: '3,100 xonadon (O‘rta qatlam)',
+      monthlyRevenue: '$14,000 – $19,000 / oy',
+      paybackMonths: '9 – 11 oy',
+      advantages: [
+        'Viloyatning eng gavjum savdo arteriyasi',
+        'Ijara narxi poytaxtga nisbatan 60% arzonroq',
+        'Yuqori rentabellik va past boshlang‘ich xarajatlar',
+      ],
+    },
+    verdict:
+      'Samarqand Universitet xiyoboni talabalar va sayyohlar hisobiga doimiy yuqori chek beradi. Farg‘ona esa past ijara xarajati bilan investitsiyani tezroq oqlash imkonini taqdim etadi.',
   },
 ];
 
