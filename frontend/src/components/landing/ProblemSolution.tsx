@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { motion, useInView } from 'motion/react';
-import { X, Check, ArrowRight } from 'lucide-react';
+import { X, Check, ArrowRight, ShieldCheck, Clock, Building2 } from 'lucide-react';
 import { useAnalyticsStore } from '../../store/useAnalyticsStore';
 
 const PROBLEMS = [
@@ -20,9 +20,27 @@ const SOLUTIONS = [
 ];
 
 const STATS = [
-  { value: '94.2%', label: 'Qaror aniqligi' },
-  { value: '4 hafta', label: 'Tejalgan tadqiqot vaqti' },
-  { value: '500k+', label: 'Indekslanagan O\'zbekiston binosi' },
+  {
+    icon: Building2,
+    tag: 'Qamrov',
+    value: '500,000+',
+    label: 'Indekslangan bino',
+    subtext: 'O\'zbekiston bo\'ylab 14 ta hudud',
+  },
+  {
+    icon: Clock,
+    tag: 'Tezlik',
+    value: '4 hafta',
+    label: 'Tejalgan vaqt',
+    subtext: 'Qo\'lda kuzatish va sanash o\'rniga',
+  },
+  {
+    icon: ShieldCheck,
+    tag: 'Aniqlik',
+    value: '94.2%',
+    label: 'Qaror aniqligi',
+    subtext: 'Fazoviy AI va tahlil modeli',
+  },
 ];
 
 export const ProblemSolution: React.FC = () => {
@@ -108,21 +126,38 @@ export const ProblemSolution: React.FC = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.55, delay: 0.35 }}
-          className="mt-12 p-8 sm:p-10 rounded-3xl bg-white/45 dark:bg-[#161616]/45 backdrop-blur-2xl backdrop-saturate-[180%] border-2 border-white/80 dark:border-white/20 grid grid-cols-1 sm:grid-cols-3 gap-8 sm:gap-0 shadow-none dark:shadow-none"
+          className="mt-12 rounded-3xl bg-white/45 dark:bg-[#161616]/45 backdrop-blur-2xl backdrop-saturate-[180%] border-2 border-white/80 dark:border-white/20 overflow-hidden shadow-none dark:shadow-none"
         >
-          {STATS.map((s, i) => (
-            <div
-              key={i}
-              className={`text-center sm:text-left ${i > 0 ? 'sm:border-l border-white/70 dark:border-white/10 sm:pl-10' : ''}`}
-            >
-              <div className="text-3xl sm:text-4xl font-bold text-[#0E9F6E] tracking-[-0.03em] tabular-nums">
-                {s.value}
-              </div>
-              <div className="mt-2 text-sm text-neutral-500 dark:text-neutral-400 font-medium">
-                {s.label}
-              </div>
-            </div>
-          ))}
+          <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-black/[0.07] dark:divide-white/10">
+            {STATS.map((s, i) => {
+              const Icon = s.icon;
+              return (
+                <div
+                  key={i}
+                  className="p-8 sm:p-10 flex flex-col items-center text-center justify-center transition-colors duration-200 hover:bg-black/[0.015] dark:hover:bg-white/[0.02]"
+                >
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#0E9F6E]/[0.08] text-[#0E9F6E] mb-4">
+                    <Icon size={13} strokeWidth={2.2} />
+                    <span className="font-mono text-[10.5px] uppercase tracking-wider font-semibold">
+                      {s.tag}
+                    </span>
+                  </div>
+
+                  <div className="text-3xl sm:text-4xl lg:text-[42px] font-bold text-[#111111] dark:text-[#FDFDFD] tracking-[-0.03em] tabular-nums leading-none mb-2.5">
+                    {s.value}
+                  </div>
+
+                  <div className="text-[15px] font-semibold text-[#111111] dark:text-[#FDFDFD]">
+                    {s.label}
+                  </div>
+
+                  <div className="mt-1 text-xs text-neutral-500 dark:text-neutral-400 font-normal">
+                    {s.subtext}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </motion.div>
 
         {/* CTA */}
