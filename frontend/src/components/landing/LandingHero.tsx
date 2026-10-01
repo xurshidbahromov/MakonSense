@@ -110,7 +110,7 @@ export const LandingHero: React.FC = () => {
   return (
     <section
       id="hero"
-      className="min-h-[100svh] flex flex-col justify-center pt-24 pb-16 bg-[#FDFDFD] dark:bg-[#111111] select-none overflow-hidden"
+      className="min-h-[100svh] flex flex-col justify-center pt-24 pb-16 select-none overflow-hidden"
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-8 w-full">
 
@@ -121,7 +121,7 @@ export const LandingHero: React.FC = () => {
           transition={{ duration: 0.45, delay: 0.05 }}
           className="mb-10"
         >
-          <span className="inline-flex items-center font-mono text-[11px] tracking-[0.16em] uppercase text-[#A4A9A5] border border-black/[0.08] dark:border-white/[0.08] rounded-full px-4 py-1.5">
+          <span className="inline-flex items-center font-mono text-[11px] tracking-[0.16em] uppercase text-neutral-500 dark:text-neutral-400 bg-white/50 dark:bg-white/[0.05] backdrop-blur-xl border border-black/[0.08] dark:border-white/20 rounded-full px-4 py-1.5 shadow-none dark:shadow-none">
             O'ZBEKISTON · 14 HUDUD · FAZOVIY INTELLEKT
           </span>
         </motion.div>
@@ -217,13 +217,13 @@ export const LandingHero: React.FC = () => {
             transition={{ duration: 0.65, delay: 0.25, ease: [0.2, 0, 0, 1] }}
             className="relative"
           >
-            {/* Ambient Backlight Glow (Very subtle) */}
-            <div className="absolute -inset-1 rounded-3xl bg-gradient-to-br from-[#0E9F6E]/10 via-transparent to-black/5 dark:to-white/5 blur-xl -z-10 pointer-events-none" />
+            {/* Ambient Backlight Glow (Subtle emerald) */}
+            <div className="absolute -inset-2 rounded-3xl bg-gradient-to-br from-[#0E9F6E]/15 via-[#0E9F6E]/5 to-transparent blur-2xl -z-10 pointer-events-none" />
 
-            <div className="rounded-2xl border border-black/[0.08] dark:border-white/[0.08] bg-white/95 dark:bg-[#181818]/95 backdrop-blur-xl overflow-hidden shadow-[0_24px_50px_-15px_rgba(0,0,0,0.06)] dark:shadow-[0_24px_50px_-15px_rgba(0,0,0,0.6)]">
+            <div className="rounded-3xl border border-black/[0.08] dark:border-white/15 bg-white/45 dark:bg-[#161616]/50 backdrop-blur-2xl backdrop-saturate-[180%] overflow-hidden shadow-none dark:shadow-none">
 
               {/* Card Top: Location Selector Pills */}
-              <div className="px-5 pt-4 pb-3 border-b border-black/[0.05] dark:border-white/[0.05] bg-black/[0.015] dark:bg-white/[0.015]">
+              <div className="px-5 pt-4 pb-3 border-b border-black/[0.04] dark:border-white/[0.05] bg-black/[0.015] dark:bg-white/[0.015]">
                 <div className="flex items-center justify-between gap-2 mb-2.5">
                   <div className="flex items-center gap-1.5 font-mono text-[11px] text-neutral-400 dark:text-neutral-500">
                     <Compass size={13} className="text-[#0E9F6E]" />
@@ -235,7 +235,7 @@ export const LandingHero: React.FC = () => {
                 </div>
 
                 {/* Switchable Location Chips */}
-                <div className="flex items-center gap-1.5 p-1 rounded-xl bg-black/[0.03] dark:bg-white/[0.05]">
+                <div className="flex items-center gap-1.5 p-1 rounded-xl bg-white/45 dark:bg-white/[0.04] border border-white/70 dark:border-white/10 backdrop-blur-md">
                   {PRESETS.map((p) => {
                     const isSelected = p.id === activePreset.id;
                     return (
@@ -251,7 +251,7 @@ export const LandingHero: React.FC = () => {
                         {isSelected && (
                           <motion.div
                             layoutId="hero-preset-indicator"
-                            className="absolute inset-0 bg-white dark:bg-[#252525] rounded-lg shadow-sm"
+                            className="absolute inset-0 bg-white/95 dark:bg-[#252525] rounded-lg border border-white/90 dark:border-white/10 shadow-none dark:shadow-none"
                             transition={{ type: 'spring', stiffness: 450, damping: 30 }}
                           />
                         )}
@@ -346,7 +346,7 @@ export const LandingHero: React.FC = () => {
 
                   {/* 4 Interactive Key Spatial Metrics */}
                   <div className="grid grid-cols-2 gap-2.5 mb-5">
-                    <div className="p-3 rounded-xl bg-black/[0.025] dark:bg-white/[0.03] border border-black/[0.03] dark:border-white/[0.04]">
+                    <div className="p-3 rounded-xl bg-white/45 dark:bg-white/[0.04] backdrop-blur-xl border border-black/[0.06] dark:border-white/10 shadow-none dark:shadow-none">
                       <div className="flex items-center gap-1.5 text-[10px] font-mono text-neutral-400 uppercase tracking-wider mb-1">
                         <Users size={11} className="text-[#0E9F6E]" />
                         <span>Kunlik trafik</span>
@@ -356,7 +356,7 @@ export const LandingHero: React.FC = () => {
                       </p>
                     </div>
 
-                    <div className="p-3 rounded-xl bg-black/[0.025] dark:bg-white/[0.03] border border-black/[0.03] dark:border-white/[0.04]">
+                    <div className="p-3 rounded-xl bg-white/45 dark:bg-white/[0.04] backdrop-blur-xl border border-black/[0.06] dark:border-white/10 shadow-none dark:shadow-none">
                       <div className="flex items-center gap-1.5 text-[10px] font-mono text-neutral-400 uppercase tracking-wider mb-1">
                         <Building2 size={11} className="text-[#0E9F6E]" />
                         <span>Metro masofasi</span>
@@ -366,7 +366,7 @@ export const LandingHero: React.FC = () => {
                       </p>
                     </div>
 
-                    <div className="p-3 rounded-xl bg-black/[0.025] dark:bg-white/[0.03] border border-black/[0.03] dark:border-white/[0.04]">
+                    <div className="p-3 rounded-xl bg-white/45 dark:bg-white/[0.04] backdrop-blur-xl border border-black/[0.06] dark:border-white/10 shadow-none dark:shadow-none">
                       <div className="flex items-center gap-1.5 text-[10px] font-mono text-neutral-400 uppercase tracking-wider mb-1">
                         <Compass size={11} className="text-[#0E9F6E]" />
                         <span>Raqobatchilar</span>
@@ -376,7 +376,7 @@ export const LandingHero: React.FC = () => {
                       </p>
                     </div>
 
-                    <div className="p-3 rounded-xl bg-black/[0.025] dark:bg-white/[0.03] border border-black/[0.03] dark:border-white/[0.04]">
+                    <div className="p-3 rounded-xl bg-white/45 dark:bg-white/[0.04] backdrop-blur-xl border border-black/[0.06] dark:border-white/10 shadow-none dark:shadow-none">
                       <div className="flex items-center gap-1.5 text-[10px] font-mono text-neutral-400 uppercase tracking-wider mb-1">
                         <TrendingUp size={11} className="text-[#0E9F6E]" />
                         <span>Prognoz</span>
@@ -420,7 +420,7 @@ export const LandingHero: React.FC = () => {
                   </div>
 
                   {/* AI Recommendation Summary */}
-                  <div className="mt-4 p-2.5 rounded-xl bg-black/[0.02] dark:bg-white/[0.025] border border-black/[0.04] dark:border-white/[0.04] flex items-center justify-between gap-3">
+                  <div className="mt-4 p-2.5 rounded-xl bg-white/45 dark:bg-white/[0.04] backdrop-blur-xl border border-black/[0.06] dark:border-white/10 flex items-center justify-between gap-3 shadow-none dark:shadow-none">
                     <div className="flex items-center gap-2 min-w-0">
                       <Sparkles size={13} className="text-[#0E9F6E] flex-shrink-0" />
                       <p className="text-[11px] text-neutral-600 dark:text-neutral-400 leading-snug line-clamp-1 truncate">
@@ -441,7 +441,7 @@ export const LandingHero: React.FC = () => {
             </div>
 
             {/* Floating Live Badge */}
-            <div className="absolute -bottom-3 -right-2 sm:-right-4 flex items-center gap-2 bg-[#FDFDFD] dark:bg-[#202020] border border-black/[0.08] dark:border-white/[0.08] rounded-full px-3.5 py-1.5 shadow-md">
+            <div className="absolute -bottom-3 -right-2 sm:-right-4 flex items-center gap-2 bg-white/70 dark:bg-[#1e1e1e]/70 backdrop-blur-xl border border-black/[0.08] dark:border-white/20 rounded-full px-3.5 py-1.5 shadow-none dark:shadow-none">
               <Sparkles size={12} className="text-[#0E9F6E]" />
               <span className="text-[11px] font-semibold text-[#111111] dark:text-[#FDFDFD]">
                 AI Tahlil tayyor

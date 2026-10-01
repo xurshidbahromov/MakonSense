@@ -12,6 +12,8 @@ import { FaqSection } from './FaqSection';
 import { LandingFooter } from './LandingFooter';
 import { AuditReportModal } from '../sidebar/AuditReportModal';
 
+import { AmbientBackground } from '../ui/AmbientBackground';
+
 export const LandingPage: React.FC = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -25,33 +27,39 @@ export const LandingPage: React.FC = () => {
   });
 
   return (
-    <div className="min-h-screen bg-[#FDFDFD] dark:bg-[#111111] text-[#111111] dark:text-[#FDFDFD] font-sans overflow-x-clip">
-      {/* Minimalist Smooth Scroll Progress Bar */}
-      <div className="fixed top-0 left-0 right-0 h-[2px] z-[100] pointer-events-none">
-        <motion.div
-          className="h-full bg-[#0E9F6E]"
-          style={{
-            scaleX,
-            transformOrigin: '0%',
-          }}
-        />
+    <div className="relative min-h-screen text-[#111111] dark:text-[#FDFDFD] font-sans overflow-x-clip">
+      {/* Reusable Silky Emerald Atmospheric Background (fixed at z-0) */}
+      <AmbientBackground />
+
+      {/* Content Layer (relative z-10, safely above ambient background) */}
+      <div className="relative z-10">
+        {/* Minimalist Smooth Scroll Progress Bar */}
+        <div className="fixed top-0 left-0 right-0 h-[2px] z-[100] pointer-events-none">
+          <motion.div
+            className="h-full bg-[#0E9F6E]"
+            style={{
+              scaleX,
+              transformOrigin: '0%',
+            }}
+          />
+        </div>
+
+        <LandingNavbar />
+
+        <main>
+          <LandingHero />
+          <ScrollExperience />
+          <ProblemSolution />
+          <LocationCompareSection />
+          <HowItWorks />
+          <IndustrySolutions />
+          <RoiCalculator />
+          <FaqSection />
+        </main>
+
+        <LandingFooter />
+        <AuditReportModal />
       </div>
-
-      <LandingNavbar />
-
-      <main>
-        <LandingHero />
-        <ScrollExperience />
-        <ProblemSolution />
-        <LocationCompareSection />
-        <HowItWorks />
-        <IndustrySolutions />
-        <RoiCalculator />
-        <FaqSection />
-      </main>
-
-      <LandingFooter />
-      <AuditReportModal />
     </div>
   );
 };

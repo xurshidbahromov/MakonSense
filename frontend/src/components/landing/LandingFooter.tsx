@@ -26,11 +26,11 @@ export const LandingFooter: React.FC = () => {
   };
 
   return (
-    <footer className="bg-[#FDFDFD] dark:bg-[#111111] border-t border-black/[0.06] dark:border-white/[0.06] select-none">
+    <footer className="border-t border-black/[0.06] dark:border-white/[0.06] select-none">
 
-      {/* Final CTA band */}
-      <div className="max-w-7xl mx-auto px-6 lg:px-8 pt-24 pb-20">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-end">
+      {/* Final CTA Card */}
+      <div className="max-w-7xl mx-auto px-6 lg:px-8 pt-20 pb-16">
+        <div className="p-8 sm:p-14 rounded-3xl bg-white/45 dark:bg-[#161616]/45 backdrop-blur-2xl backdrop-saturate-[180%] border border-black/[0.08] dark:border-white/15 shadow-none dark:shadow-none grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div>
             <span className="font-mono text-xs tracking-[0.18em] uppercase text-[#A4A9A5]">
               Bepul boshlang
@@ -105,7 +105,7 @@ export const LandingFooter: React.FC = () => {
             <p className="text-sm text-[#A4A9A5] leading-relaxed max-w-xs">
               O'zbekiston uchun fazoviy intellekt va joylashuv tahlili platformasi.
             </p>
-            <div className="mt-4 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#0E9F6E]/10 text-xs font-mono text-[#0E9F6E]">
+            <div className="mt-4 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/50 dark:bg-white/[0.05] backdrop-blur-md border border-white/70 dark:border-white/15 text-xs font-mono text-[#0E9F6E] shadow-none dark:shadow-none">
               <span className="w-1.5 h-1.5 rounded-full bg-[#0E9F6E] animate-pulse" />
               Ochiq beta · Bepul
             </div>

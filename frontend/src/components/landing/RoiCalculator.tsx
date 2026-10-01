@@ -18,7 +18,7 @@ export const RoiCalculator: React.FC = () => {
   return (
     <section
       id="calculator"
-      className="py-24 sm:py-36 bg-[#FDFDFD] dark:bg-[#111111] border-t border-black/[0.05] dark:border-white/[0.05] select-none"
+      className="py-24 sm:py-36 border-t border-black/[0.05] dark:border-white/[0.05] select-none"
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
 
@@ -38,7 +38,7 @@ export const RoiCalculator: React.FC = () => {
         </p>
 
         {/* Content */}
-        <div className="mt-16 grid grid-cols-1 lg:grid-cols-2 gap-0">
+        <div className="mt-14 p-8 sm:p-12 rounded-3xl bg-white/45 dark:bg-[#161616]/45 backdrop-blur-2xl backdrop-saturate-[180%] border border-black/[0.08] dark:border-white/15 shadow-none dark:shadow-none grid grid-cols-1 lg:grid-cols-2 gap-0">
 
           {/* Left: Slider */}
           <div className="lg:pr-20 pb-12 lg:pb-0">
@@ -83,7 +83,7 @@ export const RoiCalculator: React.FC = () => {
                   className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all duration-150 cursor-pointer ${
                     investment === preset.value
                       ? 'bg-[#111111] text-white dark:bg-[#FDFDFD] dark:text-[#111111] shadow-sm'
-                      : 'bg-black/[0.04] dark:bg-white/[0.06] text-neutral-500 hover:text-[#111111] dark:hover:text-white'
+                      : 'bg-white/50 dark:bg-white/[0.05] border border-white/70 dark:border-white/10 text-neutral-600 dark:text-neutral-300 hover:bg-white/80 dark:hover:bg-white/10'
                   }`}
                 >
                   {preset.label}
@@ -93,7 +93,7 @@ export const RoiCalculator: React.FC = () => {
           </div>
 
           {/* Right: Results */}
-          <div className="lg:pl-20 lg:border-l border-black/[0.06] dark:border-white/[0.06]">
+          <div className="lg:pl-20 lg:border-l border-white/70 dark:border-white/10">
             <p className="font-mono text-[11px] tracking-[0.16em] uppercase text-[#0E9F6E] mb-6">
               MakonSense himoyasi
             </p>

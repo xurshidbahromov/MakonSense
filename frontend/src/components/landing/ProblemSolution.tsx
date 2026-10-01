@@ -34,7 +34,7 @@ export const ProblemSolution: React.FC = () => {
     <section
       id="benefits"
       ref={ref}
-      className="py-24 sm:py-36 bg-[#FDFDFD] dark:bg-[#111111] select-none"
+      className="py-24 sm:py-36 select-none"
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
 
@@ -57,13 +57,13 @@ export const ProblemSolution: React.FC = () => {
         </motion.div>
 
         {/* Problem / Solution split */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Problems */}
           <motion.div
             initial={{ opacity: 0, x: -16 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.55, delay: 0.1 }}
-            className="lg:pr-16 pb-12 lg:pb-0 lg:border-r border-black/[0.06] dark:border-white/[0.06]"
+            className="p-8 sm:p-10 rounded-3xl bg-white/45 dark:bg-white/[0.035] backdrop-blur-2xl border border-black/[0.08] dark:border-white/15 shadow-none dark:shadow-none"
           >
             <p className="font-mono text-[11px] tracking-[0.16em] uppercase text-[#A4A9A5] mb-8">
               Avvalgi usul
@@ -72,7 +72,7 @@ export const ProblemSolution: React.FC = () => {
               {PROBLEMS.map((p, i) => (
                 <li key={i} className="flex items-start gap-3.5">
                   <X size={15} className="mt-1 text-[#A4A9A5] flex-shrink-0" />
-                  <span className="text-[16px] leading-snug text-[#A4A9A5] dark:text-[#A4A9A5]">
+                  <span className="text-[15.5px] leading-snug text-neutral-500 dark:text-neutral-400">
                     {p}
                   </span>
                 </li>
@@ -85,16 +85,16 @@ export const ProblemSolution: React.FC = () => {
             initial={{ opacity: 0, x: 16 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.55, delay: 0.18 }}
-            className="lg:pl-16 pt-12 lg:pt-0"
+            className="p-8 sm:p-10 rounded-3xl bg-white/50 dark:bg-[#0E9F6E]/[0.08] backdrop-blur-2xl border border-[#0E9F6E]/40 dark:border-[#0E9F6E]/40 shadow-none dark:shadow-none"
           >
-            <p className="font-mono text-[11px] tracking-[0.16em] uppercase text-[#0E9F6E] mb-8">
+            <p className="font-mono text-[11px] tracking-[0.16em] uppercase text-[#0E9F6E] mb-8 font-semibold">
               MakonSense bilan
             </p>
             <ul className="space-y-5">
               {SOLUTIONS.map((s, i) => (
                 <li key={i} className="flex items-start gap-3.5">
                   <Check size={15} strokeWidth={2.5} className="mt-1 text-[#0E9F6E] flex-shrink-0" />
-                  <span className="text-[16px] leading-snug text-[#111111] dark:text-[#FDFDFD] font-medium">
+                  <span className="text-[15.5px] leading-snug text-[#111111] dark:text-[#FDFDFD] font-medium">
                     {s}
                   </span>
                 </li>
@@ -108,17 +108,17 @@ export const ProblemSolution: React.FC = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.55, delay: 0.35 }}
-          className="mt-20 pt-16 border-t border-black/[0.06] dark:border-white/[0.06] grid grid-cols-1 sm:grid-cols-3 gap-12 sm:gap-0"
+          className="mt-12 p-8 sm:p-10 rounded-3xl bg-white/45 dark:bg-[#161616]/45 backdrop-blur-2xl backdrop-saturate-[180%] border border-black/[0.08] dark:border-white/15 grid grid-cols-1 sm:grid-cols-3 gap-8 sm:gap-0 shadow-none dark:shadow-none"
         >
           {STATS.map((s, i) => (
             <div
               key={i}
-              className={`text-center sm:text-left ${i > 0 ? 'sm:border-l border-black/[0.06] dark:border-white/[0.06] sm:pl-12' : ''}`}
+              className={`text-center sm:text-left ${i > 0 ? 'sm:border-l border-white/70 dark:border-white/10 sm:pl-10' : ''}`}
             >
               <div className="text-3xl sm:text-4xl font-bold text-[#0E9F6E] tracking-[-0.03em] tabular-nums">
                 {s.value}
               </div>
-              <div className="mt-2 text-sm text-[#A4A9A5] font-medium">
+              <div className="mt-2 text-sm text-neutral-500 dark:text-neutral-400 font-medium">
                 {s.label}
               </div>
             </div>

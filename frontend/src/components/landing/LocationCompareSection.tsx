@@ -64,7 +64,7 @@ export const LocationCompareSection: React.FC = () => {
     <section
       id="compare"
       ref={ref}
-      className="py-24 sm:py-36 bg-[#FDFDFD] dark:bg-[#111111] border-t border-black/[0.05] dark:border-white/[0.05] select-none"
+      className="py-24 sm:py-36 border-t border-black/[0.05] dark:border-white/[0.05] select-none"
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
 
@@ -92,15 +92,15 @@ export const LocationCompareSection: React.FC = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.55, delay: 0.12 }}
-          className="grid grid-cols-1 lg:grid-cols-2 gap-0 border border-black/[0.06] dark:border-white/[0.06] rounded-2xl overflow-hidden"
+          className="grid grid-cols-1 lg:grid-cols-2 gap-0 border border-black/[0.08] dark:border-white/15 bg-white/45 dark:bg-[#161616]/45 backdrop-blur-2xl backdrop-saturate-[180%] rounded-3xl overflow-hidden shadow-none dark:shadow-none"
         >
           {[LOC_A, LOC_B].map((loc, colIdx) => (
             <div
               key={colIdx}
               className={`p-8 sm:p-10 ${
                 colIdx === 0
-                  ? 'border-b lg:border-b-0 lg:border-r border-black/[0.06] dark:border-white/[0.06] bg-[#0E9F6E]/[0.02] dark:bg-white/[0.01]'
-                  : ''
+                  ? 'border-b lg:border-b-0 lg:border-r border-black/[0.06] dark:border-white/10 bg-white/50 dark:bg-[#0E9F6E]/[0.05]'
+                  : 'bg-white/25 dark:bg-white/[0.02]'
               }`}
             >
               {/* Location header */}

@@ -107,7 +107,7 @@ export const IndustrySolutions: React.FC = () => {
   return (
     <section
       id="industries"
-      className="py-24 sm:py-36 bg-[#FDFDFD] dark:bg-[#111111] border-t border-black/[0.05] dark:border-white/[0.05] select-none"
+      className="py-24 sm:py-36 border-t border-black/[0.05] dark:border-white/[0.05] select-none"
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
 
@@ -149,7 +149,7 @@ export const IndustrySolutions: React.FC = () => {
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
-          className="mt-12 grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-12 lg:gap-20"
+          className="mt-12 p-8 sm:p-12 rounded-3xl bg-white/45 dark:bg-[#161616]/45 backdrop-blur-2xl backdrop-saturate-[180%] border border-black/[0.08] dark:border-white/15 shadow-none dark:shadow-none grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-12 lg:gap-16"
         >
           {/* Left: metrics */}
           <div>

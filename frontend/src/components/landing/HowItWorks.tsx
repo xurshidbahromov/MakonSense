@@ -36,7 +36,7 @@ export const HowItWorks: React.FC = () => {
     <section
       id="how-it-works"
       ref={ref}
-      className="py-24 sm:py-36 bg-[#FDFDFD] dark:bg-[#111111] border-t border-black/[0.05] dark:border-white/[0.05] select-none"
+      className="py-24 sm:py-36 border-t border-black/[0.05] dark:border-white/[0.05] select-none"
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
 
@@ -58,49 +58,41 @@ export const HowItWorks: React.FC = () => {
           </p>
         </motion.div>
 
-        {/* Steps */}
-        <div className="mt-16 space-y-0">
+        {/* Steps Grid */}
+        <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6">
           {STEPS.map((item, idx) => (
             <motion.div
               key={idx}
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.5, delay: 0.12 + idx * 0.1 }}
-              className="border-t border-black/[0.06] dark:border-white/[0.06] py-10 grid grid-cols-1 lg:grid-cols-[180px_1fr_auto] gap-6 lg:gap-12 items-start"
+              className="p-8 rounded-3xl bg-white/45 dark:bg-[#161616]/45 backdrop-blur-2xl backdrop-saturate-[180%] border border-black/[0.08] dark:border-white/15 shadow-none dark:shadow-none flex flex-col justify-between"
             >
-              {/* Step number */}
-              <div className="flex items-center gap-4 lg:block">
-                <span className="text-5xl lg:text-7xl font-bold text-[#111111]/[0.08] dark:text-white/[0.08] leading-none tracking-tight select-none">
-                  {item.step}
-                </span>
-              </div>
-
-              {/* Content */}
               <div>
-                <div className="flex items-center gap-3 mb-3">
-                  <span className="font-mono text-[10px] tracking-[0.14em] uppercase text-[#0E9F6E] bg-[#0E9F6E]/[0.1] px-2 py-0.5 rounded-sm">
+                <div className="flex items-center justify-between mb-6">
+                  <span className="text-4xl lg:text-5xl font-bold text-[#111111]/[0.12] dark:text-white/[0.12] leading-none tracking-tight select-none font-mono">
+                    {item.step}
+                  </span>
+                  <span className="font-mono text-[10px] tracking-[0.14em] uppercase text-[#0E9F6E] bg-[#0E9F6E]/[0.1] border border-white/60 dark:border-white/10 px-2 py-0.5 rounded-sm">
                     {item.tag}
                   </span>
                 </div>
-                <h3 className="text-xl sm:text-2xl font-bold text-[#111111] dark:text-[#FDFDFD] leading-snug mb-3">
+                <h3 className="text-lg sm:text-xl font-bold text-[#111111] dark:text-[#FDFDFD] leading-snug mb-3">
                   {item.title}
                 </h3>
-                <p className="text-[15px] sm:text-[15.5px] text-neutral-600 dark:text-neutral-300 leading-relaxed max-w-lg">
+                <p className="text-[14.5px] text-neutral-600 dark:text-neutral-300 leading-relaxed">
                   {item.description}
                 </p>
               </div>
 
-              {/* Index indicator */}
-              <div className="hidden lg:flex items-center justify-end">
+              <div className="mt-8 pt-4 border-t border-black/[0.04] dark:border-white/[0.06] flex items-center justify-between">
+                <span className="text-[11px] font-mono text-neutral-400">Bosqich</span>
                 <span className="text-xs font-mono text-[#A4A9A5]">
                   {idx + 1} / {STEPS.length}
                 </span>
               </div>
             </motion.div>
           ))}
-
-          {/* Last border */}
-          <div className="border-t border-black/[0.06] dark:border-white/[0.06]" />
         </div>
 
         {/* CTA */}

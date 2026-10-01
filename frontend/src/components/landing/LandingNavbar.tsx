@@ -91,7 +91,7 @@ export const LandingNavbar: React.FC = () => {
             }}
             className={`pointer-events-auto h-[50px] rounded-full transition-all duration-500 flex items-center gap-2 cursor-pointer select-none ${
               scrolled
-                ? 'px-3.5 sm:px-4 border border-black/[0.08] dark:border-white/[0.1] bg-white/80 dark:bg-[#161616]/85 backdrop-blur-2xl backdrop-saturate-[180%] shadow-[inset_0_1px_1px_rgba(255,255,255,0.9),0_4px_16px_rgba(0,0,0,0.03)] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_12px_32px_rgba(0,0,0,0.6)] hover:bg-white/90 dark:hover:bg-[#1c1c1c]/90'
+                ? 'px-3.5 sm:px-4 border border-black/[0.08] dark:border-white/15 bg-white/60 dark:bg-[#161616]/65 backdrop-blur-2xl backdrop-saturate-[180%] shadow-none dark:shadow-none hover:bg-white/75 dark:hover:bg-[#1c1c1c]/80'
                 : 'px-1 bg-transparent border-transparent shadow-none hover:opacity-85'
             }`}
           >
@@ -124,7 +124,7 @@ export const LandingNavbar: React.FC = () => {
           <div
             className={`absolute inset-0 rounded-full transition-all duration-500 pointer-events-none -z-10 ${
               scrolled
-                ? 'opacity-100 border border-black/[0.08] dark:border-white/[0.1] bg-white/75 dark:bg-[#161616]/85 backdrop-blur-2xl backdrop-saturate-[180%] shadow-[inset_0_1px_1px_rgba(255,255,255,0.9),0_4px_16px_rgba(0,0,0,0.03)] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_12px_32px_rgba(0,0,0,0.6)]'
+                ? 'opacity-100 border border-black/[0.08] dark:border-white/15 bg-white/60 dark:bg-[#161616]/65 backdrop-blur-2xl backdrop-saturate-[180%] shadow-none dark:shadow-none'
                 : 'opacity-0 border-transparent bg-transparent shadow-none'
             }`}
           />
@@ -187,7 +187,7 @@ export const LandingNavbar: React.FC = () => {
                       duration: 0.18,
                       ease: [0.22, 1, 0.36, 1],
                     }}
-                    className="absolute inset-0 z-0 rounded-full bg-white dark:bg-white/[0.12] border border-black/[0.06] dark:border-white/[0.08]"
+                    className="absolute inset-0 z-0 rounded-full bg-white/90 dark:bg-white/[0.12] border border-white/90 dark:border-white/10 shadow-none dark:shadow-none"
                   />
                 )}
 
@@ -495,7 +495,7 @@ export const LandingNavbar: React.FC = () => {
           transition={{ type: 'spring', stiffness: 450, damping: 26 }}
           className={`pointer-events-auto hidden sm:flex items-center h-[50px] rounded-full transition-all duration-500 ${
             scrolled
-              ? 'pl-2 sm:pl-2.5 pr-3.5 sm:pr-4 border border-black/[0.08] dark:border-white/[0.1] bg-white/75 dark:bg-[#161616]/85 backdrop-blur-2xl backdrop-saturate-[180%] shadow-[inset_0_1px_1px_rgba(255,255,255,0.9),0_4px_16px_rgba(0,0,0,0.03)] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_12px_32px_rgba(0,0,0,0.6)] gap-1.5 sm:gap-2'
+              ? 'pl-2 sm:pl-2.5 pr-3.5 sm:pr-4 border border-black/[0.08] dark:border-white/15 bg-white/60 dark:bg-[#161616]/65 backdrop-blur-2xl backdrop-saturate-[180%] shadow-none dark:shadow-none gap-1.5 sm:gap-2'
               : 'pl-1 pr-1 bg-transparent border-transparent shadow-none gap-2 sm:gap-2.5'
           }`}
         >
@@ -557,7 +557,7 @@ export const LandingNavbar: React.FC = () => {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -8, scale: 0.98 }}
             transition={{ type: 'spring', stiffness: 450, damping: 30 }}
-            className="apple-glass-dropdown pointer-events-auto md:hidden mx-4 mt-2 rounded-[24px] p-4 space-y-2 border border-black/[0.08] dark:border-white/[0.1]"
+            className="apple-glass-dropdown pointer-events-auto md:hidden mx-4 mt-2 rounded-[24px] p-4 space-y-2 border border-white/80 dark:border-white/15"
           >
             <a
               href="#features"

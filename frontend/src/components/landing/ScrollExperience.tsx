@@ -42,7 +42,7 @@ export const ScrollExperience: React.FC = () => {
     <section
       id="features"
       ref={ref}
-      className="py-24 sm:py-36 bg-[#FDFDFD] dark:bg-[#111111] border-t border-black/[0.05] dark:border-white/[0.05] select-none"
+      className="py-24 sm:py-36 border-t border-black/[0.05] dark:border-white/[0.05] select-none"
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
 
@@ -62,15 +62,15 @@ export const ScrollExperience: React.FC = () => {
           </h2>
         </motion.div>
 
-        {/* Stages */}
-        <div className="space-y-0">
+        {/* Stages in Glass Panel */}
+        <div className="rounded-3xl bg-white/45 dark:bg-[#161616]/45 backdrop-blur-2xl backdrop-saturate-[180%] border border-black/[0.08] dark:border-white/15 p-6 sm:p-10 divide-y divide-black/[0.06] dark:divide-white/[0.08] shadow-none dark:shadow-none">
           {STAGES.map((stage, idx) => (
             <motion.div
               key={idx}
               initial={{ opacity: 0, y: 24 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.55, delay: 0.1 + idx * 0.12 }}
-              className="group border-t border-black/[0.06] dark:border-white/[0.06] py-10 grid grid-cols-1 lg:grid-cols-[100px_1fr_280px] gap-6 lg:gap-12 items-start"
+              className="py-8 first:pt-2 last:pb-2 grid grid-cols-1 lg:grid-cols-[100px_1fr_280px] gap-6 lg:gap-12 items-start"
             >
               {/* Ghost number */}
               <div className="hidden lg:block">
@@ -104,9 +104,6 @@ export const ScrollExperience: React.FC = () => {
               </div>
             </motion.div>
           ))}
-
-          {/* Last border */}
-          <div className="border-t border-black/[0.06] dark:border-white/[0.06]" />
         </div>
 
         {/* CTA */}
