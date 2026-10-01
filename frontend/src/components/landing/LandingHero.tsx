@@ -43,8 +43,7 @@ export const LandingHero: React.FC = () => {
           transition={{ duration: 0.45, delay: 0.05 }}
           className="mb-10"
         >
-          <span className="inline-flex items-center gap-2 font-mono text-[11px] tracking-[0.16em] uppercase text-[#A4A9A5] border border-black/[0.08] dark:border-white/[0.08] rounded-full px-4 py-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#0E9F6E] animate-pulse" />
+          <span className="inline-flex items-center font-mono text-[11px] tracking-[0.16em] uppercase text-[#A4A9A5] border border-black/[0.08] dark:border-white/[0.08] rounded-full px-4 py-1.5">
             O'ZBEKISTON · 14 HUDUD · FAZOVIY INTELLEKT
           </span>
         </motion.div>
@@ -101,9 +100,8 @@ export const LandingHero: React.FC = () => {
 
               <button
                 onClick={handleLaunch}
-                className="inline-flex items-center gap-2 px-5 py-3.5 rounded-full text-sm font-medium text-[#111111] dark:text-[#FDFDFD] hover:text-[#0E9F6E] transition-colors duration-150"
+                className="inline-flex items-center gap-1.5 px-4 py-3.5 rounded-full text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:text-[#111111] dark:hover:text-[#FDFDFD] transition-colors duration-150"
               >
-                <span className="w-1.5 h-1.5 rounded-full bg-[#0E9F6E]" />
                 Jonli demo ko'rish
               </button>
             </motion.div>

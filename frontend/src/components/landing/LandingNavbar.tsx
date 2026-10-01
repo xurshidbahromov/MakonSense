@@ -528,10 +528,10 @@ export const LandingNavbar: React.FC = () => {
             <motion.button
               whileTap={{ scale: 0.96 }}
               onClick={() => setCurrentView('app')}
-              className="group inline-flex items-center justify-center gap-1.5 h-[36px] px-4 rounded-full bg-[#111111] hover:bg-neutral-800 text-white text-[13.5px] font-semibold cursor-pointer whitespace-nowrap transition-all shadow-sm"
+              className="group inline-flex items-center justify-center gap-1.5 h-[36px] px-4 rounded-full bg-[#111111] hover:bg-neutral-800 text-white dark:bg-[#FDFDFD] dark:hover:bg-neutral-200 dark:text-[#111111] text-[13.5px] font-semibold cursor-pointer whitespace-nowrap transition-all duration-200 shadow-sm"
             >
               <span>Boshlash</span>
-              <ArrowRight className="w-3.5 h-3.5 text-[#0E9F6E] group-hover:translate-x-0.5 transition-transform" />
+              <ArrowRight className="w-3.5 h-3.5 text-white/80 group-hover:text-white dark:text-[#111111]/80 dark:group-hover:text-[#111111] transition-transform duration-200 ease-out group-hover:translate-x-1" />
             </motion.button>
           </Magnet>
         </motion.div>
