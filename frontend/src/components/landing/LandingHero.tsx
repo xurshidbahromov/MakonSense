@@ -217,9 +217,6 @@ export const LandingHero: React.FC = () => {
             transition={{ duration: 0.65, delay: 0.25, ease: [0.2, 0, 0, 1] }}
             className="relative"
           >
-            {/* Ambient Backlight Glow (Subtle emerald) */}
-            <div className="absolute -inset-2 rounded-3xl bg-gradient-to-br from-[#0E9F6E]/15 via-[#0E9F6E]/5 to-transparent blur-2xl -z-10 pointer-events-none" />
-
             <div className="rounded-3xl border border-black/[0.08] dark:border-white/15 bg-white/45 dark:bg-[#161616]/50 backdrop-blur-2xl backdrop-saturate-[180%] overflow-hidden shadow-none dark:shadow-none">
 
               {/* Card Top: Location Selector Pills */}

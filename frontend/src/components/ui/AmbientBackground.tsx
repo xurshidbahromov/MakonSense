@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion, useScroll, useTransform, useSpring } from 'motion/react';
 
 interface AmbientBackgroundProps {
   fixed?: boolean;
@@ -8,50 +9,80 @@ interface AmbientBackgroundProps {
 
 /**
  * AmbientBackground
- * Ultra-refined, whisper-soft emerald atmospheric background.
- * Provides the base theme canvas (light #FDFDFD / dark #111111) with
- * delicate, calm, and silky ambient green light floating gracefully at z-0.
+ * Features a single, perfectly uniform, whisper-light circular orb.
+ *
+ * Characteristics:
+ * - Ultra-light, airy emerald aura (juda light va muloyim).
+ * - Perfectly even color distribution without harsh borders, lines, or hot spots.
+ * - Smoothly glides across the screen and gently expands in response to user scroll.
  */
 export const AmbientBackground: React.FC<AmbientBackgroundProps> = ({
   fixed = true,
   className = '',
   intensity = 'default',
 }) => {
-  // Opacity multipliers based on intensity
-  const opacityClass =
-    intensity === 'vibrant'
-      ? 'opacity-100'
-      : intensity === 'subtle'
-      ? 'opacity-65'
-      : 'opacity-85';
+  // Global scroll tracking
+  const { scrollYProgress } = useScroll();
+
+  // Gentle, fluid spring physics
+  const smoothProgress = useSpring(scrollYProgress, {
+    stiffness: 45,
+    damping: 22,
+    restDelta: 0.001,
+  });
+
+  // Smooth scroll-driven trajectory across sections
+  const x = useTransform(
+    smoothProgress,
+    [0, 0.25, 0.5, 0.75, 1],
+    ['18vw', '-14vw', '14vw', '-10vw', '0vw']
+  );
+
+  const y = useTransform(
+    smoothProgress,
+    [0, 0.25, 0.5, 0.75, 1],
+    ['-20vh', '-4vh', '14vh', '28vh', '40vh']
+  );
+
+  // Gentle, gradual expansion as the user travels down the page
+  const scale = useTransform(
+    smoothProgress,
+    [0, 0.25, 0.5, 0.75, 1],
+    [1.0, 1.1, 1.2, 1.28, 1.36]
+  );
+
+  // Subtle opacity multiplier
+  const opacityMultiplier =
+    intensity === 'vibrant' ? 1.15 : intensity === 'subtle' ? 0.75 : 1.0;
 
   return (
     <div
       aria-hidden="true"
       className={`${
         fixed ? 'fixed inset-0' : 'absolute inset-0'
-      } pointer-events-none z-0 overflow-hidden select-none bg-[#FDFDFD] dark:bg-[#111111] ${opacityClass} ${className}`}
+      } pointer-events-none z-0 overflow-hidden select-none bg-[#FDFDFD] dark:bg-[#111111] ${className}`}
     >
-      {/* 0. Subtle organic page-wide ambient wash */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_100%_80%_at_50%_-10%,rgba(16,185,129,0.04),transparent_70%)] dark:bg-[radial-gradient(ellipse_100%_80%_at_50%_-10%,rgba(16,185,129,0.06),transparent_70%)]" />
+      {/* 0. Soft universal background wash */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_120%_90%_at_50%_0%,rgba(16,185,129,0.015),transparent_75%)] dark:bg-[radial-gradient(ellipse_120%_90%_at_50%_0%,rgba(16,185,129,0.025),transparent_75%)]" />
 
-      {/* 1. Top-Right Hero Ambient Mesh (Luminous Primary Bloom) */}
-      <div className="absolute -top-[12%] right-[2%] w-[980px] h-[980px] rounded-full bg-[radial-gradient(circle_at_center,rgba(16,185,129,0.13)_0%,rgba(14,159,110,0.05)_42%,transparent_72%)] dark:bg-[radial-gradient(circle_at_center,rgba(16,185,129,0.14)_0%,rgba(14,159,110,0.055)_45%,transparent_75%)] blur-[125px] transform-gpu" />
-
-      {/* 2. Top-Left Hero Drift (Secondary Soft Flow) */}
-      <div className="absolute top-[4%] -left-[6%] w-[840px] h-[840px] rounded-full bg-[radial-gradient(circle_at_center,rgba(14,159,110,0.10)_0%,rgba(16,185,129,0.04)_45%,transparent_70%)] dark:bg-[radial-gradient(circle_at_center,rgba(14,159,110,0.11)_0%,rgba(16,185,129,0.045)_48%,transparent_72%)] blur-[125px] transform-gpu" />
-
-      {/* 3. Center Flow (Directly illuminating ScrollExperience & Solutions) */}
-      <div className="absolute top-[28%] left-[12%] w-[980px] h-[880px] rounded-full bg-[radial-gradient(circle_at_center,rgba(16,185,129,0.11)_0%,rgba(14,159,110,0.04)_45%,transparent_70%)] dark:bg-[radial-gradient(circle_at_center,rgba(16,185,129,0.12)_0%,rgba(14,159,110,0.045)_48%,transparent_72%)] blur-[130px] transform-gpu" />
-
-      {/* 4. Mid-Right Accent (Illuminating HowItWorks & Industry cases) */}
-      <div className="absolute top-[48%] -right-[2%] w-[940px] h-[900px] rounded-full bg-[radial-gradient(circle_at_center,rgba(14,159,110,0.10)_0%,rgba(16,185,129,0.04)_45%,transparent_70%)] dark:bg-[radial-gradient(circle_at_center,rgba(14,159,110,0.11)_0%,rgba(16,185,129,0.045)_48%,transparent_72%)] blur-[130px] transform-gpu" />
-
-      {/* 5. Lower Flow (Behind ROI Calculator & FAQ) */}
-      <div className="absolute top-[68%] left-[8%] w-[980px] h-[900px] rounded-full bg-[radial-gradient(circle_at_center,rgba(16,185,129,0.11)_0%,rgba(14,159,110,0.04)_45%,transparent_70%)] dark:bg-[radial-gradient(circle_at_center,rgba(16,185,129,0.12)_0%,rgba(14,159,110,0.045)_48%,transparent_72%)] blur-[135px] transform-gpu" />
-
-      {/* 6. Footer Base Glow */}
-      <div className="absolute -bottom-[6%] right-[5%] w-[900px] h-[900px] rounded-full bg-[radial-gradient(circle_at_center,rgba(14,159,110,0.09)_0%,rgba(16,185,129,0.035)_45%,transparent_70%)] dark:dark:bg-[radial-gradient(circle_at_center,rgba(14,159,110,0.10)_0%,rgba(16,185,129,0.04)_48%,transparent_72%)] blur-[125px] transform-gpu" />
+      {/* 
+        1. THE UNIFORM, WHISPER-LIGHT CIRCULAR ORB
+        Evenly distributed, very light emerald diffusion that glides smoothly with scroll.
+      */}
+      <motion.div
+        style={{
+          x,
+          y,
+          scale,
+          opacity: opacityMultiplier,
+        }}
+        className="absolute left-1/2 top-1/2 -ml-[400px] -mt-[400px] sm:-ml-[500px] sm:-mt-[500px] lg:-ml-[600px] lg:-mt-[600px] w-[800px] h-[800px] sm:w-[1000px] sm:h-[1000px] lg:w-[1200px] lg:h-[1200px] pointer-events-none transform-gpu"
+      >
+        {/* Continuous, perfectly smooth radial falloff — zero harsh steps or visible lines */}
+        <div
+          className="absolute inset-0 rounded-full blur-[100px] sm:blur-[130px] lg:blur-[150px] transform-gpu bg-[radial-gradient(circle_at_center,rgba(16,185,129,0.075)_0%,rgba(16,185,129,0.055)_32%,rgba(16,185,129,0.035)_58%,rgba(16,185,129,0.015)_78%,transparent_90%)] dark:bg-[radial-gradient(circle_at_center,rgba(16,185,129,0.085)_0%,rgba(16,185,129,0.065)_32%,rgba(16,185,129,0.042)_58%,rgba(16,185,129,0.018)_78%,transparent_90%)]"
+        />
+      </motion.div>
     </div>
   );
 };

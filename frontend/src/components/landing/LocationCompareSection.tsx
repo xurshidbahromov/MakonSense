@@ -99,8 +99,8 @@ export const LocationCompareSection: React.FC = () => {
               key={colIdx}
               className={`p-8 sm:p-10 ${
                 colIdx === 0
-                  ? 'border-b lg:border-b-0 lg:border-r border-black/[0.06] dark:border-white/10 bg-white/50 dark:bg-[#0E9F6E]/[0.05]'
-                  : 'bg-white/25 dark:bg-white/[0.02]'
+                  ? 'border-b lg:border-b-0 lg:border-r border-black/[0.06] dark:border-white/10 bg-white/40 dark:bg-white/[0.03]'
+                  : 'bg-white/20 dark:bg-white/[0.015]'
               }`}
             >
               {/* Location header */}
