@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
+import { ArrowRight } from 'lucide-react';
 import { useAnalyticsStore } from '../../store/useAnalyticsStore';
 
 interface IndustryCase {
@@ -186,12 +187,10 @@ export const IndustrySolutions: React.FC = () => {
             <div className="mt-10">
               <button
                 onClick={() => setCurrentView('app')}
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#111111] dark:bg-[#FDFDFD] text-[#FDFDFD] dark:text-[#111111] text-sm font-semibold hover:opacity-80 active:scale-[0.97] transition-all duration-150"
+                className="group inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full bg-[#111111] hover:bg-neutral-800 text-white dark:bg-[#FDFDFD] dark:hover:bg-neutral-200 dark:text-[#111111] text-sm font-semibold cursor-pointer transition-all duration-200 shadow-sm active:scale-[0.98]"
               >
-                O'z lokatsiyamni tekshirish
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                  <path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
+                <span>O'z lokatsiyamni tekshirish</span>
+                <ArrowRight className="w-4 h-4 text-white/80 group-hover:text-white dark:text-[#111111]/80 dark:group-hover:text-[#111111] transition-transform duration-200 ease-out group-hover:translate-x-1" />
               </button>
             </div>
           </div>

@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { motion, useInView } from 'motion/react';
-import { ArrowDownRight } from 'lucide-react';
+import { ArrowDownRight, ArrowRight } from 'lucide-react';
 import { useAnalyticsStore } from '../../store/useAnalyticsStore';
 
 const STAGES = [
@@ -84,10 +84,10 @@ export const ScrollExperience: React.FC = () => {
                 <p className="font-mono text-[10px] tracking-[0.16em] uppercase text-[#0E9F6E] mb-3">
                   {stage.label}
                 </p>
-                <p className="text-[16px] leading-relaxed text-[#A4A9A5] dark:text-[#A4A9A5] max-w-lg">
+                <p className="text-[15.5px] sm:text-[16px] leading-relaxed text-neutral-600 dark:text-neutral-300 max-w-lg">
                   {stage.description}
                 </p>
-                <div className="mt-4 flex items-center gap-1.5 text-xs text-[#A4A9A5] font-mono">
+                <div className="mt-4 flex items-center gap-1.5 text-xs text-neutral-500 dark:text-neutral-400 font-mono">
                   <ArrowDownRight size={13} className="text-[#0E9F6E] flex-shrink-0" />
                   <span>{stage.detail}</span>
                 </div>
@@ -111,19 +111,17 @@ export const ScrollExperience: React.FC = () => {
 
         {/* CTA */}
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={isInView ? { opacity: 1 } : {}}
+          initial={{ opacity: 0, y: 12 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.45, delay: 0.55 }}
-          className="mt-12"
+          className="mt-14"
         >
           <button
             onClick={() => setCurrentView('app')}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#0E9F6E] text-[#111111] text-sm font-bold hover:bg-[#057A55] active:scale-[0.97] transition-all duration-150 shadow-sm"
+            className="group inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full bg-[#111111] hover:bg-neutral-800 text-white dark:bg-[#FDFDFD] dark:hover:bg-neutral-200 dark:text-[#111111] text-sm font-semibold cursor-pointer transition-all duration-200 shadow-sm active:scale-[0.98]"
           >
-            Tahlilni boshlash
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-              <path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
+            <span>Tahlilni boshlash</span>
+            <ArrowRight className="w-4 h-4 text-white/80 group-hover:text-white dark:text-[#111111]/80 dark:group-hover:text-[#111111] transition-transform duration-200 ease-out group-hover:translate-x-1" />
           </button>
         </motion.div>
 

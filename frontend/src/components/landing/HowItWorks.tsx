@@ -1,7 +1,6 @@
-import React from 'react';
-import { useInView } from 'motion/react';
-import { motion } from 'motion/react';
-import { useRef } from 'react';
+import React, { useRef } from 'react';
+import { motion, useInView } from 'motion/react';
+import { ArrowRight } from 'lucide-react';
 import { useAnalyticsStore } from '../../store/useAnalyticsStore';
 
 const STEPS = [
@@ -86,7 +85,7 @@ export const HowItWorks: React.FC = () => {
                 <h3 className="text-xl sm:text-2xl font-bold text-[#111111] dark:text-[#FDFDFD] leading-snug mb-3">
                   {item.title}
                 </h3>
-                <p className="text-[15px] text-[#A4A9A5] leading-relaxed max-w-lg">
+                <p className="text-[15px] sm:text-[15.5px] text-neutral-600 dark:text-neutral-300 leading-relaxed max-w-lg">
                   {item.description}
                 </p>
               </div>
@@ -109,16 +108,14 @@ export const HowItWorks: React.FC = () => {
           initial={{ opacity: 0, y: 12 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.45, delay: 0.5 }}
-          className="mt-12"
+          className="mt-14"
         >
           <button
             onClick={() => setCurrentView('app')}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#0E9F6E] text-[#111111] text-sm font-bold hover:bg-[#057A55] active:scale-[0.97] transition-all duration-150 shadow-sm"
+            className="group inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full bg-[#111111] hover:bg-neutral-800 text-white dark:bg-[#FDFDFD] dark:hover:bg-neutral-200 dark:text-[#111111] text-sm font-semibold cursor-pointer transition-all duration-200 shadow-sm active:scale-[0.98]"
           >
-            Hozir boshlang
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-              <path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
+            <span>Hozir boshlang</span>
+            <ArrowRight className="w-4 h-4 text-white/80 group-hover:text-white dark:text-[#111111]/80 dark:group-hover:text-[#111111] transition-transform duration-200 ease-out group-hover:translate-x-1" />
           </button>
         </motion.div>
 

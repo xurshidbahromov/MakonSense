@@ -47,13 +47,13 @@ export const LandingFooter: React.FC = () => {
           <div className="lg:text-right">
             <button
               onClick={handleLaunch}
-              className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-[#111111] dark:bg-[#FDFDFD] text-[#FDFDFD] dark:text-[#111111] text-base font-semibold hover:opacity-80 active:scale-[0.97] transition-all duration-150"
+              className="group inline-flex items-center gap-2 px-8 py-4 rounded-full bg-[#111111] hover:bg-neutral-800 text-white dark:bg-[#FDFDFD] dark:hover:bg-neutral-200 dark:text-[#111111] text-base font-semibold cursor-pointer transition-all duration-200 shadow-sm active:scale-[0.98]"
             >
-              Hisoblashni boshlash
-              <ArrowRight size={16} />
+              <span>Hisoblashni boshlash</span>
+              <ArrowRight size={16} className="transition-transform duration-200 ease-out group-hover:translate-x-1" />
             </button>
             <p className="mt-3 text-xs text-[#A4A9A5]">
-              500,000+ O'zbekiston binosi indekslanган · 14 hudud
+              500,000+ O'zbekiston binosi indekslangan · 14 hudud
             </p>
           </div>
         </div>

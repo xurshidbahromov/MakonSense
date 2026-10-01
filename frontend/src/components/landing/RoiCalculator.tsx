@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
+import { ArrowRight } from 'lucide-react';
 import { useAnalyticsStore } from '../../store/useAnalyticsStore';
 
 export const RoiCalculator: React.FC = () => {
@@ -11,6 +12,8 @@ export const RoiCalculator: React.FC = () => {
 
   const formatUSD = (n: number) =>
     '$' + n.toLocaleString('en-US');
+
+  const sliderPercent = ((investment - 15000) / 135000) * 100;
 
   return (
     <section
@@ -56,9 +59,9 @@ export const RoiCalculator: React.FC = () => {
               step={5000}
               value={investment}
               onChange={(e) => setInvestment(Number(e.target.value))}
-              className="w-full h-[3px] appearance-none rounded-full cursor-pointer mb-3"
+              className="w-full h-[4px] appearance-none rounded-full cursor-pointer mb-3 accent-[#0E9F6E]"
               style={{
-                background: `linear-gradient(to right, #0E9F6E ${((investment - 15000) / 135000) * 100}%, #E5E7EB ${((investment - 15000) / 135000) * 100}%)`,
+                background: `linear-gradient(to right, #0E9F6E ${sliderPercent}%, rgba(160, 160, 160, 0.22) ${sliderPercent}%)`,
               }}
             />
 
@@ -77,10 +80,10 @@ export const RoiCalculator: React.FC = () => {
                 <button
                   key={preset.label}
                   onClick={() => setInvestment(preset.value)}
-                  className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-150 ${
+                  className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all duration-150 cursor-pointer ${
                     investment === preset.value
-                      ? 'bg-[#0E9F6E] text-[#111111] font-bold shadow-sm'
-                      : 'bg-[#111111]/[0.04] dark:bg-white/[0.08] text-[#A4A9A5] hover:text-[#111111] dark:hover:text-[#FDFDFD]'
+                      ? 'bg-[#111111] text-white dark:bg-[#FDFDFD] dark:text-[#111111] shadow-sm'
+                      : 'bg-black/[0.04] dark:bg-white/[0.06] text-neutral-500 hover:text-[#111111] dark:hover:text-white'
                   }`}
                 >
                   {preset.label}
@@ -136,12 +139,10 @@ export const RoiCalculator: React.FC = () => {
         <div className="mt-16 pt-12 border-t border-black/[0.05] dark:border-white/[0.05] flex flex-col sm:flex-row items-start sm:items-center gap-6">
           <button
             onClick={() => setCurrentView('app')}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#111111] dark:bg-[#FDFDFD] text-[#FDFDFD] dark:text-[#111111] text-sm font-semibold hover:opacity-80 active:scale-[0.97] transition-all duration-150"
+            className="group inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full bg-[#111111] hover:bg-neutral-800 text-white dark:bg-[#FDFDFD] dark:hover:bg-neutral-200 dark:text-[#111111] text-sm font-semibold cursor-pointer transition-all duration-200 shadow-sm active:scale-[0.98]"
           >
-            Bepul hisoblashni boshlash
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-              <path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
+            <span>Bepul hisoblashni boshlash</span>
+            <ArrowRight className="w-4 h-4 text-white/80 group-hover:text-white dark:text-[#111111]/80 dark:group-hover:text-[#111111] transition-transform duration-200 ease-out group-hover:translate-x-1" />
           </button>
 
           <div className="flex items-center gap-6 text-xs text-[#A4A9A5]">
