@@ -1,151 +1,161 @@
 import React, { useState } from 'react';
-import { ShieldAlert, ShieldCheck, ArrowRight, Clock, Check } from 'lucide-react';
+import { motion } from 'motion/react';
 import { useAnalyticsStore } from '../../store/useAnalyticsStore';
 
 export const RoiCalculator: React.FC = () => {
   const { setCurrentView } = useAnalyticsStore();
   const [investment, setInvestment] = useState<number>(45000);
 
-  const potentialLoss = Math.round(investment * 0.85);
-  const timeSavedWeeks = 4;
+  const himoyalangan = Math.round(investment * 0.85);
+  const himoyaPercent = 85;
+
+  const formatUSD = (n: number) =>
+    '$' + n.toLocaleString('en-US');
 
   return (
-    <section id="calculator" className="py-20 sm:py-32 select-none border-t border-[#0C4137]/[0.08]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Refined Section Header */}
-        <div className="max-w-4xl mb-12 sm:mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-[6px] bg-[#E6FBF6] border border-[#06D6A0]/30 text-[#0C4137] text-xs font-mono font-semibold mb-4">
-            <span className="text-[#06D6A0]">●</span>
-            <span>MOLIYAVIY HIMOYALANISH (ROI)</span>
-          </div>
+    <section
+      id="calculator"
+      className="py-24 sm:py-36 bg-[#FDFDFD] dark:bg-[#111111] border-t border-black/[0.05] dark:border-white/[0.05] select-none"
+    >
+      <div className="max-w-7xl mx-auto px-6 lg:px-8">
 
-          <h2 className="text-[clamp(1.8rem,4vw,3.8rem)] font-semibold leading-[1.08] tracking-tight">
-            <span className="text-[#0C4137]">Sarmoyangizni himoyalang.</span>{' '}
-            <span className="text-neutral-400">Har bir xato minglab dollarga tushishi mumkin.</span>
-          </h2>
+        {/* Label */}
+        <span className="font-mono text-xs tracking-[0.18em] uppercase text-[#A4A9A5]">
+          ROI Kalkulyator
+        </span>
 
-          <p className="mt-4 text-[17px] text-neutral-500 max-w-2xl leading-relaxed">
-            Rejalashtirgan investitsiyangizni belgilang va MakonSense xatarlarning qanday oldini olishini ko‘ring.
-          </p>
-        </div>
+        {/* Headline */}
+        <h2 className="mt-4 text-3xl sm:text-4xl lg:text-[46px] font-bold tracking-[-0.03em] leading-[1.12] text-[#111111] dark:text-[#FDFDFD]">
+          Sarmoyangizni{' '}
+          <span className="text-[#A4A9A5] font-normal">hisoblang.</span>
+        </h2>
 
-        {/* JPRQ-Style Bento Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr] gap-4 sm:gap-6">
-          {/* Left Panel: Interactive Slider & Comparison */}
-          <div className="rounded-[14px] border border-[#0C4137]/[0.08] bg-[#F7F9F8] p-6 sm:p-9 flex flex-col justify-between space-y-8">
-            <div className="space-y-6">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                <label className="text-[15px] font-semibold text-[#0C4137]">
-                  Yangi nuqta ochish uchun umumiy byudjet:
-                </label>
-                <div className="text-4xl sm:text-5xl font-extrabold font-mono text-[#0C4137]">
-                  ${investment.toLocaleString()}
-                </div>
-              </div>
+        <p className="mt-5 text-base sm:text-lg text-[#A4A9A5] max-w-2xl leading-relaxed">
+          Rejalashtirgan investitsiyangizni belgilang — MakonSense himoyalaydigan summa darhol ko'rinadi.
+        </p>
 
-              <input
-                type="range"
-                min={15000}
-                max={150000}
-                step={5000}
-                value={investment}
-                onChange={(e) => setInvestment(Number(e.target.value))}
-                className="w-full h-2.5 bg-neutral-200 rounded-full appearance-none cursor-pointer accent-[#0C4137] transition-all"
-              />
+        {/* Content */}
+        <div className="mt-16 grid grid-cols-1 lg:grid-cols-2 gap-0">
 
-              <div className="flex justify-between text-xs font-mono text-neutral-400">
-                <span>$15,000 (Kichik kafe)</span>
-                <span>$75,000 (Do‘kon)</span>
-                <span>$150,000+ (Yirik restoran)</span>
-              </div>
+          {/* Left: Slider */}
+          <div className="lg:pr-20 pb-12 lg:pb-0">
+            <p className="font-mono text-[11px] tracking-[0.16em] uppercase text-[#A4A9A5] mb-6">
+              Investitsiya miqdori
+            </p>
+
+            {/* Big value */}
+            <div className="text-4xl sm:text-6xl font-bold tracking-[-0.035em] text-[#111111] dark:text-[#FDFDFD] mb-8 tabular-nums">
+              {formatUSD(investment)}
             </div>
 
-            {/* Comparison Cards Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-              <div className="bg-white border border-rose-200 rounded-[10px] p-5 space-y-1">
-                <div className="flex items-center gap-1.5 text-xs font-semibold text-rose-600">
-                  <ShieldAlert className="w-4 h-4" />
-                  <span>Xato Lokatsiya Zarari</span>
-                </div>
-                <div className="text-3xl font-mono font-extrabold text-rose-600">
-                  -${potentialLoss.toLocaleString()}
-                </div>
-                <p className="text-xs text-neutral-500 pt-1 leading-snug">
-                  Ta’mirlash, ijara depoziti va yopilishdagi qaytarilmas xarajatlar.
-                </p>
-              </div>
+            {/* Range */}
+            <input
+              type="range"
+              min={15000}
+              max={150000}
+              step={5000}
+              value={investment}
+              onChange={(e) => setInvestment(Number(e.target.value))}
+              className="w-full h-[3px] appearance-none rounded-full cursor-pointer mb-3"
+              style={{
+                background: `linear-gradient(to right, #0E9F6E ${((investment - 15000) / 135000) * 100}%, #E5E7EB ${((investment - 15000) / 135000) * 100}%)`,
+              }}
+            />
 
-              <div className="bg-white border border-[#06D6A0]/40 rounded-[10px] p-5 space-y-1">
-                <div className="flex items-center gap-1.5 text-xs font-semibold text-[#0C4137]">
-                  <ShieldCheck className="w-4 h-4 text-[#06D6A0]" />
-                  <span>Himoyalangan Sarmoya</span>
-                </div>
-                <div className="text-3xl font-mono font-extrabold text-[#0C4137]">
-                  +${investment.toLocaleString()}
-                </div>
-                <p className="text-xs text-neutral-500 pt-1 leading-snug">
-                  Aniq fazoviy tahlil orqali kafolatlangan va xavfsiz joy tanlash.
-                </p>
-              </div>
+            <div className="flex justify-between text-xs font-mono text-[#A4A9A5] mt-2">
+              <span>$15,000</span>
+              <span>$150,000+</span>
+            </div>
+
+            {/* Range labels */}
+            <div className="mt-6 flex gap-3 flex-wrap">
+              {[
+                { label: 'Kichik kafe', value: 25000 },
+                { label: "Do'kon", value: 75000 },
+                { label: 'Restoran', value: 120000 },
+              ].map((preset) => (
+                <button
+                  key={preset.label}
+                  onClick={() => setInvestment(preset.value)}
+                  className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-150 ${
+                    investment === preset.value
+                      ? 'bg-[#0E9F6E] text-[#111111] font-bold shadow-sm'
+                      : 'bg-[#111111]/[0.04] dark:bg-white/[0.08] text-[#A4A9A5] hover:text-[#111111] dark:hover:text-[#FDFDFD]'
+                  }`}
+                >
+                  {preset.label}
+                </button>
+              ))}
             </div>
           </div>
 
-          {/* Right Panel: Value Proof List */}
-          <div className="rounded-[14px] border border-[#0C4137]/[0.08] bg-[#F7F9F8] p-6 sm:p-9 flex flex-col justify-between">
+          {/* Right: Results */}
+          <div className="lg:pl-20 lg:border-l border-black/[0.06] dark:border-white/[0.06]">
+            <p className="font-mono text-[11px] tracking-[0.16em] uppercase text-[#0E9F6E] mb-6">
+              MakonSense himoyasi
+            </p>
+
+            {/* Protected amount */}
             <div>
-              <div className="inline-block text-[11px] font-mono px-2.5 py-0.5 rounded-[6px] bg-[#E6FBF6] text-[#0C4137] border border-[#06D6A0]/30 font-semibold mb-3">
-                MakonSense Himoyasi
+              <div className="text-4xl sm:text-6xl font-bold tracking-[-0.035em] text-[#0E9F6E] mb-2 tabular-nums">
+                {formatUSD(himoyalangan)}
               </div>
-
-              <h3 className="text-[22px] font-semibold text-[#0C4137] tracking-tight">
-                Birinchi haftadan tejang
-              </h3>
-
-              <p className="mt-2 text-[15px] text-neutral-500 leading-relaxed">
-                Joy tanlashga ketadigan 3–4 haftalik ko‘cha kuzatuvini bir necha soniyaga qisqartiring.
+              <p className="text-sm text-[#A4A9A5]">
+                noto'g'ri lokatsiya yo'qotishidan himoyalangan kapital
               </p>
-
-              <div className="my-6 h-px bg-[#0C4137]/[0.06]" />
-
-              <ul className="space-y-3.5 text-[14px] text-[#0C4137]">
-                <li className="flex items-center gap-3">
-                  <span className="w-5 h-5 rounded-full bg-[#E6FBF6] text-[#0C4137] flex items-center justify-center flex-shrink-0">
-                    <Check className="w-3.5 h-3.5 text-[#06D6A0]" />
-                  </span>
-                  <span>48 ta metro bekati va yo‘lovchilar soni</span>
-                </li>
-                <li className="flex items-center gap-3">
-                  <span className="w-5 h-5 rounded-full bg-[#E6FBF6] text-[#0C4137] flex items-center justify-center flex-shrink-0">
-                    <Check className="w-3.5 h-3.5 text-[#06D6A0]" />
-                  </span>
-                  <span>400m radiusdagi raqobatchilar filtri</span>
-                </li>
-                <li className="flex items-center gap-3">
-                  <span className="w-5 h-5 rounded-full bg-[#E6FBF6] text-[#0C4137] flex items-center justify-center flex-shrink-0">
-                    <Check className="w-3.5 h-3.5 text-[#06D6A0]" />
-                  </span>
-                  <span>Aholi xonadonlari va yangi massivlar</span>
-                </li>
-                <li className="flex items-center gap-3">
-                  <span className="w-5 h-5 rounded-full bg-[#E6FBF6] text-[#0C4137] flex items-center justify-center flex-shrink-0">
-                    <Check className="w-3.5 h-3.5 text-[#06D6A0]" />
-                  </span>
-                  <span>Avtomatik rasmiy 5 bo‘limli PDF audit</span>
-                </li>
-              </ul>
             </div>
 
+            {/* Progress bar */}
             <div className="mt-8">
-              <button
-                onClick={() => setCurrentView('app')}
-                className="w-full inline-flex items-center justify-center gap-2 font-semibold rounded-[10px] transition-all duration-150 whitespace-nowrap active:scale-[0.98] px-5 py-3 text-[15px] bg-[#0C4137] text-white hover:bg-[#072822] shadow-sm cursor-pointer"
-              >
-                <span>Hisoblashni Boshlash</span>
-                <ArrowRight className="w-4 h-4 text-[#06D6A0]" />
-              </button>
+              <div className="flex justify-between text-xs font-mono text-[#A4A9A5] mb-2">
+                <span>Himoya darajasi</span>
+                <span>{himoyaPercent}%</span>
+              </div>
+              <div className="h-[3px] bg-[#111111]/[0.06] dark:bg-white/[0.08] rounded-full overflow-hidden">
+                <motion.div
+                  className="h-full bg-[#0E9F6E] rounded-full"
+                  animate={{ width: `${himoyaPercent}%` }}
+                  transition={{ duration: 0.4, ease: 'easeOut' }}
+                />
+              </div>
+            </div>
+
+            {/* Time saved */}
+            <div className="mt-10 pt-10 border-t border-black/[0.06] dark:border-white/[0.06]">
+              <div className="text-3xl sm:text-4xl font-bold tracking-[-0.03em] text-[#111111] dark:text-[#FDFDFD] mb-2 tabular-nums">
+                4 hafta
+              </div>
+              <p className="text-sm text-[#A4A9A5]">
+                qo'lda tadqiqot o'rniga avtomatik tahlil
+              </p>
             </div>
           </div>
         </div>
+
+        {/* Trust pills + CTA */}
+        <div className="mt-16 pt-12 border-t border-black/[0.05] dark:border-white/[0.05] flex flex-col sm:flex-row items-start sm:items-center gap-6">
+          <button
+            onClick={() => setCurrentView('app')}
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#111111] dark:bg-[#FDFDFD] text-[#FDFDFD] dark:text-[#111111] text-sm font-semibold hover:opacity-80 active:scale-[0.97] transition-all duration-150"
+          >
+            Bepul hisoblashni boshlash
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </button>
+
+          <div className="flex items-center gap-6 text-xs text-[#A4A9A5]">
+            <span className="flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#0E9F6E]" />
+              Karta raqami shart emas
+            </span>
+            <span className="flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#0E9F6E]" />
+              Bepul ochiq beta
+            </span>
+          </div>
+        </div>
+
       </div>
     </section>
   );

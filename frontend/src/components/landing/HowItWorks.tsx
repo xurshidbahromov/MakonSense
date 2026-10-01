@@ -1,93 +1,127 @@
 import React from 'react';
-import { MapPin, SlidersHorizontal, BarChart3, ArrowRight } from 'lucide-react';
+import { useInView } from 'motion/react';
+import { motion } from 'motion/react';
+import { useRef } from 'react';
 import { useAnalyticsStore } from '../../store/useAnalyticsStore';
 
 const STEPS = [
   {
     step: '01',
-    title: 'Xaritadan nuqtani belgilang',
-    description:
-      'Toshkentning istalgan tumanidagi ko‘chani, metro bekatini yoki bo‘sh turgan binoni xaritadan bosing yoki qidiruv orqali toping.',
     tag: 'Tanlash',
+    title: "Xaritadan nuqta belgilang",
+    description:
+      "Toshkentning istalgan ko'chasi, metro bekati yoki bo'sh turgan binoni xaritadan bosing yoki qidiruv orqali toping.",
   },
   {
     step: '02',
-    title: 'Biznes toifasi va radiusni tanlang',
-    description:
-      'Ochmoqchi bo‘lgan sohangizni (Kafe, Dorixona, Supermarket, Ta’lim, Chakana) va tahlil radiusini (300m, 500m, 800m, 1km) belgilang.',
     tag: 'Parametrlar',
+    title: "Toifa va radiusni tanlang",
+    description:
+      "Ochmoqchi bo'lgan sohangiz (Kafe, Dorixona, Supermarket, Ta'lim, Retail) va tahlil radiusini (300m → 1km) belgilang.",
   },
   {
     step: '03',
-    title: 'MakonScore va SWOT auditini oling',
-    description:
-      'Bir necha soniyada 0 dan 100 gacha integrallashgan MakonScore, raqobatchilar masofasi, 24 soatlik piyodalar trafigi va rasmiy audit oling.',
     tag: 'Natija',
+    title: "MakonScore va PDF Audit",
+    description:
+      "Bir necha soniyada 0–100 gacha integrallashgan MakonScore, raqobatchilar masofasi, 24 soatlik piyodalar trafigi va professional audit oling.",
   },
 ];
 
 export const HowItWorks: React.FC = () => {
   const { setCurrentView } = useAnalyticsStore();
+  const ref = useRef<HTMLElement>(null);
+  const isInView = useInView(ref, { once: true, margin: '-80px' });
 
   return (
-    <section id="how-it-works" className="py-20 sm:py-32 select-none border-t border-[#0C4137]/[0.08]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mb-14 sm:mb-18">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-[6px] bg-[#E6FBF6] border border-[#06D6A0]/30 text-[#0C4137] text-xs font-mono font-semibold mb-4">
-            <span className="text-[#06D6A0]">●</span>
-            <span>3 BOSQICHLI ISHLASH TARTIBI</span>
-          </div>
+    <section
+      id="how-it-works"
+      ref={ref}
+      className="py-24 sm:py-36 bg-[#FDFDFD] dark:bg-[#111111] border-t border-black/[0.05] dark:border-white/[0.05] select-none"
+    >
+      <div className="max-w-7xl mx-auto px-6 lg:px-8">
 
-          <h2 className="text-[clamp(1.8rem,4vw,3.8rem)] font-semibold leading-[1.08] tracking-tight">
-            <span className="text-[#0C4137]">3 ta oddiy qadam.</span>{' '}
-            <span className="text-neutral-400">To‘liq fazoviy ekspertiza.</span>
+        {/* Label + Headline */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.5 }}
+        >
+          <span className="font-mono text-xs tracking-[0.18em] uppercase text-[#A4A9A5]">
+            Jarayon
+          </span>
+          <h2 className="mt-4 text-3xl sm:text-4xl lg:text-[46px] font-bold tracking-[-0.03em] leading-[1.12] text-[#111111] dark:text-[#FDFDFD]">
+            3 qadam.{' '}
+            <span className="text-[#A4A9A5] font-normal">To'liq ekspertiza.</span>
           </h2>
-
-          <p className="mt-4 text-[17px] text-neutral-500 max-w-2xl leading-relaxed">
-            Murakkab GIS dasturlari va oylik tadqiqotlar shart emas. MakonSense barchasini soniyalarda avtomatlashtiradi.
+          <p className="mt-5 text-base sm:text-lg text-[#A4A9A5] max-w-xl leading-relaxed">
+            Murakkab GIS dasturlar va oylik tadqiqotlar shart emas.
           </p>
-        </div>
+        </motion.div>
 
-        {/* 3 Step Cards Grid — JPRQ Style */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5">
+        {/* Steps */}
+        <div className="mt-16 space-y-0">
           {STEPS.map((item, idx) => (
-            <div
+            <motion.div
               key={idx}
-              className="rounded-[14px] border border-[#0C4137]/[0.08] bg-[#F7F9F8] p-7 sm:p-8 flex flex-col justify-between hover:border-[#06D6A0]/40 hover:bg-white transition-all duration-150"
+              initial={{ opacity: 0, y: 20 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.5, delay: 0.12 + idx * 0.1 }}
+              className="border-t border-black/[0.06] dark:border-white/[0.06] py-10 grid grid-cols-1 lg:grid-cols-[180px_1fr_auto] gap-6 lg:gap-12 items-start"
             >
+              {/* Step number */}
+              <div className="flex items-center gap-4 lg:block">
+                <span className="text-5xl lg:text-7xl font-bold text-[#111111]/[0.08] dark:text-white/[0.08] leading-none tracking-tight select-none">
+                  {item.step}
+                </span>
+              </div>
+
+              {/* Content */}
               <div>
-                <div className="flex items-center justify-between pb-6 border-b border-[#0C4137]/[0.06]">
-                  <span className="text-3xl font-extrabold font-mono text-[#0C4137]">
-                    {item.step}
-                  </span>
-                  <span className="text-[11px] font-mono px-2 py-0.5 rounded-[6px] bg-[#E6FBF6] text-[#0C4137] border border-[#06D6A0]/30 font-semibold">
+                <div className="flex items-center gap-3 mb-3">
+                  <span className="font-mono text-[10px] tracking-[0.14em] uppercase text-[#0E9F6E] bg-[#0E9F6E]/[0.1] px-2 py-0.5 rounded-sm">
                     {item.tag}
                   </span>
                 </div>
-
-                <div className="pt-6">
-                  <h3 className="text-[19px] font-semibold text-[#0C4137] tracking-tight">
-                    {item.title}
-                  </h3>
-                  <p className="mt-3 text-[15px] text-neutral-500 leading-relaxed">
-                    {item.description}
-                  </p>
-                </div>
+                <h3 className="text-xl sm:text-2xl font-bold text-[#111111] dark:text-[#FDFDFD] leading-snug mb-3">
+                  {item.title}
+                </h3>
+                <p className="text-[15px] text-[#A4A9A5] leading-relaxed max-w-lg">
+                  {item.description}
+                </p>
               </div>
-            </div>
+
+              {/* Index indicator */}
+              <div className="hidden lg:flex items-center justify-end">
+                <span className="text-xs font-mono text-[#A4A9A5]">
+                  {idx + 1} / {STEPS.length}
+                </span>
+              </div>
+            </motion.div>
           ))}
+
+          {/* Last border */}
+          <div className="border-t border-black/[0.06] dark:border-white/[0.06]" />
         </div>
 
-        {/* Action Button */}
-        <div className="mt-12">
+        {/* CTA */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.45, delay: 0.5 }}
+          className="mt-12"
+        >
           <button
             onClick={() => setCurrentView('app')}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-[10px] bg-[#0C4137] hover:bg-[#072822] text-white text-[15px] font-semibold transition-all duration-150 active:scale-[0.98] shadow-sm group cursor-pointer"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#0E9F6E] text-[#111111] text-sm font-bold hover:bg-[#057A55] active:scale-[0.97] transition-all duration-150 shadow-sm"
           >
-            <span>Hozir o‘zingiz sinab ko‘ring</span>
-            <ArrowRight className="w-4 h-4 text-[#06D6A0] group-hover:translate-x-0.5 transition-transform duration-150" />
+            Hozir boshlang
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
           </button>
-        </div>
+        </motion.div>
+
       </div>
     </section>
   );

@@ -1,443 +1,188 @@
-import React, { useState } from 'react';
-import {
-  ArrowRight,
-  TrendingUp,
-  MapPin,
-  CheckCircle2,
-  AlertTriangle,
-  Scale,
-  Train,
-  Users,
-  ShieldAlert,
-  ShieldCheck,
-  DollarSign,
-} from 'lucide-react';
+import React, { useState, useRef } from 'react';
+import { motion, useInView } from 'motion/react';
 import { useAnalyticsStore } from '../../store/useAnalyticsStore';
 
 interface CompareLocation {
-  id: string;
   name: string;
   district: string;
-  category: string;
-  lat: number;
-  lon: number;
   score: number;
-  status: string;
+  grade: string;
   footTraffic: string;
   metroDist: string;
-  competitors: number;
-  competitorStatus: string;
-  households: string;
-  monthlyRevenue: string;
-  paybackMonths: string;
-  advantages: string[];
+  competitors: string;
+  revenue: string;
+  payback: string;
+  isWinner: boolean;
 }
 
-const COMPARISON_PAIRS = [
-  {
-    title: 'Markaz vs Turar-joy massivi (HoReCa / Kafe)',
-    locA: {
-      id: 'center',
-      name: 'Amir Temur Xiyoboni',
-      district: 'Toshkent markazi (Yunusobod / Mirobod)',
-      category: 'HoReCa & Kafe',
-      lat: 41.3123,
-      lon: 69.2797,
-      score: 94.0,
-      status: 'A-GRADE (TAVSIYA ETILADI)',
-      footTraffic: '18,400+ yo‘lovchi / kun',
-      metroDist: '42 metr (Amir Temur bekati)',
-      competitors: 2,
-      competitorStatus: 'Past raqobat (350m erkin bufer)',
-      households: '1,820 xonadon (Yuqori daromad)',
-      monthlyRevenue: '$22,000 – $28,000 / oy',
-      paybackMonths: '7 – 9 oy',
-      advantages: [
-        'Ertalabki va kechki pik oqim maksimum darajada',
-        'Yaqin 500 metrda 14 ta yirik ofis markazi',
-        'Kross-trafik: talabalar va shahar mehmonlari',
-      ],
-    },
-    locB: {
-      id: 'chilonzor',
-      name: 'Chilonzor 9-Mavze',
-      district: 'Katta turar-joy massivi (Toshkent)',
-      category: 'HoReCa & Kafe',
-      lat: 41.2728,
-      lon: 69.2062,
-      score: 78.5,
-      status: 'O‘RTACHA SALOHIYAT',
-      footTraffic: '9,200+ yo‘lovchi / kun',
-      metroDist: '380 metr (Chilonzor bekati)',
-      competitors: 5,
-      competitorStatus: 'Yuqori to‘yinganlik (Narx urushlari)',
-      households: '3,800 xonadon (O‘rta daromad)',
-      monthlyRevenue: '$12,000 – $15,500 / oy',
-      paybackMonths: '14 – 16 oy',
-      advantages: [
-        'Kechki soatlarda doimiy oilaviy mijozlar',
-        'Ijara narxi markazga nisbatan 40% arzonroq',
-        'Lekin toifadosh kafelar soni haddan tashqari ko‘p',
-      ],
-    },
-    verdict:
-      'Qahvaxona va fast-food uchun Amir Temur lokatsiyasi +63% yuqori daromad va 2 baravar tezroq o‘zini qoplash muddatini ta’minlaydi. Chilonzor esa dorixona va oziq-ovqat do‘koni uchun ko‘proq mos keladi.',
-  },
-  {
-    title: 'Savdo Xablari (Retail & Supermarket)',
-    locA: {
-      id: 'tashkentcity',
-      name: 'Tashkent City Boulevard',
-      district: 'Shayxontohur, Biznes kvartali',
-      category: 'Chakana Savdo (Retail)',
-      lat: 41.3142,
-      lon: 69.2483,
-      score: 92.5,
-      status: 'PREMIUM SAVDO ZONASI',
-      footTraffic: '21,500+ tashrif / kun',
-      metroDist: '340 metr (Paxtakor bekati)',
-      competitors: 3,
-      competitorStatus: 'Premium brendlar klasteri',
-      households: '4,200 xonadon + 18k ofis',
-      monthlyRevenue: '$38,000 – $55,000 / oy',
-      paybackMonths: '9 – 11 oy',
-      advantages: [
-        'Maksimal xarid quvvati (Class A / Premium)',
-        'Tashkent City Mall gravitatsion magniti',
-        'Dam olish kunlarida sayyohlar va oilalar oqimi',
-      ],
-    },
-    locB: {
-      id: 'samarqand_darvoza',
-      name: 'Samarqand Darvoza Atrofi',
-      district: 'Shayxontohur, Tarixiy savdo xabi',
-      category: 'Chakana Savdo (Retail)',
-      lat: 41.3185,
-      lon: 69.2275,
-      score: 86.0,
-      status: 'YUQORI SAVDO GAVJUMLIGI',
-      footTraffic: '17,800+ tashrif / kun',
-      metroDist: '850 metr (Chorsu bekati)',
-      competitors: 7,
-      competitorStatus: 'Kuchli narx raqobati',
-      households: '3,400 xonadon (O‘rta qatlam)',
-      monthlyRevenue: '$28,000 – $39,000 / oy',
-      paybackMonths: '11 – 13 oy',
-      advantages: [
-        'An’anaviy xaridorlar oqimi o‘ta barqaror',
-        'Korzinka va Makro kabi anchorlar faol',
-        'Lekin transport to‘xtash joyi (parkovka) tanqisligi bor',
-      ],
-    },
-    verdict:
-      'Yuqori marjali premium mahsulotlar uchun Tashkent City ideal. Ommaviy chakana savdo va arzon narx segmenti uchun Samarqand Darvoza barqaror aylanma kafolatlaydi.',
-  },
-  {
-    title: 'Viloyatlar Xabi: Samarqand vs Farg‘ona',
-    locA: {
-      id: 'samarqand_univ',
-      name: 'Universitet Xiyoboni, Samarqand',
-      district: 'Samarqand shahri, Ta’lim & Sayyohlik markazi',
-      category: 'HoReCa & Qandolat',
-      lat: 39.6542,
-      lon: 66.9597,
-      score: 91.0,
-      status: 'A-GRADE VILOYAT XABI',
-      footTraffic: '15,200+ yo‘lovchi / kun',
-      metroDist: 'Markaziy avtobus arteriyasi (80m)',
-      competitors: 2,
-      competitorStatus: 'Monopol sharoit (erkin talab)',
-      households: '2,900 xonadon + 14,000 talaba',
-      monthlyRevenue: '$18,000 – $24,500 / oy',
-      paybackMonths: '7 – 8 oy',
-      advantages: [
-        'Talabalar va xorijiy sayyohlar kross-oqimi',
-        'Kechki soatlarda shahar yoshlarining asosiy sayrgohi',
-        'Samarqand markazida premium kafelar tanqisligi',
-      ],
-    },
-    locB: {
-      id: 'fargona_markaz',
-      name: 'Sayilgoh Ko‘chasi, Farg‘ona',
-      district: 'Farg‘ona shahri, Savdo piyodalar xabi',
-      category: 'HoReCa & Qandolat',
-      lat: 40.3864,
-      lon: 71.7864,
-      score: 84.5,
-      status: 'YUQORI SALOHIYATLI HUDUD',
-      footTraffic: '12,400+ yo‘lovchi / kun',
-      metroDist: 'Markaziy vokzal (450m)',
-      competitors: 3,
-      competitorStatus: 'Mahalliy kafelar klasteri',
-      households: '3,100 xonadon (O‘rta qatlam)',
-      monthlyRevenue: '$14,000 – $19,000 / oy',
-      paybackMonths: '9 – 11 oy',
-      advantages: [
-        'Viloyatning eng gavjum savdo arteriyasi',
-        'Ijara narxi poytaxtga nisbatan 60% arzonroq',
-        'Yuqori rentabellik va past boshlang‘ich xarajatlar',
-      ],
-    },
-    verdict:
-      'Samarqand Universitet xiyoboni talabalar va sayyohlar hisobiga doimiy yuqori chek beradi. Farg‘ona esa past ijara xarajati bilan investitsiyani tezroq oqlash imkonini taqdim etadi.',
-  },
+const LOC_A: CompareLocation = {
+  name: 'Amir Temur Xiyoboni',
+  district: 'Yunusobod / Mirobod',
+  score: 94.0,
+  grade: 'A-Grade',
+  footTraffic: '18,400+ / kun',
+  metroDist: '42 metr',
+  competitors: '2 ta (350m+ erkin)',
+  revenue: '$22,000 – $28,000 / oy',
+  payback: '7 – 9 oy',
+  isWinner: true,
+};
+
+const LOC_B: CompareLocation = {
+  name: 'Chilonzor 9-Mavze',
+  district: 'Chilonzor tumani',
+  score: 62.3,
+  grade: 'C-Grade',
+  footTraffic: '6,200+ / kun',
+  metroDist: '1.2 km',
+  competitors: '7 ta (150m ichida)',
+  revenue: '$8,000 – $12,000 / oy',
+  payback: '18 – 26 oy',
+  isWinner: false,
+};
+
+const ROWS: { label: string; keyA: keyof CompareLocation; keyB: keyof CompareLocation }[] = [
+  { label: 'Kunlik piyodalar', keyA: 'footTraffic', keyB: 'footTraffic' },
+  { label: 'Metro masofasi', keyA: 'metroDist', keyB: 'metroDist' },
+  { label: 'Raqobatchilar', keyA: 'competitors', keyB: 'competitors' },
+  { label: 'Daromad prognozi', keyA: 'revenue', keyB: 'revenue' },
+  { label: 'Investitsiya qaytimi', keyA: 'payback', keyB: 'payback' },
 ];
 
 export const LocationCompareSection: React.FC = () => {
-  const [selectedPairIndex, setSelectedPairIndex] = useState(0);
   const { setCurrentView, setSelectedCoords } = useAnalyticsStore();
+  const ref = useRef<HTMLElement>(null);
+  const isInView = useInView(ref, { once: true, margin: '-80px' });
 
-  const currentPair = COMPARISON_PAIRS[selectedPairIndex];
-  const { locA, locB, verdict } = currentPair;
+  const handleLaunch = () => {
+    setSelectedCoords({ latitude: 41.3123, longitude: 69.2797 });
+    setCurrentView('app');
+  };
 
   return (
-    <section id="compare" className="py-24 sm:py-36 select-none border-t border-[#0C4137]/[0.08] bg-[#FFFFFF]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
-        <div className="max-w-4xl mb-14 sm:mb-18">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-[6px] bg-[#E6FBF6] border border-[#06D6A0]/30 text-[#0C4137] text-xs font-mono font-semibold mb-4">
-            <Scale className="w-3.5 h-3.5 text-[#06D6A0]" />
-            <span>INTERAKTIV A/B LOKATSIYA TAQQOSLASH</span>
-          </div>
+    <section
+      id="compare"
+      ref={ref}
+      className="py-24 sm:py-36 bg-[#FDFDFD] dark:bg-[#111111] border-t border-black/[0.05] dark:border-white/[0.05] select-none"
+    >
+      <div className="max-w-7xl mx-auto px-6 lg:px-8">
 
-          <h2 className="text-3xl sm:text-5xl lg:text-[52px] font-black text-[#0C4137] tracking-tight leading-[1.08]">
-            Ikkita manzilni yonma-yon solishtiring.{' '}
-            <span className="text-neutral-400 font-normal">Qaysi biri ko‘proq foyda keltiradi?</span>
+        {/* Label + Headline */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.5 }}
+          className="mb-16"
+        >
+          <span className="font-mono text-xs tracking-[0.18em] uppercase text-[#A4A9A5]">
+            A/B Taqqoslash
+          </span>
+          <h2 className="mt-4 text-3xl sm:text-4xl lg:text-[46px] font-bold tracking-[-0.03em] leading-[1.12] text-[#111111] dark:text-[#FDFDFD]">
+            Ikki lokatsiya.{' '}
+            <span className="text-[#A4A9A5] font-normal">Bitta to'g'ri tanlov.</span>
           </h2>
-
-          <p className="mt-4 text-base sm:text-lg text-neutral-600 max-w-2xl leading-relaxed">
-            Ikkita muqobil bino orasida ikkilanyapsizmi? MakonSense har ikkala nuqtaning tranziti, aholisi va raqobatini xolis solishtirib beradi.
+          <p className="mt-5 text-base text-[#A4A9A5] max-w-xl leading-relaxed">
+            MakonSense raqamlar bilan ko'rsatadi: qaysi joy ko'proq daromad keltiradi.
           </p>
+        </motion.div>
 
-          {/* Scenario Selector Pills */}
-          <div className="flex items-center gap-2 mt-8 flex-wrap">
-            {COMPARISON_PAIRS.map((pair, idx) => (
-              <button
-                key={idx}
-                onClick={() => setSelectedPairIndex(idx)}
-                className={`px-4 py-2 rounded-[10px] text-xs sm:text-sm font-semibold transition-all duration-150 active:scale-[0.98] cursor-pointer ${
-                  selectedPairIndex === idx
-                    ? 'bg-[#0C4137] text-white shadow-sm'
-                    : 'bg-[#F7F9F8] text-neutral-600 hover:text-[#0C4137] border border-[#0C4137]/[0.08]'
-                }`}
-              >
-                {pair.title}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Side-by-Side Comparison Arena */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch relative">
-          {/* Card A: Winner / Prime Location */}
-          <div className="lg:col-span-6 rounded-[22px] bg-[#F7F9F8] border-2 border-[#06D6A0]/50 p-6 sm:p-9 shadow-[0_16px_50px_rgba(6,214,160,0.08)] flex flex-col justify-between space-y-6 relative overflow-hidden">
-            {/* Top Badge */}
-            <div className="flex items-center justify-between pb-4 border-b border-[#0C4137]/[0.08]">
-              <div className="flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-[#06D6A0]" />
-                <span className="text-xs font-mono font-bold text-[#0C4137] uppercase">Lokatsiya A (Asosiy)</span>
-              </div>
-              <span className="px-3 py-1 rounded-[6px] bg-[#E6FBF6] text-[#0C4137] border border-[#06D6A0]/40 text-xs font-black">
-                {locA.status}
-              </span>
-            </div>
-
-            {/* Location Title & Score */}
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <h3 className="text-2xl sm:text-3xl font-black text-[#0C4137] tracking-tight">{locA.name}</h3>
-                <p className="text-xs text-neutral-500 mt-1">{locA.district} • {locA.category}</p>
-              </div>
-              <div className="text-right">
-                <div className="text-3xl sm:text-4xl font-black text-[#0C4137] font-mono leading-none">
-                  {locA.score}
+        {/* Comparison grid */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.55, delay: 0.12 }}
+          className="grid grid-cols-1 lg:grid-cols-2 gap-0 border border-black/[0.06] dark:border-white/[0.06] rounded-2xl overflow-hidden"
+        >
+          {[LOC_A, LOC_B].map((loc, colIdx) => (
+            <div
+              key={colIdx}
+              className={`p-8 sm:p-10 ${
+                colIdx === 0
+                  ? 'border-b lg:border-b-0 lg:border-r border-black/[0.06] dark:border-white/[0.06] bg-[#0E9F6E]/[0.02] dark:bg-white/[0.01]'
+                  : ''
+              }`}
+            >
+              {/* Location header */}
+              <div className="flex items-start justify-between gap-4 pb-6 border-b border-black/[0.05] dark:border-white/[0.05]">
+                <div>
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className={`font-mono text-[10px] tracking-[0.14em] uppercase px-2 py-0.5 rounded-sm ${
+                      loc.isWinner
+                        ? 'bg-[#0E9F6E]/10 text-[#0E9F6E]'
+                        : 'bg-[#A4A9A5]/10 text-[#A4A9A5]'
+                    }`}>
+                      {loc.grade}
+                    </span>
+                    {loc.isWinner && (
+                      <span className="font-mono text-[10px] tracking-[0.12em] uppercase text-[#0E9F6E]">
+                        ✓ Tavsiya etiladi
+                      </span>
+                    )}
+                  </div>
+                  <h3 className="text-lg font-bold text-[#111111] dark:text-[#FDFDFD]">
+                    {loc.name}
+                  </h3>
+                  <p className="text-xs text-[#A4A9A5] mt-0.5">{loc.district}</p>
                 </div>
-                <div className="text-[10px] text-[#06D6A0] font-bold uppercase mt-1">MakonScore / 100</div>
-              </div>
-            </div>
-
-            {/* Key Comparison Metrics */}
-            <div className="space-y-3">
-              <div className="p-3.5 rounded-[12px] bg-white border border-[#0C4137]/[0.06] flex items-center justify-between">
-                <span className="text-xs text-neutral-500 flex items-center gap-2">
-                  <Train className="w-4 h-4 text-[#06D6A0]" />
-                  Piyodalar Oqimi:
-                </span>
-                <span className="text-xs font-bold text-[#0C4137] font-mono">{locA.footTraffic}</span>
-              </div>
-
-              <div className="p-3.5 rounded-[12px] bg-white border border-[#0C4137]/[0.06] flex items-center justify-between">
-                <span className="text-xs text-neutral-500 flex items-center gap-2">
-                  <ShieldCheck className="w-4 h-4 text-[#06D6A0]" />
-                  Raqobat Bosimi:
-                </span>
-                <span className="text-xs font-bold text-[#06D6A0] font-mono">{locA.competitorStatus}</span>
-              </div>
-
-              <div className="p-3.5 rounded-[12px] bg-white border border-[#0C4137]/[0.06] flex items-center justify-between">
-                <span className="text-xs text-neutral-500 flex items-center gap-2">
-                  <Users className="w-4 h-4 text-[#06D6A0]" />
-                  Aholi Qamrovi:
-                </span>
-                <span className="text-xs font-bold text-[#0C4137] font-mono">{locA.households}</span>
-              </div>
-
-              <div className="p-3.5 rounded-[12px] bg-[#E6FBF6] border border-[#06D6A0]/30 flex items-center justify-between">
-                <span className="text-xs font-semibold text-[#0C4137] flex items-center gap-2">
-                  <DollarSign className="w-4 h-4 text-[#06D6A0]" />
-                  Oylik Tushum Prognozi:
-                </span>
-                <span className="text-xs font-black text-[#0C4137] font-mono">{locA.monthlyRevenue}</span>
-              </div>
-            </div>
-
-            {/* Strategic Bullets */}
-            <div className="pt-2">
-              <div className="text-xs font-bold text-[#0C4137] uppercase font-mono mb-2.5">
-                Asosiy Afzalliklari:
-              </div>
-              <ul className="space-y-2">
-                {locA.advantages.map((adv, i) => (
-                  <li key={i} className="flex items-start gap-2 text-xs text-neutral-700">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-[#06D6A0] flex-shrink-0 mt-0.5" />
-                    <span>{adv}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Action */}
-            <div className="pt-4 border-t border-[#0C4137]/[0.08]">
-              <button
-                onClick={() => {
-                  setSelectedCoords({ latitude: locA.lat, longitude: locA.lon });
-                  setCurrentView('app');
-                }}
-                className="w-full flex items-center justify-center gap-2 py-3 rounded-[10px] bg-[#0C4137] hover:bg-[#072822] text-white text-xs font-bold transition-all active:scale-[0.98] cursor-pointer"
-              >
-                <span>Lokatsiya A ni Xaritada Ochish</span>
-                <ArrowRight className="w-4 h-4 text-[#06D6A0]" />
-              </button>
-            </div>
-          </div>
-
-          {/* Card B: Alternative Location */}
-          <div className="lg:col-span-6 rounded-[22px] bg-[#F7F9F8] border border-[#0C4137]/[0.1] p-6 sm:p-9 shadow-[0_12px_40px_rgba(12,65,55,0.04)] flex flex-col justify-between space-y-6 relative overflow-hidden">
-            {/* Top Badge */}
-            <div className="flex items-center justify-between pb-4 border-b border-[#0C4137]/[0.08]">
-              <div className="flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-neutral-400" />
-                <span className="text-xs font-mono font-bold text-neutral-500 uppercase">Lokatsiya B (Muqobil)</span>
-              </div>
-              <span className="px-3 py-1 rounded-[6px] bg-white text-neutral-600 border border-[#0C4137]/[0.1] text-xs font-bold">
-                {locB.status}
-              </span>
-            </div>
-
-            {/* Location Title & Score */}
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <h3 className="text-2xl sm:text-3xl font-black text-[#0C4137] tracking-tight">{locB.name}</h3>
-                <p className="text-xs text-neutral-500 mt-1">{locB.district} • {locB.category}</p>
-              </div>
-              <div className="text-right">
-                <div className="text-3xl sm:text-4xl font-black text-neutral-700 font-mono leading-none">
-                  {locB.score}
+                {/* Score */}
+                <div className="text-right flex-shrink-0">
+                  <div className={`text-3xl font-bold tracking-[-0.03em] tabular-nums ${
+                    loc.isWinner ? 'text-[#0E9F6E]' : 'text-[#A4A9A5]'
+                  }`}>
+                    {loc.score}
+                  </div>
+                  <p className="text-[10px] font-mono text-[#A4A9A5] mt-0.5">/ 100</p>
                 </div>
-                <div className="text-[10px] text-neutral-400 font-bold uppercase mt-1">MakonScore / 100</div>
-              </div>
-            </div>
-
-            {/* Key Comparison Metrics */}
-            <div className="space-y-3">
-              <div className="p-3.5 rounded-[12px] bg-white border border-[#0C4137]/[0.06] flex items-center justify-between">
-                <span className="text-xs text-neutral-500 flex items-center gap-2">
-                  <Train className="w-4 h-4 text-neutral-400" />
-                  Piyodalar Oqimi:
-                </span>
-                <span className="text-xs font-bold text-[#0C4137] font-mono">{locB.footTraffic}</span>
               </div>
 
-              <div className="p-3.5 rounded-[12px] bg-white border border-[#0C4137]/[0.06] flex items-center justify-between">
-                <span className="text-xs text-neutral-500 flex items-center gap-2">
-                  <AlertTriangle className="w-4 h-4 text-amber-500" />
-                  Raqobat Bosimi:
-                </span>
-                <span className="text-xs font-bold text-amber-600 font-mono">{locB.competitorStatus}</span>
+              {/* Score bar */}
+              <div className="mt-5 mb-6">
+                <div className="h-[2px] bg-black/[0.05] dark:bg-white/[0.05] rounded-full overflow-hidden">
+                  <motion.div
+                    className={`h-full rounded-full ${loc.isWinner ? 'bg-[#0E9F6E]' : 'bg-[#A4A9A5]'}`}
+                    initial={{ width: 0 }}
+                    animate={isInView ? { width: `${loc.score}%` } : { width: 0 }}
+                    transition={{ duration: 0.8, delay: 0.3 + colIdx * 0.1, ease: 'easeOut' }}
+                  />
+                </div>
               </div>
 
-              <div className="p-3.5 rounded-[12px] bg-white border border-[#0C4137]/[0.06] flex items-center justify-between">
-                <span className="text-xs text-neutral-500 flex items-center gap-2">
-                  <Users className="w-4 h-4 text-neutral-400" />
-                  Aholi Qamrovi:
-                </span>
-                <span className="text-xs font-bold text-[#0C4137] font-mono">{locB.households}</span>
-              </div>
-
-              <div className="p-3.5 rounded-[12px] bg-white border border-[#0C4137]/[0.06] flex items-center justify-between">
-                <span className="text-xs font-semibold text-neutral-600 flex items-center gap-2">
-                  <DollarSign className="w-4 h-4 text-neutral-400" />
-                  Oylik Tushum Prognozi:
-                </span>
-                <span className="text-xs font-bold text-[#0C4137] font-mono">{locB.monthlyRevenue}</span>
-              </div>
-            </div>
-
-            {/* Strategic Bullets */}
-            <div className="pt-2">
-              <div className="text-xs font-bold text-neutral-600 uppercase font-mono mb-2.5">
-                Kuzatilgan Xususiyatlar:
-              </div>
-              <ul className="space-y-2">
-                {locB.advantages.map((adv, i) => (
-                  <li key={i} className="flex items-start gap-2 text-xs text-neutral-600">
-                    <span className="text-neutral-400 font-bold">•</span>
-                    <span>{adv}</span>
-                  </li>
+              {/* Metrics */}
+              <div className="space-y-3">
+                {ROWS.map((row) => (
+                  <div key={row.label} className="flex items-center justify-between gap-4 py-2 border-b border-black/[0.03] dark:border-white/[0.03]">
+                    <span className="text-xs text-[#A4A9A5]">{row.label}</span>
+                    <span className={`text-sm font-semibold text-right ${
+                      loc.isWinner ? 'text-[#111111] dark:text-[#FDFDFD]' : 'text-[#A4A9A5]'
+                    }`}>
+                      {String(loc[row.keyA])}
+                    </span>
+                  </div>
                 ))}
-              </ul>
-            </div>
-
-            {/* Action */}
-            <div className="pt-4 border-t border-[#0C4137]/[0.08]">
-              <button
-                onClick={() => {
-                  setSelectedCoords({ latitude: locB.lat, longitude: locB.lon });
-                  setCurrentView('app');
-                }}
-                className="w-full flex items-center justify-center gap-2 py-3 rounded-[10px] bg-white hover:bg-neutral-100 border border-[#0C4137]/[0.15] text-xs font-bold text-[#0C4137] transition-all active:scale-[0.98] cursor-pointer"
-              >
-                <span>Lokatsiya B ni Xaritada Ochish</span>
-                <ArrowRight className="w-4 h-4 text-[#0C4137]" />
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* AI Synthesis Verdict Banner */}
-        <div className="mt-8 p-6 sm:p-7 rounded-[18px] bg-[#E6FBF6] border border-[#06D6A0]/40 flex flex-col sm:flex-row items-center justify-between gap-5 shadow-sm">
-          <div className="flex items-start gap-4">
-            <div className="w-10 h-10 rounded-[10px] bg-[#0C4137] text-[#06D6A0] flex items-center justify-center flex-shrink-0 mt-0.5">
-              <Scale className="w-5 h-5" />
-            </div>
-            <div>
-              <div className="text-xs font-mono font-bold text-[#0C4137] uppercase tracking-wider">
-                MakonSense A/B Xulosasi
               </div>
-              <p className="text-xs sm:text-sm text-[#0C4137] font-medium leading-relaxed mt-1">
-                {verdict}
-              </p>
             </div>
-          </div>
+          ))}
+        </motion.div>
 
+        {/* CTA */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.45, delay: 0.4 }}
+          className="mt-12 flex items-center gap-4"
+        >
           <button
-            onClick={() => setCurrentView('app')}
-            className="flex-shrink-0 inline-flex items-center gap-2 px-5 py-3 rounded-[10px] bg-[#0C4137] hover:bg-[#072822] text-white text-xs sm:text-sm font-bold shadow-sm transition-all active:scale-[0.98] cursor-pointer whitespace-nowrap"
+            onClick={handleLaunch}
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#111111] dark:bg-[#FDFDFD] text-[#FDFDFD] dark:text-[#111111] text-sm font-semibold hover:opacity-80 active:scale-[0.97] transition-all duration-150"
           >
-            <span>O‘z Joyingizni Solishtiring</span>
-            <ArrowRight className="w-4 h-4 text-[#06D6A0]" />
+            O'z lokatsiyamni solishtirish
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
           </button>
-        </div>
+          <p className="text-xs text-[#A4A9A5]">Bepul · Ro'yxatdan o'tish shart emas</p>
+        </motion.div>
+
       </div>
     </section>
   );

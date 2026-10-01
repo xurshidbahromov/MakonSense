@@ -40,7 +40,21 @@ export const LandingNavbar: React.FC = () => {
   const [solutionsOpen, setSolutionsOpen] = useState(false);
   const [regionsOpen, setRegionsOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(() =>
+    document.documentElement.classList.contains('dark')
+  );
+
+  const toggleDarkMode = () => {
+    const next = !isDarkMode;
+    setIsDarkMode(next);
+    if (next) {
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('makonsense_theme', 'dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('makonsense_theme', 'light');
+    }
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -50,6 +64,7 @@ export const LandingNavbar: React.FC = () => {
     handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
 
   return (
     <header className="fixed top-3.5 sm:top-5 left-0 right-0 z-50 pointer-events-none transition-all duration-300">
@@ -154,7 +169,7 @@ export const LandingNavbar: React.FC = () => {
                   <ChevronDown
                     className={`w-3.5 h-3.5 transition-transform duration-200 opacity-50 ${
                       (isSolutions && solutionsOpen) || (isRegions && regionsOpen)
-                        ? 'rotate-180 opacity-100 text-[#0C4137]'
+                        ? 'rotate-180 opacity-100 text-[#111111]'
                         : ''
                     }`}
                   />
@@ -197,7 +212,7 @@ export const LandingNavbar: React.FC = () => {
                     onClick={handleClick}
                     className={`relative z-10 flex items-center gap-1.5 px-4 py-2 text-[14px] rounded-full transition-colors duration-150 cursor-pointer whitespace-nowrap ${
                       isSelected
-                        ? isDarkMode ? 'text-white font-semibold' : 'text-[#0C4137] font-semibold'
+                        ? isDarkMode ? 'text-white font-semibold' : 'text-[#111111] font-semibold'
                         : isDarkMode ? 'text-neutral-300 hover:text-white font-medium' : 'text-neutral-500 hover:text-neutral-900 font-medium'
                     }`}
                   >
@@ -209,7 +224,7 @@ export const LandingNavbar: React.FC = () => {
                     onClick={handleClick}
                     className={`relative z-10 flex items-center gap-1.5 px-4 py-2 text-[14px] rounded-full transition-colors duration-150 cursor-pointer whitespace-nowrap ${
                       isSelected
-                        ? isDarkMode ? 'text-white font-semibold' : 'text-[#0C4137] font-semibold'
+                        ? isDarkMode ? 'text-white font-semibold' : 'text-[#111111] font-semibold'
                         : isDarkMode ? 'text-neutral-300 hover:text-white font-medium' : 'text-neutral-500 hover:text-neutral-900 font-medium'
                     }`}
                   >
@@ -244,7 +259,7 @@ export const LandingNavbar: React.FC = () => {
               >
                 <div className="px-2 pt-0.5 pb-1.5 flex items-center justify-between text-[11px] font-mono uppercase tracking-wider text-neutral-400 font-semibold border-b border-black/[0.04]">
                   <span>Sohaviy Geomarketing Tahlili</span>
-                  <span className="text-[#06D6A0] font-bold">Sun’iy Intellekt</span>
+                  <span className="text-[#0E9F6E] font-bold">Sun’iy Intellekt</span>
                 </div>
 
                 <div className="grid grid-cols-2 gap-1.5">
@@ -254,10 +269,10 @@ export const LandingNavbar: React.FC = () => {
                     className="flex items-center gap-3 px-3 py-2.5 rounded-[14px] hover:bg-black/[0.035] transition-all duration-200 ease-out group cursor-pointer"
                   >
                     <div className="w-7 h-7 flex items-center justify-center flex-shrink-0">
-                      <Coffee className="w-5 h-5 text-[#0C4137] transition-transform duration-200 ease-out group-hover:scale-105" />
+                      <Coffee className="w-5 h-5 text-[#111111] transition-transform duration-200 ease-out group-hover:scale-105" />
                     </div>
                     <div className="flex-1 min-w-0 pr-1">
-                      <div className="text-[13px] font-bold text-[#0C4137] tracking-tight group-hover:translate-x-0.5 transition-transform duration-200 ease-out">
+                      <div className="text-[13px] font-bold text-[#111111] tracking-tight group-hover:translate-x-0.5 transition-transform duration-200 ease-out">
                         HoReCa & Restoranlar
                       </div>
                       <div className="text-[11px] text-neutral-500 leading-snug mt-0.5">
@@ -272,10 +287,10 @@ export const LandingNavbar: React.FC = () => {
                     className="flex items-center gap-3 px-3 py-2.5 rounded-[14px] hover:bg-black/[0.035] transition-all duration-200 ease-out group cursor-pointer"
                   >
                     <div className="w-7 h-7 flex items-center justify-center flex-shrink-0">
-                      <ShoppingBag className="w-5 h-5 text-[#0C4137] transition-transform duration-200 ease-out group-hover:scale-105" />
+                      <ShoppingBag className="w-5 h-5 text-[#111111] transition-transform duration-200 ease-out group-hover:scale-105" />
                     </div>
                     <div className="flex-1 min-w-0 pr-1">
-                      <div className="text-[13px] font-bold text-[#0C4137] tracking-tight group-hover:translate-x-0.5 transition-transform duration-200 ease-out">
+                      <div className="text-[13px] font-bold text-[#111111] tracking-tight group-hover:translate-x-0.5 transition-transform duration-200 ease-out">
                         Supermarket & Retail
                       </div>
                       <div className="text-[11px] text-neutral-500 leading-snug mt-0.5">
@@ -290,10 +305,10 @@ export const LandingNavbar: React.FC = () => {
                     className="flex items-center gap-3 px-3 py-2.5 rounded-[14px] hover:bg-black/[0.035] transition-all duration-200 ease-out group cursor-pointer"
                   >
                     <div className="w-7 h-7 flex items-center justify-center flex-shrink-0">
-                      <Pill className="w-5 h-5 text-[#0C4137] transition-transform duration-200 ease-out group-hover:scale-105" />
+                      <Pill className="w-5 h-5 text-[#111111] transition-transform duration-200 ease-out group-hover:scale-105" />
                     </div>
                     <div className="flex-1 min-w-0 pr-1">
-                      <div className="text-[13px] font-bold text-[#0C4137] tracking-tight group-hover:translate-x-0.5 transition-transform duration-200 ease-out">
+                      <div className="text-[13px] font-bold text-[#111111] tracking-tight group-hover:translate-x-0.5 transition-transform duration-200 ease-out">
                         Dorixona & Tibbiyot
                       </div>
                       <div className="text-[11px] text-neutral-500 leading-snug mt-0.5">
@@ -308,10 +323,10 @@ export const LandingNavbar: React.FC = () => {
                     className="flex items-center gap-3 px-3 py-2.5 rounded-[14px] hover:bg-black/[0.035] transition-all duration-200 ease-out group cursor-pointer"
                   >
                     <div className="w-7 h-7 flex items-center justify-center flex-shrink-0">
-                      <Building className="w-5 h-5 text-[#0C4137] transition-transform duration-200 ease-out group-hover:scale-105" />
+                      <Building className="w-5 h-5 text-[#111111] transition-transform duration-200 ease-out group-hover:scale-105" />
                     </div>
                     <div className="flex-1 min-w-0 pr-1">
-                      <div className="text-[13px] font-bold text-[#0C4137] tracking-tight group-hover:translate-x-0.5 transition-transform duration-200 ease-out">
+                      <div className="text-[13px] font-bold text-[#111111] tracking-tight group-hover:translate-x-0.5 transition-transform duration-200 ease-out">
                         Tijoriy Ko‘chmas Mulk
                       </div>
                       <div className="text-[11px] text-neutral-500 leading-snug mt-0.5">
@@ -330,12 +345,12 @@ export const LandingNavbar: React.FC = () => {
                   className="mt-1 px-3.5 py-2 rounded-[14px] bg-white/40 hover:bg-white/70 backdrop-blur-md border border-white/60 shadow-[inset_0_1px_1px_rgba(255,255,255,0.8)] flex items-center justify-between group cursor-pointer transition-all duration-200"
                 >
                   <div className="flex items-center gap-2 group-hover:translate-x-0.5 transition-transform duration-200 ease-out">
-                    <Sparkles className="w-3.5 h-3.5 text-[#0C4137]/80" />
-                    <span className="text-xs font-semibold text-[#0C4137]">
+                    <Sparkles className="w-3.5 h-3.5 text-[#111111]/80" />
+                    <span className="text-xs font-semibold text-[#111111]">
                       O‘z biznesingiz bo‘yicha bepul geomarketing tahlilini sinab ko‘ring
                     </span>
                   </div>
-                  <ArrowRight className="w-3.5 h-3.5 text-[#0C4137]/70 group-hover:translate-x-0.5 transition-transform duration-200 ease-out" />
+                  <ArrowRight className="w-3.5 h-3.5 text-[#111111]/70 group-hover:translate-x-0.5 transition-transform duration-200 ease-out" />
                 </div>
               </motion.div>
             )}
@@ -358,7 +373,7 @@ export const LandingNavbar: React.FC = () => {
               >
                 <div className="px-2 pt-0.5 pb-1.5 flex items-center justify-between text-[11px] font-mono uppercase tracking-wider text-neutral-400 font-semibold border-b border-black/[0.04]">
                   <span>Butun O‘zbekiston Qamrovi</span>
-                  <span className="text-[#0C4137] font-bold">14 Ta Hudud</span>
+                  <span className="text-[#111111] font-bold">14 Ta Hudud</span>
                 </div>
 
                 <div className="grid grid-cols-2 gap-1.5">
@@ -370,10 +385,10 @@ export const LandingNavbar: React.FC = () => {
                     className="flex items-center gap-2.5 px-3 py-2 rounded-[14px] hover:bg-black/[0.035] transition-all duration-200 cursor-pointer group"
                   >
                     <div className="w-5 h-5 flex items-center justify-center flex-shrink-0">
-                      <MapPin className="w-3.5 h-3.5 text-[#0C4137]/70 transition-transform duration-200 ease-out group-hover:scale-110" />
+                      <MapPin className="w-3.5 h-3.5 text-[#111111]/70 transition-transform duration-200 ease-out group-hover:scale-110" />
                     </div>
                     <div className="flex-1 min-w-0 group-hover:translate-x-0.5 transition-transform duration-200 ease-out">
-                      <div className="text-xs font-bold text-[#0C4137]">Toshkent shahri</div>
+                      <div className="text-xs font-bold text-[#111111]">Toshkent shahri</div>
                       <div className="text-[10px] text-neutral-400">Markaziy hab • 52k+ bino</div>
                     </div>
                   </div>
@@ -386,10 +401,10 @@ export const LandingNavbar: React.FC = () => {
                     className="flex items-center gap-2.5 px-3 py-2 rounded-[14px] hover:bg-black/[0.035] transition-all duration-200 cursor-pointer group"
                   >
                     <div className="w-5 h-5 flex items-center justify-center flex-shrink-0">
-                      <MapPin className="w-3.5 h-3.5 text-[#0C4137]/70 transition-transform duration-200 ease-out group-hover:scale-110" />
+                      <MapPin className="w-3.5 h-3.5 text-[#111111]/70 transition-transform duration-200 ease-out group-hover:scale-110" />
                     </div>
                     <div className="flex-1 min-w-0 group-hover:translate-x-0.5 transition-transform duration-200 ease-out">
-                      <div className="text-xs font-bold text-[#0C4137]">Samarqand</div>
+                      <div className="text-xs font-bold text-[#111111]">Samarqand</div>
                       <div className="text-[10px] text-neutral-400">Sayyohlik & Retail • 38k+</div>
                     </div>
                   </div>
@@ -402,10 +417,10 @@ export const LandingNavbar: React.FC = () => {
                     className="flex items-center gap-2.5 px-3 py-2 rounded-[14px] hover:bg-black/[0.035] transition-all duration-200 cursor-pointer group"
                   >
                     <div className="w-5 h-5 flex items-center justify-center flex-shrink-0">
-                      <MapPin className="w-3.5 h-3.5 text-[#0C4137]/70 transition-transform duration-200 ease-out group-hover:scale-110" />
+                      <MapPin className="w-3.5 h-3.5 text-[#111111]/70 transition-transform duration-200 ease-out group-hover:scale-110" />
                     </div>
                     <div className="flex-1 min-w-0 group-hover:translate-x-0.5 transition-transform duration-200 ease-out">
-                      <div className="text-xs font-bold text-[#0C4137]">Farg‘ona vodiysi</div>
+                      <div className="text-xs font-bold text-[#111111]">Farg‘ona vodiysi</div>
                       <div className="text-[10px] text-neutral-400">Aholi zichligi • 72k+</div>
                     </div>
                   </div>
@@ -418,10 +433,10 @@ export const LandingNavbar: React.FC = () => {
                     className="flex items-center gap-2.5 px-3 py-2 rounded-[14px] hover:bg-black/[0.035] transition-all duration-200 cursor-pointer group"
                   >
                     <div className="w-5 h-5 flex items-center justify-center flex-shrink-0">
-                      <MapPin className="w-3.5 h-3.5 text-[#0C4137]/70 transition-transform duration-200 ease-out group-hover:scale-110" />
+                      <MapPin className="w-3.5 h-3.5 text-[#111111]/70 transition-transform duration-200 ease-out group-hover:scale-110" />
                     </div>
                     <div className="flex-1 min-w-0 group-hover:translate-x-0.5 transition-transform duration-200 ease-out">
-                      <div className="text-xs font-bold text-[#0C4137]">Buxoro & Navoiy</div>
+                      <div className="text-xs font-bold text-[#111111]">Buxoro & Navoiy</div>
                       <div className="text-[10px] text-neutral-400">Sanoat & Biznes • 31k+</div>
                     </div>
                   </div>
@@ -434,10 +449,10 @@ export const LandingNavbar: React.FC = () => {
                     className="flex items-center gap-2.5 px-3 py-2 rounded-[14px] hover:bg-black/[0.035] transition-all duration-200 cursor-pointer group"
                   >
                     <div className="w-5 h-5 flex items-center justify-center flex-shrink-0">
-                      <MapPin className="w-3.5 h-3.5 text-[#0C4137]/70 transition-transform duration-200 ease-out group-hover:scale-110" />
+                      <MapPin className="w-3.5 h-3.5 text-[#111111]/70 transition-transform duration-200 ease-out group-hover:scale-110" />
                     </div>
                     <div className="flex-1 min-w-0 group-hover:translate-x-0.5 transition-transform duration-200 ease-out">
-                      <div className="text-xs font-bold text-[#0C4137]">Qashqadaryo & Surxondaryo</div>
+                      <div className="text-xs font-bold text-[#111111]">Qashqadaryo & Surxondaryo</div>
                       <div className="text-[10px] text-neutral-400">Janubiy tranzit • 44k+</div>
                     </div>
                   </div>
@@ -450,10 +465,10 @@ export const LandingNavbar: React.FC = () => {
                     className="flex items-center gap-2.5 px-3 py-2 rounded-[14px] hover:bg-black/[0.035] transition-all duration-200 cursor-pointer group"
                   >
                     <div className="w-5 h-5 flex items-center justify-center flex-shrink-0">
-                      <MapPin className="w-3.5 h-3.5 text-[#0C4137]/70 transition-transform duration-200 ease-out group-hover:scale-110" />
+                      <MapPin className="w-3.5 h-3.5 text-[#111111]/70 transition-transform duration-200 ease-out group-hover:scale-110" />
                     </div>
                     <div className="flex-1 min-w-0 group-hover:translate-x-0.5 transition-transform duration-200 ease-out">
-                      <div className="text-xs font-bold text-[#0C4137]">Qoraqalpog‘iston & Xorazm</div>
+                      <div className="text-xs font-bold text-[#111111]">Qoraqalpog‘iston & Xorazm</div>
                       <div className="text-[10px] text-neutral-400">G‘arbiy zonalar • 29k+</div>
                     </div>
                   </div>
@@ -461,10 +476,10 @@ export const LandingNavbar: React.FC = () => {
 
                 <div className="pt-1.5 border-t border-black/[0.04] text-[11px] text-neutral-500 px-2 flex items-center justify-between">
                   <span className="flex items-center gap-1.5 font-medium text-neutral-500">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#0C4137]/40" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#111111]/40" />
                     208 ta tuman fazoviy monitoringda
                   </span>
-                  <span className="font-mono text-[10px] text-[#0C4137] font-bold bg-white/60 backdrop-blur-sm border border-white/70 px-2 py-0.5 rounded-full shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]">
+                  <span className="font-mono text-[10px] text-[#111111] font-bold bg-white/60 backdrop-blur-sm border border-white/70 px-2 py-0.5 rounded-full shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]">
                     524,476 ta bino
                   </span>
                 </div>
@@ -489,12 +504,12 @@ export const LandingNavbar: React.FC = () => {
           {/* Apple-style minimalist glass mode toggle */}
           <motion.button
             whileTap={{ scale: 0.92 }}
-            onClick={() => setIsDarkMode(!isDarkMode)}
+            onClick={() => toggleDarkMode()}
             className="w-[34px] h-[34px] rounded-full bg-white/40 hover:bg-white/70 backdrop-blur-md border border-white/60 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)] flex items-center justify-center text-neutral-600 hover:text-black transition-all cursor-pointer select-none"
             title="Mavzu rejimi"
           >
             {isDarkMode ? (
-              <Moon className="w-3.5 h-3.5 text-[#06D6A0]" />
+              <Moon className="w-3.5 h-3.5 text-[#0E9F6E]" />
             ) : (
               <Sun className="w-3.5 h-3.5 text-amber-500" />
             )}
@@ -503,7 +518,7 @@ export const LandingNavbar: React.FC = () => {
           {/* Log In Link */}
           <button
             onClick={() => setCurrentView('app')}
-            className="text-neutral-600 hover:text-[#0C4137] font-medium text-[13.5px] px-2.5 sm:px-3 py-1.5 rounded-full hover:bg-white/40 transition-all cursor-pointer"
+            className="text-neutral-600 hover:text-[#111111] font-medium text-[13.5px] px-2.5 sm:px-3 py-1.5 rounded-full hover:bg-white/40 transition-all cursor-pointer"
           >
             Kirish
           </button>
@@ -513,10 +528,10 @@ export const LandingNavbar: React.FC = () => {
             <motion.button
               whileTap={{ scale: 0.96 }}
               onClick={() => setCurrentView('app')}
-              className="group inline-flex items-center justify-center gap-1.5 h-[36px] px-4 rounded-full bg-[#0C4137] hover:bg-[#072822] text-white text-[13.5px] font-semibold cursor-pointer whitespace-nowrap transition-all shadow-[0_2px_8px_rgba(12,65,55,0.18),inset_0_1px_0_rgba(255,255,255,0.2)]"
+              className="group inline-flex items-center justify-center gap-1.5 h-[36px] px-4 rounded-full bg-[#111111] hover:bg-neutral-800 text-white text-[13.5px] font-semibold cursor-pointer whitespace-nowrap transition-all shadow-sm"
             >
               <span>Boshlash</span>
-              <ArrowRight className="w-3.5 h-3.5 text-[#06D6A0] group-hover:translate-x-0.5 transition-transform" />
+              <ArrowRight className="w-3.5 h-3.5 text-[#0E9F6E] group-hover:translate-x-0.5 transition-transform" />
             </motion.button>
           </Magnet>
         </motion.div>
@@ -531,7 +546,7 @@ export const LandingNavbar: React.FC = () => {
                 : 'h-[44px] w-[44px] bg-transparent border-transparent shadow-none hover:bg-black/[0.04]'
             }`}
           >
-            {mobileMenuOpen ? <X className="w-4 h-4 text-[#0C4137]" /> : <Menu className="w-4 h-4 text-[#0C4137]" />}
+            {mobileMenuOpen ? <X className="w-4 h-4 text-[#111111]" /> : <Menu className="w-4 h-4 text-[#111111]" />}
           </button>
         </div>
       </div>
@@ -553,28 +568,28 @@ export const LandingNavbar: React.FC = () => {
             <a
               href="#features"
               onClick={() => setMobileMenuOpen(false)}
-              className="block px-3.5 py-2 text-xs font-semibold text-[#0C4137] rounded-xl hover:bg-white/50 hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.8)] transition-all"
+              className="block px-3.5 py-2 text-xs font-semibold text-[#111111] rounded-xl hover:bg-white/50 hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.8)] transition-all"
             >
               Shahar Radari
             </a>
             <a
               href="#solutions"
               onClick={() => setMobileMenuOpen(false)}
-              className="block px-3.5 py-2 text-xs font-semibold text-[#0C4137] rounded-xl hover:bg-white/50 hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.8)] transition-all"
+              className="block px-3.5 py-2 text-xs font-semibold text-[#111111] rounded-xl hover:bg-white/50 hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.8)] transition-all"
             >
               Yechimlar (HoReCa, Retail, Dorixona)
             </a>
             <a
               href="#compare"
               onClick={() => setMobileMenuOpen(false)}
-              className="block px-3.5 py-2 text-xs font-semibold text-[#0C4137] rounded-xl hover:bg-white/50 hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.8)] transition-all"
+              className="block px-3.5 py-2 text-xs font-semibold text-[#111111] rounded-xl hover:bg-white/50 hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.8)] transition-all"
             >
               A/B Taqqoslash
             </a>
             <a
               href="#calculator"
               onClick={() => setMobileMenuOpen(false)}
-              className="block px-3.5 py-2 text-xs font-semibold text-[#0C4137] rounded-xl hover:bg-white/50 hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.8)] transition-all"
+              className="block px-3.5 py-2 text-xs font-semibold text-[#111111] rounded-xl hover:bg-white/50 hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.8)] transition-all"
             >
               Moliya & ROI
             </a>
@@ -584,7 +599,7 @@ export const LandingNavbar: React.FC = () => {
                   setMobileMenuOpen(false);
                   setCurrentView('app');
                 }}
-                className="w-full py-2.5 rounded-full bg-[#0C4137] hover:bg-[#072822] text-white font-semibold text-xs text-center transition-all shadow-[0_2px_8px_rgba(12,65,55,0.18)]"
+                className="w-full py-2.5 rounded-full bg-[#111111] hover:bg-neutral-800 text-white font-semibold text-xs text-center transition-all shadow-sm"
               >
                 Platformaga Kirish
               </button>

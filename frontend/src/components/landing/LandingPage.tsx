@@ -29,34 +29,29 @@ export const LandingPage: React.FC = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#FBFBFD] text-[#0C4137] font-sans selection:bg-[#06D6A0]/25 selection:text-[#0C4137] overflow-x-clip">
-      {/* Hairline Scroll Progress Bar */}
-      <div className="fixed top-0 left-0 right-0 h-[2.5px] bg-transparent z-[100] pointer-events-none">
+    <div className="min-h-screen bg-[#FDFDFD] dark:bg-[#111111] text-[#111111] dark:text-[#FDFDFD] font-sans overflow-x-clip">
+      {/* Scroll Progress Bar */}
+      <div className="fixed top-0 left-0 right-0 h-[2px] bg-transparent z-[100] pointer-events-none">
         <div
-          className="h-full bg-[#06D6A0] transition-[width] duration-75 ease-out shadow-[0_0_8px_rgba(6,214,160,0.5)]"
+          className="h-full bg-[#0E9F6E] transition-[width] duration-75 ease-out shadow-[0_0_8px_rgba(14,159,110,0.5)]"
           style={{ width: `${scrollProgress}%` }}
         />
       </div>
 
-      {/* Sticky Blurred Navigation Bar */}
       <LandingNavbar />
 
-      {/* Main Sections Flow */}
       <main>
         <LandingHero />
         <ScrollExperience />
-        <LocationCompareSection />
         <ProblemSolution />
+        <LocationCompareSection />
         <HowItWorks />
         <IndustrySolutions />
         <RoiCalculator />
         <FaqSection />
       </main>
 
-      {/* Grand Footer with Final CTA */}
       <LandingFooter />
-
-      {/* Interactive Audit Modal (Opens on 'PDF Audit Namunasi' click) */}
       <AuditReportModal />
     </div>
   );

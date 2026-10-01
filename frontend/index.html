@@ -1,18 +1,29 @@
 <!doctype html>
-<html lang="uz" class="light">
+<html lang="uz">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" href="/brand/logo_icon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MakonSense — Spatial Intelligence & Location Analytics</title>
+    <!-- Anti-FOUC: Apply saved theme before first paint -->
+    <script>
+      (function() {
+        try {
+          var saved = localStorage.getItem('makonsense_theme');
+          if (saved === 'dark') {
+            document.documentElement.classList.add('dark');
+          } else {
+            document.documentElement.classList.remove('dark');
+          }
+        } catch(e) {}
+      })();
+    </script>
     <!-- MapLibre GL CSS -->
     <link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet" />
-    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   </head>
-  <body class="bg-[#FBFBFD] text-[#0C4137] antialiased selection:bg-[#06D6A0]/25 selection:text-[#0C4137]">
+  <body class="antialiased">
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
