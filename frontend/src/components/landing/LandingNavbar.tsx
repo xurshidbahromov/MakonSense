@@ -187,7 +187,7 @@ export const LandingNavbar: React.FC = () => {
                       duration: 0.18,
                       ease: [0.22, 1, 0.36, 1],
                     }}
-                    className="absolute inset-0 z-0 rounded-full bg-white shadow-[0_2px_8px_rgba(0,0,0,0.08)] dark:bg-white/[0.12] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.15)]"
+                    className="absolute inset-0 z-0 rounded-full bg-white dark:bg-white/[0.12] border border-black/[0.06] dark:border-white/[0.08]"
                   />
                 )}
 
