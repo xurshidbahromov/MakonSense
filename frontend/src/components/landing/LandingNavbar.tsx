@@ -44,16 +44,23 @@ export const LandingNavbar: React.FC = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
+      setScrolled(window.scrollY > 30);
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   return (
     <header className="fixed top-3.5 sm:top-5 left-0 right-0 z-50 pointer-events-none transition-all duration-300">
-      {/* Harmonious Apple Proximity Container (max-w-5xl / 6xl rather than stretched 7xl) */}
-      <div className="max-w-5xl xl:max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between gap-3">
+      {/* Dynamic Container: wide & borderless at top (max-w-7xl), compacts to original island width on scroll (max-w-5xl/6xl) */}
+      <div
+        className={`mx-auto transition-all duration-500 ease-out flex items-center justify-between gap-3 ${
+          scrolled
+            ? 'max-w-5xl xl:max-w-6xl px-4 sm:px-6'
+            : 'max-w-7xl px-6 sm:px-10'
+        }`}
+      >
         {/* ========================================================= */}
         {/* ISLAND 1 (LEFT): BRAND DYNAMIC ISLAND                     */}
         {/* Clean, iconic, Apple-minimalist, React Bits Magnet        */}
@@ -67,8 +74,10 @@ export const LandingNavbar: React.FC = () => {
               setActiveTab('home');
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
-            className={`pointer-events-auto h-[50px] px-3.5 sm:px-4 rounded-full border border-white/60 bg-white/45 backdrop-blur-2xl backdrop-saturate-[180%] shadow-[inset_0_1px_1px_rgba(255,255,255,0.9),0_4px_16px_rgba(0,0,0,0.02)] hover:bg-white/65 hover:border-white/80 transition-all flex items-center gap-2 cursor-pointer select-none ${
-              scrolled ? 'bg-white/65 border-white/70 shadow-[0_6px_24px_rgba(0,0,0,0.03)]' : ''
+            className={`pointer-events-auto h-[50px] rounded-full transition-all duration-500 flex items-center gap-2 cursor-pointer select-none ${
+              scrolled
+                ? 'px-3.5 sm:px-4 border border-white/60 bg-white/65 backdrop-blur-2xl backdrop-saturate-[180%] shadow-[inset_0_1px_1px_rgba(255,255,255,0.9),0_4px_16px_rgba(0,0,0,0.02)] hover:bg-white/75 hover:border-white/80'
+                : 'px-1 bg-transparent border-transparent shadow-none hover:opacity-85'
             }`}
           >
             <img
@@ -96,10 +105,12 @@ export const LandingNavbar: React.FC = () => {
           }}
           className="pointer-events-auto relative hidden md:flex items-center h-[50px] p-1.5 rounded-full select-none"
         >
-          {/* Island 2 Glass Capsule Background (Isolated so it does NOT clip dropdown backdrops) */}
+          {/* Island 2 Glass Capsule Background (Active only when scrolled) */}
           <div
-            className={`absolute inset-0 rounded-full border border-white/60 bg-white/45 backdrop-blur-2xl backdrop-saturate-[180%] shadow-[inset_0_1px_1px_rgba(255,255,255,0.9),0_4px_16px_rgba(0,0,0,0.02)] hover:border-white/80 transition-all pointer-events-none -z-10 ${
-              scrolled ? 'bg-white/65 border-white/70 shadow-[0_6px_24px_rgba(0,0,0,0.03)]' : ''
+            className={`absolute inset-0 rounded-full transition-all duration-500 pointer-events-none -z-10 ${
+              scrolled
+                ? 'opacity-100 border border-white/60 bg-white/45 backdrop-blur-2xl backdrop-saturate-[180%] shadow-[inset_0_1px_1px_rgba(255,255,255,0.9),0_4px_16px_rgba(0,0,0,0.02)] hover:border-white/80'
+                : 'opacity-0 border-transparent bg-transparent shadow-none'
             }`}
           />
           {NAV_TABS.map((tab) => {
@@ -469,8 +480,10 @@ export const LandingNavbar: React.FC = () => {
         <motion.div
           whileHover={{ y: -0.5 }}
           transition={{ type: 'spring', stiffness: 450, damping: 26 }}
-          className={`pointer-events-auto hidden sm:flex items-center h-[50px] pl-2 sm:pl-2.5 pr-3.5 sm:pr-4 rounded-full border border-white/60 bg-white/45 backdrop-blur-2xl backdrop-saturate-[180%] shadow-[inset_0_1px_1px_rgba(255,255,255,0.9),0_4px_16px_rgba(0,0,0,0.02)] hover:border-white/80 transition-all gap-1.5 sm:gap-2 ${
-            scrolled ? 'bg-white/65 border-white/70 shadow-[0_6px_24px_rgba(0,0,0,0.03)]' : ''
+          className={`pointer-events-auto hidden sm:flex items-center h-[50px] rounded-full transition-all duration-500 ${
+            scrolled
+              ? 'pl-2 sm:pl-2.5 pr-3.5 sm:pr-4 border border-white/60 bg-white/45 backdrop-blur-2xl backdrop-saturate-[180%] shadow-[inset_0_1px_1px_rgba(255,255,255,0.9),0_4px_16px_rgba(0,0,0,0.02)] hover:border-white/80 gap-1.5 sm:gap-2'
+              : 'pl-1 pr-1 bg-transparent border-transparent shadow-none gap-2 sm:gap-2.5'
           }`}
         >
           {/* Apple-style minimalist glass mode toggle */}
@@ -512,7 +525,11 @@ export const LandingNavbar: React.FC = () => {
         <div className="pointer-events-auto md:hidden">
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="h-[50px] w-[50px] rounded-full border border-white/60 bg-white/45 backdrop-blur-2xl backdrop-saturate-[180%] shadow-[inset_0_1px_1px_rgba(255,255,255,0.9),0_4px_16px_rgba(0,0,0,0.02)] hover:bg-white/65 hover:border-white/80 text-neutral-700 flex items-center justify-center transition-all cursor-pointer"
+            className={`rounded-full transition-all duration-500 text-neutral-700 flex items-center justify-center cursor-pointer ${
+              scrolled
+                ? 'h-[50px] w-[50px] border border-white/60 bg-white/45 backdrop-blur-2xl backdrop-saturate-[180%] shadow-[inset_0_1px_1px_rgba(255,255,255,0.9),0_4px_16px_rgba(0,0,0,0.02)] hover:bg-white/65 hover:border-white/80'
+                : 'h-[44px] w-[44px] bg-transparent border-transparent shadow-none hover:bg-black/[0.04]'
+            }`}
           >
             {mobileMenuOpen ? <X className="w-4 h-4 text-[#0C4137]" /> : <Menu className="w-4 h-4 text-[#0C4137]" />}
           </button>
