@@ -217,7 +217,7 @@ export const LandingHero: React.FC = () => {
             transition={{ duration: 0.65, delay: 0.25, ease: [0.2, 0, 0, 1] }}
             className="relative"
           >
-            <div className="rounded-3xl border border-black/[0.08] dark:border-white/15 bg-white/45 dark:bg-[#161616]/50 backdrop-blur-2xl backdrop-saturate-[180%] overflow-hidden shadow-none dark:shadow-none">
+            <div className="rounded-3xl border-2 border-white/80 dark:border-white/20 bg-white/45 dark:bg-[#161616]/50 backdrop-blur-2xl backdrop-saturate-[180%] overflow-hidden shadow-none dark:shadow-none">
 
               {/* Card Top: Location Selector Pills */}
               <div className="px-5 pt-4 pb-3 border-b border-black/[0.04] dark:border-white/[0.05] bg-black/[0.015] dark:bg-white/[0.015]">
@@ -438,7 +438,7 @@ export const LandingHero: React.FC = () => {
             </div>
 
             {/* Floating Live Badge */}
-            <div className="absolute -bottom-3 -right-2 sm:-right-4 flex items-center gap-2 bg-white/70 dark:bg-[#1e1e1e]/70 backdrop-blur-xl border border-black/[0.08] dark:border-white/20 rounded-full px-3.5 py-1.5 shadow-none dark:shadow-none">
+            <div className="absolute -bottom-3 -right-2 sm:-right-4 flex items-center gap-2 bg-white/70 dark:bg-[#1e1e1e]/70 backdrop-blur-xl border-[1.5px] border-white/80 dark:border-white/20 rounded-full px-3.5 py-1.5 shadow-none dark:shadow-none">
               <Sparkles size={12} className="text-[#0E9F6E]" />
               <span className="text-[11px] font-semibold text-[#111111] dark:text-[#FDFDFD]">
                 AI Tahlil tayyor

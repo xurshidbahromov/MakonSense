@@ -91,7 +91,7 @@ export const LandingNavbar: React.FC = () => {
             }}
             className={`pointer-events-auto h-[50px] rounded-full transition-all duration-500 flex items-center gap-2 cursor-pointer select-none ${
               scrolled
-                ? 'px-3.5 sm:px-4 border border-black/[0.08] dark:border-white/15 bg-white/60 dark:bg-[#161616]/65 backdrop-blur-2xl backdrop-saturate-[180%] shadow-none dark:shadow-none hover:bg-white/75 dark:hover:bg-[#1c1c1c]/80'
+                ? 'px-3.5 sm:px-4 border border-black/[0.07] dark:border-white/15 bg-white/65 dark:bg-[#161616]/70 backdrop-blur-[40px] backdrop-saturate-[200%] shadow-none dark:shadow-none hover:bg-white/80 dark:hover:bg-[#1c1c1c]/85'
                 : 'px-1 bg-transparent border-transparent shadow-none hover:opacity-85'
             }`}
           >
@@ -124,7 +124,7 @@ export const LandingNavbar: React.FC = () => {
           <div
             className={`absolute inset-0 rounded-full transition-all duration-500 pointer-events-none -z-10 ${
               scrolled
-                ? 'opacity-100 border border-black/[0.08] dark:border-white/15 bg-white/60 dark:bg-[#161616]/65 backdrop-blur-2xl backdrop-saturate-[180%] shadow-none dark:shadow-none'
+                ? 'opacity-100 border border-black/[0.07] dark:border-white/15 bg-white/65 dark:bg-[#161616]/70 backdrop-blur-[40px] backdrop-saturate-[200%] shadow-none dark:shadow-none'
                 : 'opacity-0 border-transparent bg-transparent shadow-none'
             }`}
           />
@@ -250,10 +250,10 @@ export const LandingNavbar: React.FC = () => {
                 onMouseLeave={() => setSolutionsOpen(false)}
                 style={{
                   transformOrigin: 'top center',
-                  backdropFilter: 'blur(28px) saturate(190%)',
-                  WebkitBackdropFilter: 'blur(28px) saturate(190%)',
+                  backdropFilter: 'blur(40px) saturate(200%)',
+                  WebkitBackdropFilter: 'blur(40px) saturate(200%)',
                 }}
-                className="apple-glass-dropdown absolute top-full left-0 right-0 mt-2 w-full rounded-[26px] p-3.5 space-y-2 z-50 before:content-[''] before:absolute before:-top-3 before:left-0 before:right-0 before:h-3"
+                className="apple-glass-dropdown absolute top-full left-0 right-0 mt-2 w-full rounded-[26px] p-3.5 space-y-2 z-50 shadow-none dark:shadow-none before:content-[''] before:absolute before:-top-3 before:left-0 before:right-0 before:h-3"
               >
                 <div className="px-2 pt-0.5 pb-1.5 flex items-center justify-between text-[11px] font-mono uppercase tracking-wider text-neutral-400 dark:text-neutral-400 font-semibold border-b border-black/[0.04] dark:border-white/[0.06]">
                   <span>Sohaviy Geomarketing Tahlili</span>
@@ -364,10 +364,10 @@ export const LandingNavbar: React.FC = () => {
                 onMouseLeave={() => setRegionsOpen(false)}
                 style={{
                   transformOrigin: 'top center',
-                  backdropFilter: 'blur(28px) saturate(190%)',
-                  WebkitBackdropFilter: 'blur(28px) saturate(190%)',
+                  backdropFilter: 'blur(40px) saturate(200%)',
+                  WebkitBackdropFilter: 'blur(40px) saturate(200%)',
                 }}
-                className="apple-glass-dropdown absolute top-full left-0 right-0 mt-2 w-full rounded-[26px] p-3.5 space-y-2 z-50 before:content-[''] before:absolute before:-top-3 before:left-0 before:right-0 before:h-3"
+                className="apple-glass-dropdown absolute top-full left-0 right-0 mt-2 w-full rounded-[26px] p-3.5 space-y-2 z-50 shadow-none dark:shadow-none before:content-[''] before:absolute before:-top-3 before:left-0 before:right-0 before:h-3"
               >
                 <div className="px-2 pt-0.5 pb-1.5 flex items-center justify-between text-[11px] font-mono uppercase tracking-wider text-neutral-400 dark:text-neutral-400 font-semibold border-b border-black/[0.04] dark:border-white/[0.06]">
                   <span>Butun O‘zbekiston Qamrovi</span>
@@ -495,7 +495,7 @@ export const LandingNavbar: React.FC = () => {
           transition={{ type: 'spring', stiffness: 450, damping: 26 }}
           className={`pointer-events-auto hidden sm:flex items-center h-[50px] rounded-full transition-all duration-500 ${
             scrolled
-              ? 'pl-2 sm:pl-2.5 pr-3.5 sm:pr-4 border border-black/[0.08] dark:border-white/15 bg-white/60 dark:bg-[#161616]/65 backdrop-blur-2xl backdrop-saturate-[180%] shadow-none dark:shadow-none gap-1.5 sm:gap-2'
+              ? 'pl-2 sm:pl-2.5 pr-3.5 sm:pr-4 border border-black/[0.07] dark:border-white/15 bg-white/65 dark:bg-[#161616]/70 backdrop-blur-[40px] backdrop-saturate-[200%] shadow-none dark:shadow-none gap-1.5 sm:gap-2'
               : 'pl-1 pr-1 bg-transparent border-transparent shadow-none gap-2 sm:gap-2.5'
           }`}
         >
@@ -540,7 +540,7 @@ export const LandingNavbar: React.FC = () => {
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className={`rounded-full transition-all duration-500 text-neutral-700 dark:text-neutral-200 flex items-center justify-center cursor-pointer ${
               scrolled
-                ? 'h-[50px] w-[50px] border border-black/[0.08] dark:border-white/[0.1] bg-white/75 dark:bg-[#161616]/85 backdrop-blur-2xl backdrop-saturate-[180%] shadow-sm hover:bg-white/90 dark:hover:bg-[#1c1c1c]/90'
+                ? 'h-[50px] w-[50px] border border-black/[0.07] dark:border-white/15 bg-white/65 dark:bg-[#161616]/70 backdrop-blur-[40px] backdrop-saturate-[200%] shadow-none dark:shadow-none hover:bg-white/80 dark:hover:bg-[#1c1c1c]/85'
                 : 'h-[44px] w-[44px] bg-transparent border-transparent shadow-none hover:bg-black/[0.04] dark:hover:bg-white/[0.06]'
             }`}
           >
@@ -557,7 +557,7 @@ export const LandingNavbar: React.FC = () => {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -8, scale: 0.98 }}
             transition={{ type: 'spring', stiffness: 450, damping: 30 }}
-            className="apple-glass-dropdown pointer-events-auto md:hidden mx-4 mt-2 rounded-[24px] p-4 space-y-2 border border-white/80 dark:border-white/15"
+            className="apple-glass-dropdown pointer-events-auto md:hidden mx-4 mt-2 rounded-[24px] p-4 space-y-2 border border-black/[0.07] dark:border-white/15 shadow-none dark:shadow-none"
           >
             <a
               href="#features"

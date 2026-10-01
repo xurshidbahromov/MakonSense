@@ -149,7 +149,7 @@ export const IndustrySolutions: React.FC = () => {
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
-          className="mt-12 p-8 sm:p-12 rounded-3xl bg-white/45 dark:bg-[#161616]/45 backdrop-blur-2xl backdrop-saturate-[180%] border border-black/[0.08] dark:border-white/15 shadow-none dark:shadow-none grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-12 lg:gap-16"
+          className="mt-12 p-8 sm:p-12 rounded-3xl bg-white/45 dark:bg-[#161616]/45 backdrop-blur-2xl backdrop-saturate-[180%] border-2 border-white/80 dark:border-white/20 shadow-none dark:shadow-none grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-12 lg:gap-16"
         >
           {/* Left: metrics */}
           <div>

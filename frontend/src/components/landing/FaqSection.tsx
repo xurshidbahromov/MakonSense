@@ -67,7 +67,7 @@ export const FaqSection: React.FC = () => {
         </h2>
 
         {/* FAQ List */}
-        <div className="mt-14 p-6 sm:p-10 rounded-3xl bg-white/45 dark:bg-[#161616]/45 backdrop-blur-2xl backdrop-saturate-[180%] border border-black/[0.08] dark:border-white/15 shadow-none dark:shadow-none divide-y divide-black/[0.06] dark:divide-white/[0.08]">
+        <div className="mt-14 p-6 sm:p-10 rounded-3xl bg-white/45 dark:bg-[#161616]/45 backdrop-blur-2xl backdrop-saturate-[180%] border-2 border-white/80 dark:border-white/20 shadow-none dark:shadow-none divide-y divide-black/[0.05] dark:divide-white/[0.07]">
           {FAQS.map((faq) => {
             const isOpen = openId === faq.id;
             return (

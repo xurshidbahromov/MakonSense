@@ -38,7 +38,7 @@ export const RoiCalculator: React.FC = () => {
         </p>
 
         {/* Content */}
-        <div className="mt-14 p-8 sm:p-12 rounded-3xl bg-white/45 dark:bg-[#161616]/45 backdrop-blur-2xl backdrop-saturate-[180%] border border-black/[0.08] dark:border-white/15 shadow-none dark:shadow-none grid grid-cols-1 lg:grid-cols-2 gap-0">
+        <div className="mt-14 p-8 sm:p-12 rounded-3xl bg-white/45 dark:bg-[#161616]/45 backdrop-blur-2xl backdrop-saturate-[180%] border-2 border-white/80 dark:border-white/20 shadow-none dark:shadow-none grid grid-cols-1 lg:grid-cols-2 gap-0">
 
           {/* Left: Slider */}
           <div className="lg:pr-20 pb-12 lg:pb-0">

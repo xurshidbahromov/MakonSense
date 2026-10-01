@@ -30,7 +30,7 @@ export const LandingFooter: React.FC = () => {
 
       {/* Final CTA Card */}
       <div className="max-w-7xl mx-auto px-6 lg:px-8 pt-20 pb-16">
-        <div className="p-8 sm:p-14 rounded-3xl bg-white/45 dark:bg-[#161616]/45 backdrop-blur-2xl backdrop-saturate-[180%] border border-black/[0.08] dark:border-white/15 shadow-none dark:shadow-none grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div className="p-8 sm:p-14 rounded-3xl bg-white/45 dark:bg-[#161616]/45 backdrop-blur-2xl backdrop-saturate-[180%] border-2 border-white/80 dark:border-white/20 shadow-none dark:shadow-none grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div>
             <span className="font-mono text-xs tracking-[0.18em] uppercase text-[#A4A9A5]">
               Bepul boshlang
