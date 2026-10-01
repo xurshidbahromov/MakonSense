@@ -67,19 +67,20 @@ export const LandingNavbar: React.FC = () => {
               setActiveTab('home');
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
-            className={`pointer-events-auto h-[46px] px-4 rounded-full border border-black/[0.07] bg-white/75 backdrop-blur-2xl shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] hover:bg-white/90 hover:border-black/[0.12] transition-all flex items-center gap-2.5 cursor-pointer select-none ${
-              scrolled ? 'bg-white/85 shadow-[0_4px_20px_rgba(0,0,0,0.03)]' : ''
+            className={`pointer-events-auto h-[50px] px-3.5 sm:px-4 rounded-full border border-white/60 bg-white/45 backdrop-blur-2xl backdrop-saturate-[180%] shadow-[inset_0_1px_1px_rgba(255,255,255,0.9),0_4px_16px_rgba(0,0,0,0.02)] hover:bg-white/65 hover:border-white/80 transition-all flex items-center gap-2 cursor-pointer select-none ${
+              scrolled ? 'bg-white/65 border-white/70 shadow-[0_6px_24px_rgba(0,0,0,0.03)]' : ''
             }`}
           >
             <img
-              src="/brand/logo_icon.png"
-              alt="MakonSense Logo"
-              className="h-5 w-auto object-contain"
+              src={isDarkMode ? '/brand/logo_icon_white.png' : '/brand/logo_icon.png'}
+              alt="MakonSense Icon"
+              className="h-[23px] sm:h-[24.5px] w-auto object-contain flex-shrink-0"
             />
-            <span className="font-bold text-[15px] tracking-[-0.02em] text-[#0C4137]">
-              MakonSense
-            </span>
-            <span className="w-1.5 h-1.5 rounded-full bg-[#06D6A0] opacity-80" />
+            <img
+              src={isDarkMode ? '/brand/logo_text_white.png' : '/brand/logo_text_dark.png'}
+              alt="MakonSense"
+              className="h-[13px] sm:h-[13.5px] w-auto object-contain select-none"
+            />
           </motion.div>
         </Magnet>
 
@@ -87,18 +88,20 @@ export const LandingNavbar: React.FC = () => {
         {/* ISLAND 2 (CENTER): DYNAMIC SEGMENTED SWITCH ISLAND        */}
         {/* Apple liquid sliding pill, optical padding, crystal glass  */}
         {/* ========================================================= */}
-        <motion.nav
-          whileHover={{ y: -0.5 }}
-          transition={{ type: 'spring', stiffness: 450, damping: 26 }}
+        <nav
           onMouseLeave={() => {
             setHoveredTab(null);
             setSolutionsOpen(false);
             setRegionsOpen(false);
           }}
-          className={`pointer-events-auto relative hidden md:flex items-center h-[46px] p-1 rounded-full border border-black/[0.07] bg-white/75 backdrop-blur-2xl shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] hover:border-black/[0.12] transition-all ${
-            scrolled ? 'bg-white/85 shadow-[0_4px_20px_rgba(0,0,0,0.03)]' : ''
-          }`}
+          className="pointer-events-auto relative hidden md:flex items-center h-[50px] p-1.5 rounded-full select-none"
         >
+          {/* Island 2 Glass Capsule Background (Isolated so it does NOT clip dropdown backdrops) */}
+          <div
+            className={`absolute inset-0 rounded-full border border-white/60 bg-white/45 backdrop-blur-2xl backdrop-saturate-[180%] shadow-[inset_0_1px_1px_rgba(255,255,255,0.9),0_4px_16px_rgba(0,0,0,0.02)] hover:border-white/80 transition-all pointer-events-none -z-10 ${
+              scrolled ? 'bg-white/65 border-white/70 shadow-[0_6px_24px_rgba(0,0,0,0.03)]' : ''
+            }`}
+          />
           {NAV_TABS.map((tab) => {
             const isSelected = activeTab === tab.id;
             const isHovered = hoveredTab === tab.id;
@@ -119,15 +122,31 @@ export const LandingNavbar: React.FC = () => {
               }
             };
 
-            const handleClick = () => {
+            const handleClick = (e: React.MouseEvent) => {
               setActiveTab(tab.id);
               if (tab.id === 'home') {
+                e.preventDefault();
                 window.scrollTo({ top: 0, behavior: 'smooth' });
+              } else if (tab.href && tab.href.startsWith('#')) {
+                e.preventDefault();
+                const target = document.querySelector(tab.href);
+                if (target) {
+                  target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
               }
             };
 
             const labelContent = (
-              <>
+              <span className="flex items-center gap-1.5">
+                {isSelected ? (
+                  <motion.span
+                    layoutId="dynamic-island-active-droplet"
+                    transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
+                    className="w-1.5 h-1.5 rounded-full bg-[#06D6A0] inline-block flex-shrink-0"
+                  />
+                ) : (
+                  <span className="w-1.5 h-1.5 rounded-full bg-transparent inline-block flex-shrink-0" />
+                )}
                 <span>{tab.label}</span>
                 {tab.hasDropdown && (
                   <ChevronDown
@@ -138,26 +157,34 @@ export const LandingNavbar: React.FC = () => {
                     }`}
                   />
                 )}
-              </>
+              </span>
             );
 
             return (
               <div key={tab.id} className="relative">
-                {/* Framer Motion Sliding Active Pill */}
+                {/* Framer Motion Sliding Active Pill (Zero-shadow, pure minimalist flat white tile) */}
                 {isSelected && (
                   <motion.div
                     layoutId="dynamic-island-active-pill"
-                    transition={{ type: 'spring', stiffness: 440, damping: 32 }}
-                    className="absolute inset-0 z-0 bg-white rounded-full border border-black/[0.06] shadow-[0_1px_3px_rgba(0,0,0,0.06)]"
+                    transition={{
+                      duration: 0.18,
+                      ease: [0.22, 1, 0.36, 1],
+                    }}
+                    className={`absolute inset-0 z-0 rounded-full ${
+                      isDarkMode ? 'bg-white/20' : 'bg-white'
+                    }`}
                   />
                 )}
 
-                {/* Framer Motion Hover Ghost Pill */}
+                {/* Framer Motion Hover Ghost Pill (Feather-light 140ms) */}
                 {isHovered && !isSelected && (
                   <motion.div
                     layoutId="dynamic-island-hover-pill"
-                    transition={{ type: 'spring', stiffness: 480, damping: 35 }}
-                    className="absolute inset-0 z-0 bg-black/[0.03] rounded-full"
+                    transition={{
+                      duration: 0.14,
+                      ease: [0.22, 1, 0.36, 1],
+                    }}
+                    className="absolute inset-0 z-0 bg-black/[0.025] dark:bg-white/[0.06] rounded-full"
                   />
                 )}
 
@@ -166,8 +193,10 @@ export const LandingNavbar: React.FC = () => {
                     href={tab.href}
                     onMouseEnter={handleMouseEnter}
                     onClick={handleClick}
-                    className={`relative z-10 flex items-center gap-1.5 px-3.5 py-1.5 text-[13.5px] rounded-full transition-colors duration-150 cursor-pointer whitespace-nowrap ${
-                      isSelected ? 'text-[#0C4137] font-semibold' : 'text-neutral-600 hover:text-neutral-900 font-medium'
+                    className={`relative z-10 flex items-center gap-1.5 px-4 py-2 text-[14px] rounded-full transition-colors duration-150 cursor-pointer whitespace-nowrap ${
+                      isSelected
+                        ? isDarkMode ? 'text-white font-semibold' : 'text-[#0C4137] font-semibold'
+                        : isDarkMode ? 'text-neutral-300 hover:text-white font-medium' : 'text-neutral-500 hover:text-neutral-900 font-medium'
                     }`}
                   >
                     {labelContent}
@@ -176,26 +205,56 @@ export const LandingNavbar: React.FC = () => {
                   <button
                     onMouseEnter={handleMouseEnter}
                     onClick={handleClick}
-                    className={`relative z-10 flex items-center gap-1.5 px-3.5 py-1.5 text-[13.5px] rounded-full transition-colors duration-150 cursor-pointer whitespace-nowrap ${
-                      isSelected ? 'text-[#0C4137] font-semibold' : 'text-neutral-600 hover:text-neutral-900 font-medium'
+                    className={`relative z-10 flex items-center gap-1.5 px-4 py-2 text-[14px] rounded-full transition-colors duration-150 cursor-pointer whitespace-nowrap ${
+                      isSelected
+                        ? isDarkMode ? 'text-white font-semibold' : 'text-[#0C4137] font-semibold'
+                        : isDarkMode ? 'text-neutral-300 hover:text-white font-medium' : 'text-neutral-500 hover:text-neutral-900 font-medium'
                     }`}
                   >
                     {labelContent}
                   </button>
                 )}
 
-                {/* Solutions Dropdown Menu (AnimatePresence) */}
+                {/* Solutions Dropdown Menu (Water droplet drip reveal, aligned with link) */}
                 <AnimatePresence>
                   {isSolutions && solutionsOpen && (
                     <motion.div
-                      initial={{ opacity: 0, y: 10, scale: 0.96 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={{ opacity: 0, y: 8, scale: 0.96 }}
-                      transition={{ type: 'spring', stiffness: 450, damping: 28 }}
+                      initial={{ opacity: 0, y: -12, scaleY: 0.88, scaleX: 0.96 }}
+                      animate={{ opacity: 1, y: 0, scaleY: 1, scaleX: 1 }}
+                      exit={{ opacity: 0, y: -8, scaleY: 0.9, transition: { duration: 0.14 } }}
+                      transition={{ type: 'spring', stiffness: 360, damping: 24, mass: 0.7 }}
                       onMouseEnter={() => setSolutionsOpen(true)}
                       onMouseLeave={() => setSolutionsOpen(false)}
-                      className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-[400px] sm:w-[440px] bg-white/95 backdrop-blur-3xl border border-black/[0.08] shadow-[0_24px_50px_rgba(0,0,0,0.08),0_1px_3px_rgba(0,0,0,0.04)] rounded-[24px] p-3 space-y-1.5 z-50"
+                      style={{
+                        transformOrigin: '28px 0px',
+                        backdropFilter: 'blur(28px) saturate(190%)',
+                        WebkitBackdropFilter: 'blur(28px) saturate(190%)',
+                      }}
+                      className="apple-glass-dropdown absolute top-full left-0 mt-3 w-[400px] sm:w-[440px] rounded-[24px] p-3 space-y-1.5 z-50 before:content-[''] before:absolute before:-top-4 before:left-0 before:right-0 before:h-4"
                     >
+                      {/* Water Droplet Drip Connector (Suv tomchisi) */}
+                      <div className="absolute -top-3 left-6 flex flex-col items-center pointer-events-none z-20">
+                        <svg
+                          width="16"
+                          height="14"
+                          viewBox="0 0 16 14"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="overflow-visible drop-shadow-[0_2px_4px_rgba(12,65,55,0.08)]"
+                        >
+                          <path
+                            d="M8 0C8 0 3 5 3 8.5C3 11.5 5.2 14 8 14C10.8 14 13 11.5 13 8.5C13 5 8 0 8 0Z"
+                            fill="rgba(255, 255, 255, 0.95)"
+                          />
+                          <path
+                            d="M6 7.5C6 6.2 6.8 5.2 8 4.8"
+                            stroke="#06D6A0"
+                            strokeWidth="1.2"
+                            strokeLinecap="round"
+                          />
+                        </svg>
+                      </div>
+
                       <div className="px-3 pt-1 pb-2 flex items-center justify-between text-[11px] font-mono uppercase tracking-wider text-neutral-400 font-semibold border-b border-black/[0.04]">
                         <span>Sohaviy Geomarketing Tahlili</span>
                         <span className="text-[#06D6A0] font-bold">Sun’iy Intellekt</span>
@@ -204,103 +263,167 @@ export const LandingNavbar: React.FC = () => {
                       <a
                         href="#solutions"
                         onClick={() => setSolutionsOpen(false)}
-                        className="flex items-start gap-3 p-2.5 rounded-[16px] hover:bg-black/[0.035] transition-all duration-200 ease-out group cursor-pointer"
+                        className="flex items-center gap-3 px-3.5 py-2.5 rounded-[16px] hover:bg-black/[0.035] transition-all duration-200 ease-out group cursor-pointer"
                       >
-                        <Coffee className="w-5 h-5 text-[#0C4137] group-hover:-translate-y-0.5 transition-transform duration-200 ease-out mt-0.5 flex-shrink-0" />
-                        <div className="flex-1 min-w-0 group-hover:translate-x-1.5 transition-transform duration-200 ease-out">
-                          <div className="text-[13px] font-bold text-[#0C4137] flex items-center justify-between">
-                            <span>HoReCa, Kafe & Restoranlar</span>
-                            <ArrowRight className="w-3.5 h-3.5 text-[#0C4137] opacity-0 -translate-x-1.5 group-hover:opacity-40 group-hover:translate-x-0 transition-all duration-200 ease-out" />
+                        {/* Centered Icon Container (Centered on X and Y) */}
+                        <div className="w-7 h-7 flex items-center justify-center flex-shrink-0">
+                          <Coffee className="w-5 h-5 text-[#0C4137] transition-transform duration-200 ease-out group-hover:scale-105" />
+                        </div>
+
+                        {/* Text Content with subtle nudge */}
+                        <div className="flex-1 min-w-0 pr-2">
+                          <div className="text-[13px] font-bold text-[#0C4137] tracking-tight group-hover:translate-x-1 transition-transform duration-200 ease-out">
+                            HoReCa, Kafe & Restoranlar
                           </div>
-                          <div className="text-[11px] text-neutral-500 leading-snug mt-0.5">
+                          <div className="text-[11px] text-neutral-500 leading-snug mt-0.5 group-hover:translate-x-1 transition-transform duration-200 ease-out">
                             Piyoda tranzit oqimi, pik soatlar va raqobat tahlili
                           </div>
                         </div>
+
+                        {/* Arrow with comfortable right breathing room */}
+                        <div className="w-5 h-5 flex items-center justify-center flex-shrink-0 mr-1.5">
+                          <ArrowRight className="w-3.5 h-3.5 text-[#0C4137] opacity-0 -translate-x-1 group-hover:opacity-40 group-hover:translate-x-0 transition-all duration-200 ease-out" />
+                        </div>
                       </a>
 
                       <a
                         href="#solutions"
                         onClick={() => setSolutionsOpen(false)}
-                        className="flex items-start gap-3 p-2.5 rounded-[16px] hover:bg-black/[0.035] transition-all duration-200 ease-out group cursor-pointer"
+                        className="flex items-center gap-3 px-3.5 py-2.5 rounded-[16px] hover:bg-black/[0.035] transition-all duration-200 ease-out group cursor-pointer"
                       >
-                        <ShoppingBag className="w-5 h-5 text-[#0C4137] group-hover:-translate-y-0.5 transition-transform duration-200 ease-out mt-0.5 flex-shrink-0" />
-                        <div className="flex-1 min-w-0 group-hover:translate-x-1.5 transition-transform duration-200 ease-out">
-                          <div className="text-[13px] font-bold text-[#0C4137] flex items-center justify-between">
-                            <span>Supermarket & Chakana Savdo</span>
-                            <ArrowRight className="w-3.5 h-3.5 text-[#0C4137] opacity-0 -translate-x-1.5 group-hover:opacity-40 group-hover:translate-x-0 transition-all duration-200 ease-out" />
+                        {/* Centered Icon Container */}
+                        <div className="w-7 h-7 flex items-center justify-center flex-shrink-0">
+                          <ShoppingBag className="w-5 h-5 text-[#0C4137] transition-transform duration-200 ease-out group-hover:scale-105" />
+                        </div>
+
+                        {/* Text Content */}
+                        <div className="flex-1 min-w-0 pr-2">
+                          <div className="text-[13px] font-bold text-[#0C4137] tracking-tight group-hover:translate-x-1 transition-transform duration-200 ease-out">
+                            Supermarket & Chakana Savdo
                           </div>
-                          <div className="text-[11px] text-neutral-500 leading-snug mt-0.5">
+                          <div className="text-[11px] text-neutral-500 leading-snug mt-0.5 group-hover:translate-x-1 transition-transform duration-200 ease-out">
                             Aholi zichligi, xarid quvvati va to‘lov layoqati
                           </div>
                         </div>
+
+                        {/* Arrow */}
+                        <div className="w-5 h-5 flex items-center justify-center flex-shrink-0 mr-1.5">
+                          <ArrowRight className="w-3.5 h-3.5 text-[#0C4137] opacity-0 -translate-x-1 group-hover:opacity-40 group-hover:translate-x-0 transition-all duration-200 ease-out" />
+                        </div>
                       </a>
 
                       <a
                         href="#solutions"
                         onClick={() => setSolutionsOpen(false)}
-                        className="flex items-start gap-3 p-2.5 rounded-[16px] hover:bg-black/[0.035] transition-all duration-200 ease-out group cursor-pointer"
+                        className="flex items-center gap-3 px-3.5 py-2.5 rounded-[16px] hover:bg-black/[0.035] transition-all duration-200 ease-out group cursor-pointer"
                       >
-                        <Pill className="w-5 h-5 text-[#0C4137] group-hover:-translate-y-0.5 transition-transform duration-200 ease-out mt-0.5 flex-shrink-0" />
-                        <div className="flex-1 min-w-0 group-hover:translate-x-1.5 transition-transform duration-200 ease-out">
-                          <div className="text-[13px] font-bold text-[#0C4137] flex items-center justify-between">
-                            <span>Dorixona, Tibbiyot & Optika</span>
-                            <ArrowRight className="w-3.5 h-3.5 text-[#0C4137] opacity-0 -translate-x-1.5 group-hover:opacity-40 group-hover:translate-x-0 transition-all duration-200 ease-out" />
+                        {/* Centered Icon Container */}
+                        <div className="w-7 h-7 flex items-center justify-center flex-shrink-0">
+                          <Pill className="w-5 h-5 text-[#0C4137] transition-transform duration-200 ease-out group-hover:scale-105" />
+                        </div>
+
+                        {/* Text Content */}
+                        <div className="flex-1 min-w-0 pr-2">
+                          <div className="text-[13px] font-bold text-[#0C4137] tracking-tight group-hover:translate-x-1 transition-transform duration-200 ease-out">
+                            Dorixona, Tibbiyot & Optika
                           </div>
-                          <div className="text-[11px] text-neutral-500 leading-snug mt-0.5">
+                          <div className="text-[11px] text-neutral-500 leading-snug mt-0.5 group-hover:translate-x-1 transition-transform duration-200 ease-out">
                             Monopol radius, retseptli tranzit va bemorlar oqimi
                           </div>
                         </div>
+
+                        {/* Arrow */}
+                        <div className="w-5 h-5 flex items-center justify-center flex-shrink-0 mr-1.5">
+                          <ArrowRight className="w-3.5 h-3.5 text-[#0C4137] opacity-0 -translate-x-1 group-hover:opacity-40 group-hover:translate-x-0 transition-all duration-200 ease-out" />
+                        </div>
                       </a>
 
                       <a
                         href="#solutions"
                         onClick={() => setSolutionsOpen(false)}
-                        className="flex items-start gap-3 p-2.5 rounded-[16px] hover:bg-black/[0.035] transition-all duration-200 ease-out group cursor-pointer"
+                        className="flex items-center gap-3 px-3.5 py-2.5 rounded-[16px] hover:bg-black/[0.035] transition-all duration-200 ease-out group cursor-pointer"
                       >
-                        <Building className="w-5 h-5 text-[#0C4137] group-hover:-translate-y-0.5 transition-transform duration-200 ease-out mt-0.5 flex-shrink-0" />
-                        <div className="flex-1 min-w-0 group-hover:translate-x-1.5 transition-transform duration-200 ease-out">
-                          <div className="text-[13px] font-bold text-[#0C4137] flex items-center justify-between">
-                            <span>Ko‘chmas Mulk & Tijoriy Bino</span>
-                            <ArrowRight className="w-3.5 h-3.5 text-[#0C4137] opacity-0 -translate-x-1.5 group-hover:opacity-40 group-hover:translate-x-0 transition-all duration-200 ease-out" />
+                        {/* Centered Icon Container */}
+                        <div className="w-7 h-7 flex items-center justify-center flex-shrink-0">
+                          <Building className="w-5 h-5 text-[#0C4137] transition-transform duration-200 ease-out group-hover:scale-105" />
+                        </div>
+
+                        {/* Text Content */}
+                        <div className="flex-1 min-w-0 pr-2">
+                          <div className="text-[13px] font-bold text-[#0C4137] tracking-tight group-hover:translate-x-1 transition-transform duration-200 ease-out">
+                            Ko‘chmas Mulk & Tijoriy Bino
                           </div>
-                          <div className="text-[11px] text-neutral-500 leading-snug mt-0.5">
+                          <div className="text-[11px] text-neutral-500 leading-snug mt-0.5 group-hover:translate-x-1 transition-transform duration-200 ease-out">
                             ROI prognozi, ijara stavkalari va qaytish muddati
                           </div>
                         </div>
+
+                        {/* Arrow */}
+                        <div className="w-5 h-5 flex items-center justify-center flex-shrink-0 mr-1.5">
+                          <ArrowRight className="w-3.5 h-3.5 text-[#0C4137] opacity-0 -translate-x-1 group-hover:opacity-40 group-hover:translate-x-0 transition-all duration-200 ease-out" />
+                        </div>
                       </a>
 
-                      {/* Interactive Bottom CTA Footer (Calm & Minimalist) */}
+                      {/* Interactive Bottom CTA Footer (Clear Blur Glass) */}
                       <div
                         onClick={() => {
                           setSolutionsOpen(false);
                           setCurrentView('app');
                         }}
-                        className="mt-1 pt-2.5 border-t border-black/[0.04] px-3 py-2.5 rounded-[14px] bg-black/[0.02] hover:bg-black/[0.04] flex items-center justify-between group cursor-pointer transition-colors duration-200"
+                        className="mt-1.5 px-3.5 py-2.5 rounded-[14px] bg-white/40 hover:bg-white/70 backdrop-blur-md border border-white/60 shadow-[inset_0_1px_1px_rgba(255,255,255,0.8)] flex items-center justify-between group cursor-pointer transition-all duration-200"
                       >
-                        <div className="flex items-center gap-2 group-hover:translate-x-1 transition-transform duration-200 ease-out">
-                          <Sparkles className="w-4 h-4 text-[#0C4137]/70" />
+                        <div className="flex items-center gap-2.5 group-hover:translate-x-0.5 transition-transform duration-200 ease-out">
+                          <Sparkles className="w-4 h-4 text-[#0C4137]/80" />
                           <span className="text-xs font-semibold text-[#0C4137]">
                             O‘z biznesingiz bo‘yicha bepul tahlil oling
                           </span>
                         </div>
-                        <ArrowRight className="w-3.5 h-3.5 text-[#0C4137]/60 group-hover:translate-x-1 transition-transform duration-200 ease-out" />
+                        <ArrowRight className="w-3.5 h-3.5 text-[#0C4137]/70 group-hover:translate-x-0.5 transition-transform duration-200 ease-out mr-1" />
                       </div>
                     </motion.div>
                   )}
                 </AnimatePresence>
 
-                {/* Regions Dropdown Menu (AnimatePresence) */}
+                {/* Regions Dropdown Menu (Water droplet drip reveal, aligned with link) */}
                 <AnimatePresence>
                   {isRegions && regionsOpen && (
                     <motion.div
-                      initial={{ opacity: 0, y: 10, scale: 0.96 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={{ opacity: 0, y: 8, scale: 0.96 }}
-                      transition={{ type: 'spring', stiffness: 440, damping: 28 }}
+                      initial={{ opacity: 0, y: -12, scaleY: 0.88, scaleX: 0.96 }}
+                      animate={{ opacity: 1, y: 0, scaleY: 1, scaleX: 1 }}
+                      exit={{ opacity: 0, y: -8, scaleY: 0.9, transition: { duration: 0.14 } }}
+                      transition={{ type: 'spring', stiffness: 360, damping: 24, mass: 0.7 }}
                       onMouseEnter={() => setRegionsOpen(true)}
                       onMouseLeave={() => setRegionsOpen(false)}
-                      className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-[420px] sm:w-[460px] bg-white/95 backdrop-blur-3xl border border-black/[0.08] shadow-[0_24px_50px_rgba(0,0,0,0.08),0_1px_3px_rgba(0,0,0,0.04)] rounded-[24px] p-3.5 space-y-2 z-50"
+                      style={{
+                        transformOrigin: '32px 0px',
+                        backdropFilter: 'blur(28px) saturate(190%)',
+                        WebkitBackdropFilter: 'blur(28px) saturate(190%)',
+                      }}
+                      className="apple-glass-dropdown absolute top-full left-0 sm:left-[-12px] mt-3 w-[420px] sm:w-[460px] rounded-[24px] p-3.5 space-y-2 z-50 before:content-[''] before:absolute before:-top-4 before:left-0 before:right-0 before:h-4"
                     >
+                      {/* Water Droplet Drip Connector (Suv tomchisi) */}
+                      <div className="absolute -top-3 left-7 flex flex-col items-center pointer-events-none z-20">
+                        <svg
+                          width="16"
+                          height="14"
+                          viewBox="0 0 16 14"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="overflow-visible drop-shadow-[0_2px_4px_rgba(12,65,55,0.08)]"
+                        >
+                          <path
+                            d="M8 0C8 0 3 5 3 8.5C3 11.5 5.2 14 8 14C10.8 14 13 11.5 13 8.5C13 5 8 0 8 0Z"
+                            fill="rgba(255, 255, 255, 0.95)"
+                          />
+                          <path
+                            d="M6 7.5C6 6.2 6.8 5.2 8 4.8"
+                            stroke="#06D6A0"
+                            strokeWidth="1.2"
+                            strokeLinecap="round"
+                          />
+                        </svg>
+                      </div>
+
                       <div className="px-2 pt-1 pb-1 flex items-center justify-between text-[11px] font-mono uppercase tracking-wider text-neutral-400 font-semibold border-b border-black/[0.04]">
                         <span>Butun O‘zbekiston Qamrovi</span>
                         <span className="text-[#0C4137] font-bold">14 Ta Hudud</span>
@@ -312,13 +435,15 @@ export const LandingNavbar: React.FC = () => {
                             setRegionsOpen(false);
                             setCurrentView('app');
                           }}
-                          className="p-2.5 rounded-[14px] hover:bg-black/[0.035] transition-all duration-200 cursor-pointer group"
+                          className="flex items-center gap-2.5 px-3 py-2.5 rounded-[14px] hover:bg-black/[0.035] transition-all duration-200 cursor-pointer group"
                         >
-                          <div className="flex items-center gap-1.5 text-xs font-bold text-[#0C4137] group-hover:translate-x-1 transition-transform duration-200 ease-out">
-                            <MapPin className="w-3.5 h-3.5 text-[#0C4137]/70 flex-shrink-0 group-hover:-translate-y-0.5 transition-transform duration-200" />
-                            <span>Toshkent shahri</span>
+                          <div className="w-5 h-5 flex items-center justify-center flex-shrink-0">
+                            <MapPin className="w-3.5 h-3.5 text-[#0C4137]/70 transition-transform duration-200 ease-out group-hover:scale-110" />
                           </div>
-                          <div className="text-[10px] text-neutral-400 pl-5">Markaziy hab • 52k+ bino</div>
+                          <div className="flex-1 min-w-0 group-hover:translate-x-0.5 transition-transform duration-200 ease-out">
+                            <div className="text-xs font-bold text-[#0C4137]">Toshkent shahri</div>
+                            <div className="text-[10px] text-neutral-400">Markaziy hab • 52k+ bino</div>
+                          </div>
                         </div>
 
                         <div
@@ -326,13 +451,15 @@ export const LandingNavbar: React.FC = () => {
                             setRegionsOpen(false);
                             setCurrentView('app');
                           }}
-                          className="p-2.5 rounded-[14px] hover:bg-black/[0.035] transition-all duration-200 cursor-pointer group"
+                          className="flex items-center gap-2.5 px-3 py-2.5 rounded-[14px] hover:bg-black/[0.035] transition-all duration-200 cursor-pointer group"
                         >
-                          <div className="flex items-center gap-1.5 text-xs font-bold text-[#0C4137] group-hover:translate-x-1 transition-transform duration-200 ease-out">
-                            <MapPin className="w-3.5 h-3.5 text-[#0C4137]/70 flex-shrink-0 group-hover:-translate-y-0.5 transition-transform duration-200" />
-                            <span>Samarqand</span>
+                          <div className="w-5 h-5 flex items-center justify-center flex-shrink-0">
+                            <MapPin className="w-3.5 h-3.5 text-[#0C4137]/70 transition-transform duration-200 ease-out group-hover:scale-110" />
                           </div>
-                          <div className="text-[10px] text-neutral-400 pl-5">Sayyohlik & Retail • 38k+</div>
+                          <div className="flex-1 min-w-0 group-hover:translate-x-0.5 transition-transform duration-200 ease-out">
+                            <div className="text-xs font-bold text-[#0C4137]">Samarqand</div>
+                            <div className="text-[10px] text-neutral-400">Sayyohlik & Retail • 38k+</div>
+                          </div>
                         </div>
 
                         <div
@@ -340,13 +467,15 @@ export const LandingNavbar: React.FC = () => {
                             setRegionsOpen(false);
                             setCurrentView('app');
                           }}
-                          className="p-2.5 rounded-[14px] hover:bg-black/[0.035] transition-all duration-200 cursor-pointer group"
+                          className="flex items-center gap-2.5 px-3 py-2.5 rounded-[14px] hover:bg-black/[0.035] transition-all duration-200 cursor-pointer group"
                         >
-                          <div className="flex items-center gap-1.5 text-xs font-bold text-[#0C4137] group-hover:translate-x-1 transition-transform duration-200 ease-out">
-                            <MapPin className="w-3.5 h-3.5 text-[#0C4137]/70 flex-shrink-0 group-hover:-translate-y-0.5 transition-transform duration-200" />
-                            <span>Farg‘ona vodiysi</span>
+                          <div className="w-5 h-5 flex items-center justify-center flex-shrink-0">
+                            <MapPin className="w-3.5 h-3.5 text-[#0C4137]/70 transition-transform duration-200 ease-out group-hover:scale-110" />
                           </div>
-                          <div className="text-[10px] text-neutral-400 pl-5">Aholi zichligi • 72k+</div>
+                          <div className="flex-1 min-w-0 group-hover:translate-x-0.5 transition-transform duration-200 ease-out">
+                            <div className="text-xs font-bold text-[#0C4137]">Farg‘ona vodiysi</div>
+                            <div className="text-[10px] text-neutral-400">Aholi zichligi • 72k+</div>
+                          </div>
                         </div>
 
                         <div
@@ -354,13 +483,15 @@ export const LandingNavbar: React.FC = () => {
                             setRegionsOpen(false);
                             setCurrentView('app');
                           }}
-                          className="p-2.5 rounded-[14px] hover:bg-black/[0.035] transition-all duration-200 cursor-pointer group"
+                          className="flex items-center gap-2.5 px-3 py-2.5 rounded-[14px] hover:bg-black/[0.035] transition-all duration-200 cursor-pointer group"
                         >
-                          <div className="flex items-center gap-1.5 text-xs font-bold text-[#0C4137] group-hover:translate-x-1 transition-transform duration-200 ease-out">
-                            <MapPin className="w-3.5 h-3.5 text-[#0C4137]/70 flex-shrink-0 group-hover:-translate-y-0.5 transition-transform duration-200" />
-                            <span>Buxoro & Navoiy</span>
+                          <div className="w-5 h-5 flex items-center justify-center flex-shrink-0">
+                            <MapPin className="w-3.5 h-3.5 text-[#0C4137]/70 transition-transform duration-200 ease-out group-hover:scale-110" />
                           </div>
-                          <div className="text-[10px] text-neutral-400 pl-5">Sanoat & Biznes • 31k+</div>
+                          <div className="flex-1 min-w-0 group-hover:translate-x-0.5 transition-transform duration-200 ease-out">
+                            <div className="text-xs font-bold text-[#0C4137]">Buxoro & Navoiy</div>
+                            <div className="text-[10px] text-neutral-400">Sanoat & Biznes • 31k+</div>
+                          </div>
                         </div>
 
                         <div
@@ -368,13 +499,15 @@ export const LandingNavbar: React.FC = () => {
                             setRegionsOpen(false);
                             setCurrentView('app');
                           }}
-                          className="p-2.5 rounded-[14px] hover:bg-black/[0.035] transition-all duration-200 cursor-pointer group"
+                          className="flex items-center gap-2.5 px-3 py-2.5 rounded-[14px] hover:bg-black/[0.035] transition-all duration-200 cursor-pointer group"
                         >
-                          <div className="flex items-center gap-1.5 text-xs font-bold text-[#0C4137] group-hover:translate-x-1 transition-transform duration-200 ease-out">
-                            <MapPin className="w-3.5 h-3.5 text-[#0C4137]/70 flex-shrink-0 group-hover:-translate-y-0.5 transition-transform duration-200" />
-                            <span>Qashqadaryo & Surxondaryo</span>
+                          <div className="w-5 h-5 flex items-center justify-center flex-shrink-0">
+                            <MapPin className="w-3.5 h-3.5 text-[#0C4137]/70 transition-transform duration-200 ease-out group-hover:scale-110" />
                           </div>
-                          <div className="text-[10px] text-neutral-400 pl-5">Janubiy tranzit • 44k+</div>
+                          <div className="flex-1 min-w-0 group-hover:translate-x-0.5 transition-transform duration-200 ease-out">
+                            <div className="text-xs font-bold text-[#0C4137]">Qashqadaryo & Surxondaryo</div>
+                            <div className="text-[10px] text-neutral-400">Janubiy tranzit • 44k+</div>
+                          </div>
                         </div>
 
                         <div
@@ -382,13 +515,15 @@ export const LandingNavbar: React.FC = () => {
                             setRegionsOpen(false);
                             setCurrentView('app');
                           }}
-                          className="p-2.5 rounded-[14px] hover:bg-black/[0.035] transition-all duration-200 cursor-pointer group"
+                          className="flex items-center gap-2.5 px-3 py-2.5 rounded-[14px] hover:bg-black/[0.035] transition-all duration-200 cursor-pointer group"
                         >
-                          <div className="flex items-center gap-1.5 text-xs font-bold text-[#0C4137] group-hover:translate-x-1 transition-transform duration-200 ease-out">
-                            <MapPin className="w-3.5 h-3.5 text-[#0C4137]/70 flex-shrink-0 group-hover:-translate-y-0.5 transition-transform duration-200" />
-                            <span>Qoraqalpog‘iston & Xorazm</span>
+                          <div className="w-5 h-5 flex items-center justify-center flex-shrink-0">
+                            <MapPin className="w-3.5 h-3.5 text-[#0C4137]/70 transition-transform duration-200 ease-out group-hover:scale-110" />
                           </div>
-                          <div className="text-[10px] text-neutral-400 pl-5">G‘arbiy zonalar • 29k+</div>
+                          <div className="flex-1 min-w-0 group-hover:translate-x-0.5 transition-transform duration-200 ease-out">
+                            <div className="text-xs font-bold text-[#0C4137]">Qoraqalpog‘iston & Xorazm</div>
+                            <div className="text-[10px] text-neutral-400">G‘arbiy zonalar • 29k+</div>
+                          </div>
                         </div>
                       </div>
 
@@ -397,7 +532,7 @@ export const LandingNavbar: React.FC = () => {
                           <span className="w-1.5 h-1.5 rounded-full bg-[#0C4137]/40" />
                           208 ta tuman fazoviy monitoringda
                         </span>
-                        <span className="font-mono text-[10px] text-[#0C4137] font-bold bg-black/[0.04] px-2 py-0.5 rounded-full">
+                        <span className="font-mono text-[10px] text-[#0C4137] font-bold bg-white/60 backdrop-blur-sm border border-white/70 px-2 py-0.5 rounded-full shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]">
                           524,476 ta bino
                         </span>
                       </div>
@@ -407,7 +542,7 @@ export const LandingNavbar: React.FC = () => {
               </div>
             );
           })}
-        </motion.nav>
+        </nav>
 
         {/* ========================================================= */}
         {/* ISLAND 3 (RIGHT): ACTION & CONTROL DYNAMIC ISLAND          */}
@@ -416,15 +551,15 @@ export const LandingNavbar: React.FC = () => {
         <motion.div
           whileHover={{ y: -0.5 }}
           transition={{ type: 'spring', stiffness: 450, damping: 26 }}
-          className={`pointer-events-auto hidden sm:flex items-center h-[46px] px-2 rounded-full border border-black/[0.07] bg-white/75 backdrop-blur-2xl shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] hover:border-black/[0.12] transition-all gap-1.5 ${
-            scrolled ? 'bg-white/85 shadow-[0_4px_20px_rgba(0,0,0,0.03)]' : ''
+          className={`pointer-events-auto hidden sm:flex items-center h-[50px] pl-2 sm:pl-2.5 pr-3.5 sm:pr-4 rounded-full border border-white/60 bg-white/45 backdrop-blur-2xl backdrop-saturate-[180%] shadow-[inset_0_1px_1px_rgba(255,255,255,0.9),0_4px_16px_rgba(0,0,0,0.02)] hover:border-white/80 transition-all gap-1.5 sm:gap-2 ${
+            scrolled ? 'bg-white/65 border-white/70 shadow-[0_6px_24px_rgba(0,0,0,0.03)]' : ''
           }`}
         >
           {/* Apple-style minimalist glass mode toggle */}
           <motion.button
             whileTap={{ scale: 0.92 }}
             onClick={() => setIsDarkMode(!isDarkMode)}
-            className="w-8 h-8 rounded-full bg-black/[0.03] hover:bg-black/[0.06] border border-black/[0.04] flex items-center justify-center text-neutral-600 hover:text-black transition-colors cursor-pointer select-none"
+            className="w-[34px] h-[34px] rounded-full bg-white/40 hover:bg-white/70 backdrop-blur-md border border-white/60 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)] flex items-center justify-center text-neutral-600 hover:text-black transition-all cursor-pointer select-none"
             title="Mavzu rejimi"
           >
             {isDarkMode ? (
@@ -437,7 +572,7 @@ export const LandingNavbar: React.FC = () => {
           {/* Log In Link */}
           <button
             onClick={() => setCurrentView('app')}
-            className="text-neutral-700 hover:text-[#0C4137] font-medium text-[13px] px-3 py-1.5 transition-colors cursor-pointer"
+            className="text-neutral-600 hover:text-[#0C4137] font-medium text-[13.5px] px-2.5 sm:px-3 py-1.5 rounded-full hover:bg-white/40 transition-all cursor-pointer"
           >
             Kirish
           </button>
@@ -447,7 +582,7 @@ export const LandingNavbar: React.FC = () => {
             <motion.button
               whileTap={{ scale: 0.96 }}
               onClick={() => setCurrentView('app')}
-              className="group inline-flex items-center justify-center gap-1.5 h-[34px] px-4 rounded-full bg-[#0C4137] hover:bg-[#072822] text-white text-[13px] font-semibold cursor-pointer whitespace-nowrap transition-all shadow-xs"
+              className="group inline-flex items-center justify-center gap-1.5 h-[36px] px-4 rounded-full bg-[#0C4137] hover:bg-[#072822] text-white text-[13.5px] font-semibold cursor-pointer whitespace-nowrap transition-all shadow-[0_2px_8px_rgba(12,65,55,0.18),inset_0_1px_0_rgba(255,255,255,0.2)]"
             >
               <span>Boshlash</span>
               <ArrowRight className="w-3.5 h-3.5 text-[#06D6A0] group-hover:translate-x-0.5 transition-transform" />
@@ -459,7 +594,7 @@ export const LandingNavbar: React.FC = () => {
         <div className="pointer-events-auto md:hidden">
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="h-[46px] w-[46px] rounded-full border border-black/[0.07] bg-white/80 backdrop-blur-2xl text-neutral-700 flex items-center justify-center hover:bg-white transition-all cursor-pointer"
+            className="h-[50px] w-[50px] rounded-full border border-white/60 bg-white/45 backdrop-blur-2xl backdrop-saturate-[180%] shadow-[inset_0_1px_1px_rgba(255,255,255,0.9),0_4px_16px_rgba(0,0,0,0.02)] hover:bg-white/65 hover:border-white/80 text-neutral-700 flex items-center justify-center transition-all cursor-pointer"
           >
             {mobileMenuOpen ? <X className="w-4 h-4 text-[#0C4137]" /> : <Menu className="w-4 h-4 text-[#0C4137]" />}
           </button>
@@ -474,43 +609,47 @@ export const LandingNavbar: React.FC = () => {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -8, scale: 0.98 }}
             transition={{ type: 'spring', stiffness: 450, damping: 30 }}
-            className="pointer-events-auto md:hidden mx-4 mt-2 bg-white/95 backdrop-blur-2xl border border-black/[0.08] rounded-[22px] p-4 space-y-2.5 shadow-[0_12px_32px_rgba(0,0,0,0.06)]"
+            style={{
+              backdropFilter: 'blur(28px) saturate(190%)',
+              WebkitBackdropFilter: 'blur(28px) saturate(190%)',
+            }}
+            className="apple-glass-dropdown pointer-events-auto md:hidden mx-4 mt-2 rounded-[24px] p-4 space-y-2"
           >
             <a
               href="#features"
               onClick={() => setMobileMenuOpen(false)}
-              className="block px-3 py-2 text-xs font-semibold text-[#0C4137] rounded-xl hover:bg-neutral-50 transition-colors"
+              className="block px-3.5 py-2 text-xs font-semibold text-[#0C4137] rounded-xl hover:bg-white/50 hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.8)] transition-all"
             >
               Shahar Radari
             </a>
             <a
               href="#solutions"
               onClick={() => setMobileMenuOpen(false)}
-              className="block px-3 py-2 text-xs font-semibold text-[#0C4137] rounded-xl hover:bg-neutral-50 transition-colors"
+              className="block px-3.5 py-2 text-xs font-semibold text-[#0C4137] rounded-xl hover:bg-white/50 hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.8)] transition-all"
             >
               Yechimlar (HoReCa, Retail, Dorixona)
             </a>
             <a
               href="#compare"
               onClick={() => setMobileMenuOpen(false)}
-              className="block px-3 py-2 text-xs font-semibold text-[#0C4137] rounded-xl hover:bg-neutral-50 transition-colors"
+              className="block px-3.5 py-2 text-xs font-semibold text-[#0C4137] rounded-xl hover:bg-white/50 hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.8)] transition-all"
             >
               A/B Taqqoslash
             </a>
             <a
               href="#calculator"
               onClick={() => setMobileMenuOpen(false)}
-              className="block px-3 py-2 text-xs font-semibold text-[#0C4137] rounded-xl hover:bg-neutral-50 transition-colors"
+              className="block px-3.5 py-2 text-xs font-semibold text-[#0C4137] rounded-xl hover:bg-white/50 hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.8)] transition-all"
             >
               Moliya & ROI
             </a>
-            <div className="pt-2 border-t border-black/[0.05] flex flex-col gap-2">
+            <div className="pt-2 border-t border-black/[0.04] flex flex-col gap-2">
               <button
                 onClick={() => {
                   setMobileMenuOpen(false);
                   setCurrentView('app');
                 }}
-                className="w-full py-2.5 rounded-full bg-[#0C4137] text-white font-semibold text-xs text-center"
+                className="w-full py-2.5 rounded-full bg-[#0C4137] hover:bg-[#072822] text-white font-semibold text-xs text-center transition-all shadow-[0_2px_8px_rgba(12,65,55,0.18)]"
               >
                 Platformaga Kirish
               </button>
