@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { motion, useScroll, useSpring } from 'motion/react';
 import { LandingNavbar } from './LandingNavbar';
 import { LandingHero } from './LandingHero';
 import { ScrollExperience } from './ScrollExperience';
@@ -12,29 +13,27 @@ import { LandingFooter } from './LandingFooter';
 import { AuditReportModal } from '../sidebar/AuditReportModal';
 
 export const LandingPage: React.FC = () => {
-  const [scrollProgress, setScrollProgress] = React.useState(0);
-
   useEffect(() => {
     window.scrollTo(0, 0);
-
-    const handleScroll = () => {
-      const total = document.documentElement.scrollHeight - window.innerHeight;
-      if (total > 0) {
-        setScrollProgress(Math.min(100, Math.max(0, (window.scrollY / total) * 100)));
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  const { scrollYProgress } = useScroll();
+  const scaleX = useSpring(scrollYProgress, {
+    stiffness: 140,
+    damping: 30,
+    restDelta: 0.001,
+  });
 
   return (
     <div className="min-h-screen bg-[#FDFDFD] dark:bg-[#111111] text-[#111111] dark:text-[#FDFDFD] font-sans overflow-x-clip">
-      {/* Scroll Progress Bar */}
-      <div className="fixed top-0 left-0 right-0 h-[2px] bg-transparent z-[100] pointer-events-none">
-        <div
-          className="h-full bg-[#0E9F6E] transition-[width] duration-75 ease-out shadow-[0_0_8px_rgba(14,159,110,0.5)]"
-          style={{ width: `${scrollProgress}%` }}
+      {/* Minimalist Smooth Scroll Progress Bar */}
+      <div className="fixed top-0 left-0 right-0 h-[2px] z-[100] pointer-events-none">
+        <motion.div
+          className="h-full bg-[#0E9F6E]"
+          style={{
+            scaleX,
+            transformOrigin: '0%',
+          }}
         />
       </div>
 
