@@ -41,7 +41,7 @@ export const LandingFooter: React.FC = () => {
   };
 
   return (
-    <footer className="border-t border-black/[0.06] dark:border-white/[0.06] select-none">
+    <footer className="select-none">
 
       {/* Final CTA Card */}
       <div className="max-w-7xl mx-auto px-6 lg:px-8 pt-20 pb-16">
@@ -74,113 +74,103 @@ export const LandingFooter: React.FC = () => {
         </div>
       </div>
 
-      {/* Thin divider */}
-      <div className="border-t border-black/[0.05] dark:border-white/[0.05]" />
-
-      {/* Links grid */}
-      <div className="max-w-7xl mx-auto px-6 lg:px-8 pt-14 pb-16">
-        <div className="grid grid-cols-2 lg:grid-cols-[1fr_1fr_1fr_2fr] gap-10">
-          {FOOTER_LINKS.map((group) => (
-            <div key={group.title}>
-              <p className="font-mono text-[11px] tracking-[0.16em] uppercase text-[#A4A9A5] mb-5">
-                {group.title}
-              </p>
-              <ul className="space-y-3">
-                {group.links.map((link) => (
-                  <li key={link}>
-                    <a
-                      href="#"
-                      className="text-sm text-[#A4A9A5] hover:text-[#111111] dark:hover:text-[#FDFDFD] transition-colors duration-150"
-                    >
-                      {link}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-
-          {/* Brand column */}
-          <div className="col-span-2 lg:col-span-1">
-            <div className="flex items-center gap-2 mb-4">
-              <img
-                src="/brand/logo_icon.png"
-                alt="MakonSense"
-                className="w-7 h-7 dark:hidden"
-              />
-              <img
-                src="/brand/logo_icon_white.png"
-                alt="MakonSense"
-                className="w-7 h-7 hidden dark:block"
-              />
-              <span className="font-bold text-[#111111] dark:text-[#FDFDFD]">
-                MakonSense
-              </span>
-            </div>
-            <p className="text-sm text-[#A4A9A5] leading-relaxed max-w-xs">
-              O'zbekiston uchun fazoviy intellekt va joylashuv tahlili platformasi.
-            </p>
-            <div className="mt-4 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/50 dark:bg-white/[0.05] backdrop-blur-md border border-white/70 dark:border-white/15 text-xs font-mono text-[#0E9F6E] shadow-none dark:shadow-none">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#0E9F6E] animate-pulse" />
-              Ochiq beta · Bepul
-            </div>
-          </div>
-        </div>
-      </div>
-
       {/* ========================================================= */}
-      {/* CREATIVE FULL-WIDTH BRAND MONUMENT (PadiSave style)       */}
-      {/* Continuous mathematical scrim gradient · Interactive glow */}
+      {/* UNIFIED CREATIVE FOOTER UNIVERSE (Links + Wordmark merged) */}
+      {/* Upward fading emerald background · Interactive mouse glow */}
       {/* ========================================================= */}
       <div
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
-        className="relative overflow-hidden pt-28 sm:pt-36 pb-0 select-none group transition-colors duration-500"
+        className="relative overflow-hidden pt-14 sm:pt-20 pb-0 select-none group transition-colors duration-500"
       >
-        {/* Light Mode Continuous Eased Gradient (Zero inflection lines, seamless continuous taper) */}
+        {/* Light Mode Continuous Eased Gradient (Balanced pine-obsidian tone) */}
         <div
           className="dark:hidden absolute inset-0 pointer-events-none"
           style={{
             background:
-              'linear-gradient(to top, rgba(10,46,32,1) 0%, rgba(10,46,32,0.96) 12%, rgba(10,46,32,0.85) 26%, rgba(10,46,32,0.68) 42%, rgba(10,46,32,0.50) 56%, rgba(10,46,32,0.34) 68%, rgba(10,46,32,0.20) 79%, rgba(10,46,32,0.10) 88%, rgba(10,46,32,0.03) 95%, rgba(10,46,32,0) 100%)',
+              'linear-gradient(to bottom, transparent 0%, rgba(11,25,18,0.06) 10%, rgba(11,25,18,0.25) 24%, rgba(11,25,18,0.55) 42%, rgba(11,25,18,0.82) 62%, rgba(11,25,18,0.95) 80%, rgba(11,25,18,1) 100%)',
           }}
         />
 
-        {/* Dark Mode Continuous Eased Gradient */}
+        {/* Dark Mode Continuous Eased Gradient (Deep obsidian-forest) */}
         <div
           className="hidden dark:block absolute inset-0 pointer-events-none"
           style={{
             background:
-              'linear-gradient(to top, rgba(6,28,20,1) 0%, rgba(6,28,20,0.96) 12%, rgba(6,28,20,0.85) 26%, rgba(6,28,20,0.68) 42%, rgba(6,28,20,0.50) 56%, rgba(6,28,20,0.34) 68%, rgba(6,28,20,0.20) 79%, rgba(6,28,20,0.10) 88%, rgba(6,28,20,0.03) 95%, rgba(6,28,20,0) 100%)',
+              'linear-gradient(to bottom, transparent 0%, rgba(8,18,13,0.06) 10%, rgba(8,18,13,0.25) 24%, rgba(8,18,13,0.55) 42%, rgba(8,18,13,0.82) 62%, rgba(8,18,13,0.95) 80%, rgba(8,18,13,1) 100%)',
           }}
         />
 
-        {/* Interactive Mouse Reactive Spotlight Glow */}
+        {/* Interactive Mouse Reactive Spotlight Glow (Balanced 0.09 emerald sheen) */}
         {mousePos.active && (
           <div
             className="pointer-events-none absolute -inset-px transition-opacity duration-300 z-10"
             style={{
-              background: `radial-gradient(550px circle at ${mousePos.x}px ${mousePos.y}px, rgba(14, 159, 110, 0.22), transparent 75%)`,
+              background: `radial-gradient(420px circle at ${mousePos.x}px ${mousePos.y}px, rgba(14, 159, 110, 0.09), transparent 68%)`,
             }}
           />
         )}
 
-        {/* Top Copyright & Metadata Row */}
+        {/* Links Grid */}
         <div className="relative z-20 max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs text-emerald-100/75">
+          <div className="grid grid-cols-2 lg:grid-cols-[1fr_1fr_1fr_2fr] gap-10">
+            {FOOTER_LINKS.map((group) => (
+              <div key={group.title}>
+                <p className="font-mono text-[11px] tracking-[0.18em] uppercase text-white/90 font-semibold mb-5">
+                  {group.title}
+                </p>
+                <ul className="space-y-3">
+                  {group.links.map((link) => (
+                    <li key={link}>
+                      <a
+                        href="#"
+                        className="text-sm text-neutral-300 hover:text-white transition-colors duration-150"
+                      >
+                        {link}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+
+            {/* Brand column */}
+            <div className="col-span-2 lg:col-span-1">
+              <div className="flex items-center gap-2.5 mb-4">
+                <img
+                  src="/brand/logo_icon_white.png"
+                  alt="MakonSense"
+                  className="w-7 h-7 object-contain"
+                />
+                <span className="font-bold text-white text-base tracking-tight">
+                  MakonSense
+                </span>
+              </div>
+              <p className="text-sm text-neutral-300/85 leading-relaxed max-w-xs font-normal">
+                O'zbekiston uchun fazoviy intellekt va joylashuv tahlili platformasi.
+              </p>
+              <div className="mt-4 inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/15 text-xs font-mono text-white/90 shadow-none">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#0E9F6E] animate-pulse" />
+                Ochiq beta · Bepul
+              </div>
+            </div>
+          </div>
+
+          {/* Metadata & Back to top Row */}
+          <div className="mt-12 sm:mt-16 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs text-neutral-400">
             <p className="font-normal tracking-wide">
               © 2026 MakonSense. Barcha huquqlar himoyalangan.
             </p>
 
             <div className="flex items-center gap-6">
-              <span className="hidden sm:inline-flex items-center gap-2 font-mono text-[11px] text-emerald-300/80">
+              <span className="hidden sm:inline-flex items-center gap-2 font-mono text-[11px] text-neutral-300/90">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#0E9F6E] animate-pulse" />
                 O'zbekiston · 14 hudud · 524,476+ bino
               </span>
 
               <button
                 onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                className="inline-flex items-center gap-1.5 text-xs text-emerald-200/60 hover:text-white transition-colors duration-200 cursor-pointer group/btn"
+                className="inline-flex items-center gap-1.5 text-xs text-neutral-400 hover:text-white transition-colors duration-200 cursor-pointer group/btn"
               >
                 <span>Yuqoriga</span>
                 <ArrowUp className="w-3.5 h-3.5 transition-transform duration-200 group-hover/btn:-translate-y-0.5" />
@@ -189,14 +179,14 @@ export const LandingFooter: React.FC = () => {
           </div>
         </div>
 
-        {/* Full-width Giant Vector Wordmark Logo */}
-        <div className="relative z-20 w-full overflow-hidden select-none pointer-events-none mt-8 sm:mt-12 lg:mt-16 flex items-end justify-center px-4 sm:px-6 md:px-8 -mb-1 sm:-mb-2 lg:-mb-3">
+        {/* Full-width Giant Vector Wordmark Logo (Compact & elegant height) */}
+        <div className="relative z-20 w-full overflow-hidden select-none pointer-events-none mt-6 sm:mt-8 lg:mt-10 flex items-end justify-center px-4 sm:px-6 md:px-8 -mb-1 sm:-mb-2 lg:-mb-3">
           {/* Subtle Ambient Floor Glow strictly under logo */}
-          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-4/5 h-24 bg-[#0E9F6E]/15 blur-3xl pointer-events-none" />
+          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-3/5 h-12 bg-[#0E9F6E]/[0.05] blur-3xl pointer-events-none" />
 
-          {/* Mathematical SVG Vector Wordmark (Infinite DPI, razor sharp) */}
+          {/* Mathematical SVG Vector Wordmark (Infinite DPI, stable constant opacity) */}
           <MakonSenseWordmark
-            className="w-full h-auto select-none pointer-events-none transition-all duration-700 ease-out opacity-30 group-hover:opacity-55"
+            className="w-full h-auto select-none pointer-events-none opacity-25"
           />
         </div>
       </div>
