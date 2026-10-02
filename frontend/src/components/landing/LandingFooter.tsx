@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ArrowRight, ArrowUp } from 'lucide-react';
 import { useAnalyticsStore } from '../../store/useAnalyticsStore';
+import { MakonSenseWordmark } from '../brand/MakonSenseWordmark';
 
 const FOOTER_LINKS = [
   {
@@ -77,7 +78,7 @@ export const LandingFooter: React.FC = () => {
       <div className="border-t border-black/[0.05] dark:border-white/[0.05]" />
 
       {/* Links grid */}
-      <div className="max-w-7xl mx-auto px-6 lg:px-8 py-14">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8 pt-14 pb-16">
         <div className="grid grid-cols-2 lg:grid-cols-[1fr_1fr_1fr_2fr] gap-10">
           {FOOTER_LINKS.map((group) => (
             <div key={group.title}>
@@ -128,26 +129,44 @@ export const LandingFooter: React.FC = () => {
       </div>
 
       {/* ========================================================= */}
-      {/* CREATIVE FULL-WIDTH BRAND MONUMENT BANNER (PadiSave style) */}
-      {/* Deep signature emerald, interactive reactive glow, full-bleed wordmark */}
+      {/* CREATIVE FULL-WIDTH BRAND MONUMENT (PadiSave style)       */}
+      {/* Continuous mathematical scrim gradient · Interactive glow */}
       {/* ========================================================= */}
       <div
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
-        className="relative overflow-hidden bg-[#0A2E20] dark:bg-[#061C14] border-t border-[#134934] dark:border-[#0E3827] text-white pt-10 sm:pt-14 pb-0 transition-colors duration-500 group select-none"
+        className="relative overflow-hidden pt-28 sm:pt-36 pb-0 select-none group transition-colors duration-500"
       >
-        {/* Interactive Mouse Reactive Light Beam */}
+        {/* Light Mode Continuous Eased Gradient (Zero inflection lines, seamless continuous taper) */}
+        <div
+          className="dark:hidden absolute inset-0 pointer-events-none"
+          style={{
+            background:
+              'linear-gradient(to top, rgba(10,46,32,1) 0%, rgba(10,46,32,0.96) 12%, rgba(10,46,32,0.85) 26%, rgba(10,46,32,0.68) 42%, rgba(10,46,32,0.50) 56%, rgba(10,46,32,0.34) 68%, rgba(10,46,32,0.20) 79%, rgba(10,46,32,0.10) 88%, rgba(10,46,32,0.03) 95%, rgba(10,46,32,0) 100%)',
+          }}
+        />
+
+        {/* Dark Mode Continuous Eased Gradient */}
+        <div
+          className="hidden dark:block absolute inset-0 pointer-events-none"
+          style={{
+            background:
+              'linear-gradient(to top, rgba(6,28,20,1) 0%, rgba(6,28,20,0.96) 12%, rgba(6,28,20,0.85) 26%, rgba(6,28,20,0.68) 42%, rgba(6,28,20,0.50) 56%, rgba(6,28,20,0.34) 68%, rgba(6,28,20,0.20) 79%, rgba(6,28,20,0.10) 88%, rgba(6,28,20,0.03) 95%, rgba(6,28,20,0) 100%)',
+          }}
+        />
+
+        {/* Interactive Mouse Reactive Spotlight Glow */}
         {mousePos.active && (
           <div
-            className="pointer-events-none absolute -inset-px transition-opacity duration-300"
+            className="pointer-events-none absolute -inset-px transition-opacity duration-300 z-10"
             style={{
-              background: `radial-gradient(450px circle at ${mousePos.x}px ${mousePos.y}px, rgba(14, 159, 110, 0.28), transparent 70%)`,
+              background: `radial-gradient(550px circle at ${mousePos.x}px ${mousePos.y}px, rgba(14, 159, 110, 0.22), transparent 75%)`,
             }}
           />
         )}
 
         {/* Top Copyright & Metadata Row */}
-        <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8">
+        <div className="relative z-20 max-w-7xl mx-auto px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs text-emerald-100/75">
             <p className="font-normal tracking-wide">
               © 2026 MakonSense. Barcha huquqlar himoyalangan.
@@ -170,20 +189,14 @@ export const LandingFooter: React.FC = () => {
           </div>
         </div>
 
-        {/* Full-width Giant Wordmark Logo */}
-        <div className="relative z-10 w-full overflow-hidden select-none pointer-events-none mt-8 sm:mt-12 lg:mt-16 flex items-end justify-center px-4 sm:px-6 md:px-8 -mb-1 sm:-mb-2 lg:-mb-4">
-          {/* Subtle Ambient Floor Glow */}
-          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-4/5 h-32 bg-[#0E9F6E]/18 blur-3xl pointer-events-none" />
+        {/* Full-width Giant Vector Wordmark Logo */}
+        <div className="relative z-20 w-full overflow-hidden select-none pointer-events-none mt-8 sm:mt-12 lg:mt-16 flex items-end justify-center px-4 sm:px-6 md:px-8 -mb-1 sm:-mb-2 lg:-mb-3">
+          {/* Subtle Ambient Floor Glow strictly under logo */}
+          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-4/5 h-24 bg-[#0E9F6E]/15 blur-3xl pointer-events-none" />
 
-          {/* Actual Brand Logo Graphic filling full width */}
-          <img
-            src="/brand/logo_text_white.png"
-            alt="MakonSense"
-            className="w-full h-auto object-contain select-none pointer-events-none transition-all duration-700 ease-out opacity-25 group-hover:opacity-40"
-            style={{
-              maskImage: 'linear-gradient(to bottom, rgba(0,0,0,0.95) 15%, rgba(0,0,0,0.18) 100%)',
-              WebkitMaskImage: 'linear-gradient(to bottom, rgba(0,0,0,0.95) 15%, rgba(0,0,0,0.18) 100%)',
-            }}
+          {/* Mathematical SVG Vector Wordmark (Infinite DPI, razor sharp) */}
+          <MakonSenseWordmark
+            className="w-full h-auto select-none pointer-events-none transition-all duration-700 ease-out opacity-30 group-hover:opacity-55"
           />
         </div>
       </div>
