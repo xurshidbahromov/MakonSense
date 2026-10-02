@@ -92,21 +92,21 @@ export const LandingFooter: React.FC = () => {
           }}
         />
 
-        {/* Dark Mode Continuous Eased Gradient (Deep obsidian-forest) */}
+        {/* Dark Mode Continuous Eased Gradient (Minimal matte graphite-noir, ultra-subtle tint) */}
         <div
           className="hidden dark:block absolute inset-0 pointer-events-none"
           style={{
             background:
-              'linear-gradient(to bottom, transparent 0%, rgba(8,18,13,0.06) 10%, rgba(8,18,13,0.25) 24%, rgba(8,18,13,0.55) 42%, rgba(8,18,13,0.82) 62%, rgba(8,18,13,0.95) 80%, rgba(8,18,13,1) 100%)',
+              'linear-gradient(to bottom, transparent 0%, rgba(9,11,10,0.15) 12%, rgba(9,11,10,0.45) 28%, rgba(9,11,10,0.75) 48%, rgba(9,11,10,0.92) 70%, rgba(9,11,10,1) 90%, rgba(9,11,10,1) 100%)',
           }}
         />
 
-        {/* Interactive Mouse Reactive Spotlight Glow (Balanced 0.09 emerald sheen) */}
+        {/* Interactive Mouse Reactive Spotlight Glow (Balanced 0.08 satin sheen) */}
         {mousePos.active && (
           <div
             className="pointer-events-none absolute -inset-px transition-opacity duration-300 z-10"
             style={{
-              background: `radial-gradient(420px circle at ${mousePos.x}px ${mousePos.y}px, rgba(14, 159, 110, 0.09), transparent 68%)`,
+              background: `radial-gradient(420px circle at ${mousePos.x}px ${mousePos.y}px, rgba(14, 159, 110, 0.08), transparent 68%)`,
             }}
           />
         )}
@@ -116,7 +116,7 @@ export const LandingFooter: React.FC = () => {
           <div className="grid grid-cols-2 lg:grid-cols-[1fr_1fr_1fr_2fr] gap-10">
             {FOOTER_LINKS.map((group) => (
               <div key={group.title}>
-                <p className="font-mono text-[11px] tracking-[0.18em] uppercase text-neutral-800 dark:text-white/90 font-bold mb-5">
+                <p className="font-mono text-[11px] tracking-[0.18em] uppercase text-neutral-800 dark:text-white font-bold mb-5">
                   {group.title}
                 </p>
                 <ul className="space-y-3">
@@ -151,27 +151,27 @@ export const LandingFooter: React.FC = () => {
                   MakonSense
                 </span>
               </div>
-              <p className="text-sm text-neutral-600 dark:text-neutral-300/85 leading-relaxed max-w-xs font-normal">
+              <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed max-w-xs font-normal">
                 O'zbekiston uchun fazoviy intellekt va joylashuv tahlili platformasi.
               </p>
             </div>
           </div>
 
           {/* Metadata & Back to top Row */}
-          <div className="mt-12 sm:mt-16 pt-6 border-t border-white/15 dark:border-white/15 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs text-white/70 dark:text-white/70">
+          <div className="mt-12 sm:mt-16 pt-6 border-t border-white/15 dark:border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs text-white/70 dark:text-neutral-400">
             <p className="font-normal tracking-wide">
               © 2026 MakonSense. Barcha huquqlar himoyalangan.
             </p>
 
             <div className="flex items-center gap-6">
-              <span className="hidden sm:inline-flex items-center gap-2 font-mono text-[11px] text-white/80 dark:text-white/80">
+              <span className="hidden sm:inline-flex items-center gap-2 font-mono text-[11px] text-white/80 dark:text-neutral-300">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#0E9F6E] animate-pulse" />
                 O'zbekiston · 14 hudud · 524,476+ bino
               </span>
 
               <button
                 onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                className="inline-flex items-center gap-1.5 text-xs text-white/80 hover:text-white dark:text-white/80 dark:hover:text-white transition-colors duration-200 cursor-pointer group/btn"
+                className="inline-flex items-center gap-1.5 text-xs text-white/80 hover:text-white dark:text-neutral-300 dark:hover:text-white transition-colors duration-200 cursor-pointer group/btn"
               >
                 <span>Yuqoriga</span>
                 <ArrowUp className="w-3.5 h-3.5 transition-transform duration-200 group-hover/btn:-translate-y-0.5" />
@@ -180,14 +180,14 @@ export const LandingFooter: React.FC = () => {
           </div>
         </div>
 
-        {/* Full-width Giant Vector Wordmark Logo (Compact & elegant height) */}
+        {/* Full-width Giant Vector Wordmark Logo (Illuminated in Dark Mode) */}
         <div className="relative z-20 w-full overflow-hidden select-none pointer-events-none mt-6 sm:mt-8 lg:mt-10 flex items-end justify-center px-4 sm:px-6 md:px-8 -mb-1 sm:-mb-2 lg:-mb-3">
           {/* Subtle Ambient Floor Glow strictly under logo */}
-          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-3/5 h-12 bg-[#0E9F6E]/[0.05] blur-3xl pointer-events-none" />
+          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-3/4 h-14 bg-[#0E9F6E]/[0.05] dark:bg-white/[0.04] blur-3xl pointer-events-none" />
 
-          {/* Mathematical SVG Vector Wordmark (Infinite DPI, stable constant opacity) */}
+          {/* Mathematical SVG Vector Wordmark (Infinite DPI, crisp & illuminated in dark mode) */}
           <MakonSenseWordmark
-            className="w-full h-auto select-none pointer-events-none opacity-25"
+            className="w-full h-auto select-none pointer-events-none opacity-22 dark:opacity-45"
           />
         </div>
       </div>
