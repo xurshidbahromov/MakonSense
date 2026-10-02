@@ -116,7 +116,7 @@ export const LandingFooter: React.FC = () => {
           <div className="grid grid-cols-2 lg:grid-cols-[1fr_1fr_1fr_2fr] gap-10">
             {FOOTER_LINKS.map((group) => (
               <div key={group.title}>
-                <p className="font-mono text-[11px] tracking-[0.18em] uppercase text-white/90 font-semibold mb-5">
+                <p className="font-mono text-[11px] tracking-[0.18em] uppercase text-neutral-800 dark:text-white/90 font-bold mb-5">
                   {group.title}
                 </p>
                 <ul className="space-y-3">
@@ -124,7 +124,7 @@ export const LandingFooter: React.FC = () => {
                     <li key={link}>
                       <a
                         href="#"
-                        className="text-sm text-neutral-300 hover:text-white transition-colors duration-150"
+                        className="text-sm text-neutral-700 hover:text-neutral-950 dark:text-neutral-300 dark:hover:text-white font-medium transition-colors duration-150"
                       >
                         {link}
                       </a>
@@ -138,39 +138,40 @@ export const LandingFooter: React.FC = () => {
             <div className="col-span-2 lg:col-span-1">
               <div className="flex items-center gap-2.5 mb-4">
                 <img
+                  src="/brand/logo_icon.png"
+                  alt="MakonSense"
+                  className="w-7 h-7 object-contain dark:hidden"
+                />
+                <img
                   src="/brand/logo_icon_white.png"
                   alt="MakonSense"
-                  className="w-7 h-7 object-contain"
+                  className="w-7 h-7 object-contain hidden dark:block"
                 />
-                <span className="font-bold text-white text-base tracking-tight">
+                <span className="font-bold text-neutral-900 dark:text-white text-base tracking-tight">
                   MakonSense
                 </span>
               </div>
-              <p className="text-sm text-neutral-300/85 leading-relaxed max-w-xs font-normal">
+              <p className="text-sm text-neutral-600 dark:text-neutral-300/85 leading-relaxed max-w-xs font-normal">
                 O'zbekiston uchun fazoviy intellekt va joylashuv tahlili platformasi.
               </p>
-              <div className="mt-4 inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/15 text-xs font-mono text-white/90 shadow-none">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#0E9F6E] animate-pulse" />
-                Ochiq beta · Bepul
-              </div>
             </div>
           </div>
 
           {/* Metadata & Back to top Row */}
-          <div className="mt-12 sm:mt-16 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs text-neutral-400">
+          <div className="mt-12 sm:mt-16 pt-6 border-t border-white/15 dark:border-white/15 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs text-white/70 dark:text-white/70">
             <p className="font-normal tracking-wide">
               © 2026 MakonSense. Barcha huquqlar himoyalangan.
             </p>
 
             <div className="flex items-center gap-6">
-              <span className="hidden sm:inline-flex items-center gap-2 font-mono text-[11px] text-neutral-300/90">
+              <span className="hidden sm:inline-flex items-center gap-2 font-mono text-[11px] text-white/80 dark:text-white/80">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#0E9F6E] animate-pulse" />
                 O'zbekiston · 14 hudud · 524,476+ bino
               </span>
 
               <button
                 onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                className="inline-flex items-center gap-1.5 text-xs text-neutral-400 hover:text-white transition-colors duration-200 cursor-pointer group/btn"
+                className="inline-flex items-center gap-1.5 text-xs text-white/80 hover:text-white dark:text-white/80 dark:hover:text-white transition-colors duration-200 cursor-pointer group/btn"
               >
                 <span>Yuqoriga</span>
                 <ArrowUp className="w-3.5 h-3.5 transition-transform duration-200 group-hover/btn:-translate-y-0.5" />
