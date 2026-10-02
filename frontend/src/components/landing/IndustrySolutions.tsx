@@ -206,7 +206,7 @@ export const IndustrySolutions: React.FC = () => {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.28 }}
-          className="rounded-3xl bg-white/45 dark:bg-[#161616]/45 backdrop-blur-2xl backdrop-saturate-[180%] border-2 border-white/80 dark:border-white/20 p-6 sm:p-10 shadow-none dark:shadow-none"
+          className="rounded-3xl bg-white/45 dark:bg-[#161616]/45 backdrop-blur-2xl backdrop-saturate-[180%] border-2 border-white/80 dark:border-white/[0.05] p-6 sm:p-10 shadow-none dark:shadow-none"
         >
           {/* Card Top Bar: Location metadata & MakonScore showcase */}
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 pb-8 border-b border-black/[0.05] dark:border-white/[0.06]">

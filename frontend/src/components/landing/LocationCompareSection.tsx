@@ -92,7 +92,7 @@ export const LocationCompareSection: React.FC = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.55, delay: 0.12 }}
-          className="grid grid-cols-1 lg:grid-cols-2 gap-0 border-2 border-white/80 dark:border-white/20 bg-white/45 dark:bg-[#161616]/45 backdrop-blur-2xl backdrop-saturate-[180%] rounded-3xl overflow-hidden shadow-none dark:shadow-none"
+          className="grid grid-cols-1 lg:grid-cols-2 gap-0 border-2 border-white/80 dark:border-white/[0.05] bg-white/45 dark:bg-[#161616]/45 backdrop-blur-2xl backdrop-saturate-[180%] rounded-3xl overflow-hidden shadow-none dark:shadow-none"
         >
           {[LOC_A, LOC_B].map((loc, colIdx) => (
             <div

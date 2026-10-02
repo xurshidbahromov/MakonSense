@@ -63,7 +63,7 @@ export const ScrollExperience: React.FC = () => {
         </motion.div>
 
         {/* Stages in Glass Panel */}
-        <div className="rounded-3xl bg-white/45 dark:bg-[#161616]/45 backdrop-blur-2xl backdrop-saturate-[180%] border-2 border-white/80 dark:border-white/20 p-6 sm:p-10 divide-y divide-black/[0.05] dark:divide-white/[0.07] shadow-none dark:shadow-none">
+        <div className="rounded-3xl bg-white/45 dark:bg-[#161616]/45 backdrop-blur-2xl backdrop-saturate-[180%] border-2 border-white/80 dark:border-white/[0.05] p-6 sm:p-10 divide-y divide-black/[0.05] dark:divide-white/[0.07] shadow-none dark:shadow-none">
           {STAGES.map((stage, idx) => (
             <motion.div
               key={idx}
