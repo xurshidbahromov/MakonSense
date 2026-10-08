@@ -42,7 +42,7 @@ export const ScrollExperience: React.FC = () => {
     <section
       id="features"
       ref={ref}
-      className="py-24 sm:py-36 border-t border-black/[0.05] dark:border-white/[0.05] select-none"
+      className="py-24 sm:py-36 border-t border-black/[0.05] dark:border-white/[0.05] select-none scroll-mt-24"
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
 
@@ -53,12 +53,12 @@ export const ScrollExperience: React.FC = () => {
           transition={{ duration: 0.5 }}
           className="mb-16 sm:mb-20"
         >
-          <span className="font-mono text-xs tracking-[0.18em] uppercase text-[#A4A9A5]">
+          <span className="font-mono text-xs tracking-[0.18em] uppercase text-neutral-500 dark:text-neutral-400 font-semibold">
             Fazoviy Razvedka
           </span>
           <h2 className="mt-4 text-3xl sm:text-4xl lg:text-[46px] font-bold tracking-[-0.03em] leading-[1.12] text-[#111111] dark:text-[#FDFDFD]">
             Uch qatlam tahlil.{' '}
-            <span className="text-[#A4A9A5] font-normal">Bir hisobot.</span>
+            <span className="text-neutral-400 dark:text-neutral-500 font-normal">Bir hisobot.</span>
           </h2>
         </motion.div>
 
@@ -98,7 +98,7 @@ export const ScrollExperience: React.FC = () => {
                 <div className="text-3xl sm:text-4xl font-bold text-[#111111] dark:text-[#FDFDFD] tracking-[-0.03em] leading-none tabular-nums">
                   {stage.stat}
                 </div>
-                <p className="mt-2 text-xs font-mono text-[#A4A9A5]">
+                <p className="mt-2 text-xs font-mono text-neutral-500 dark:text-neutral-400">
                   {stage.statUnit}
                 </p>
               </div>

@@ -3,28 +3,91 @@ import { ArrowRight, ArrowUp } from 'lucide-react';
 import { useAnalyticsStore } from '../../store/useAnalyticsStore';
 import { MakonSenseWordmark } from '../brand/MakonSenseWordmark';
 
-const FOOTER_LINKS = [
-  {
-    title: 'Mahsulot',
-    links: ['MakonScore', 'PDF Audit', 'A/B Taqqoslash', 'API'],
-  },
-  {
-    title: 'Hududlar',
-    links: ['Toshkent', 'Samarqand', "Farg'ona", 'Buxoro'],
-  },
-  {
-    title: 'Kompaniya',
-    links: ['Haqimizda', 'Aloqa', 'Maxfiylik', 'Shartlar'],
-  },
-];
+interface FooterLinkItem {
+  label: string;
+  href?: string;
+  action?: () => void;
+}
+
+interface FooterGroup {
+  title: string;
+  items: FooterLinkItem[];
+}
 
 export const LandingFooter: React.FC = () => {
-  const { setCurrentView, setSelectedCoords } = useAnalyticsStore();
+  const { setCurrentView, setSelectedCoords, generateAuditReport } = useAnalyticsStore();
   const [mousePos, setMousePos] = useState({ x: 0, y: 0, active: false });
+
+  const footerGroups: FooterGroup[] = [
+    {
+      title: 'Mahsulot',
+      items: [
+        { label: 'MakonScore', href: '#features' },
+        { label: 'PDF Audit', action: () => generateAuditReport() },
+        { label: 'A/B Taqqoslash', href: '#compare' },
+        { label: 'Kalkulyator', href: '#calculator' },
+      ],
+    },
+    {
+      title: 'Hududlar',
+      items: [
+        {
+          label: 'Toshkent',
+          action: () => {
+            setSelectedCoords({ latitude: 41.3123, longitude: 69.2797 });
+            setCurrentView('app');
+          },
+        },
+        {
+          label: 'Samarqand',
+          action: () => {
+            setSelectedCoords({ latitude: 39.6542, longitude: 66.9597 });
+            setCurrentView('app');
+          },
+        },
+        {
+          label: "Farg'ona",
+          action: () => {
+            setSelectedCoords({ latitude: 40.3842, longitude: 71.7843 });
+            setCurrentView('app');
+          },
+        },
+        {
+          label: 'Buxoro',
+          action: () => {
+            setSelectedCoords({ latitude: 39.7747, longitude: 64.4286 });
+            setCurrentView('app');
+          },
+        },
+      ],
+    },
+    {
+      title: 'Kompaniya',
+      items: [
+        { label: 'Haqimizda', href: '#benefits' },
+        { label: 'Jarayon', href: '#how-it-works' },
+        { label: 'Yechimlar', href: '#solutions' },
+        { label: 'Savollar (FAQ)', href: '#faq' },
+      ],
+    },
+  ];
 
   const handleLaunch = () => {
     setSelectedCoords({ latitude: 41.3123, longitude: 69.2797 });
     setCurrentView('app');
+  };
+
+  const handleLinkClick = (e: React.MouseEvent, item: FooterLinkItem) => {
+    if (item.action) {
+      e.preventDefault();
+      item.action();
+    } else if (item.href && item.href.startsWith('#')) {
+      e.preventDefault();
+      const el = document.querySelector(item.href);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
   };
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -47,14 +110,14 @@ export const LandingFooter: React.FC = () => {
       <div className="max-w-7xl mx-auto px-6 lg:px-8 pt-20 pb-16">
         <div className="p-8 sm:p-14 rounded-3xl bg-white/45 dark:bg-[#161616]/45 backdrop-blur-2xl backdrop-saturate-[180%] border-2 border-white/80 dark:border-white/[0.05] shadow-none dark:shadow-none grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div>
-            <span className="font-mono text-xs tracking-[0.18em] uppercase text-[#A4A9A5]">
+            <span className="font-mono text-xs tracking-[0.18em] uppercase text-neutral-500 dark:text-neutral-400 font-semibold">
               Bepul boshlang
             </span>
             <h2 className="mt-4 text-3xl sm:text-4xl lg:text-[46px] font-bold tracking-[-0.03em] leading-[1.12] text-[#111111] dark:text-[#FDFDFD]">
               Manzilingiz qanchalik{' '}
               <span className="text-[#0E9F6E]">daromadli?</span>
             </h2>
-            <p className="mt-5 text-base text-[#A4A9A5] max-w-md leading-relaxed">
+            <p className="mt-5 text-base text-neutral-600 dark:text-neutral-400 max-w-md leading-relaxed">
               Bir zumda bepul tekshiring — karta raqami va ro'yxatdan o'tish shart emas.
             </p>
           </div>
@@ -67,8 +130,8 @@ export const LandingFooter: React.FC = () => {
               <span>Hisoblashni boshlash</span>
               <ArrowRight size={16} className="transition-transform duration-200 ease-out group-hover:translate-x-1" />
             </button>
-            <p className="mt-3 text-xs text-[#A4A9A5]">
-              500,000+ O'zbekiston binosi indekslangan · 14 hudud
+            <p className="mt-3 text-xs text-neutral-500 dark:text-neutral-400">
+              524,000+ O'zbekiston binosi indekslangan · 14 hudud
             </p>
           </div>
         </div>
@@ -114,20 +177,30 @@ export const LandingFooter: React.FC = () => {
         {/* Links Grid */}
         <div className="relative z-20 max-w-7xl mx-auto px-6 lg:px-8">
           <div className="grid grid-cols-2 lg:grid-cols-[1fr_1fr_1fr_2fr] gap-10">
-            {FOOTER_LINKS.map((group) => (
+            {footerGroups.map((group) => (
               <div key={group.title}>
                 <p className="font-mono text-[11px] tracking-[0.18em] uppercase text-neutral-800 dark:text-white font-bold mb-5">
                   {group.title}
                 </p>
                 <ul className="space-y-3">
-                  {group.links.map((link) => (
-                    <li key={link}>
-                      <a
-                        href="#"
-                        className="text-sm text-neutral-700 hover:text-neutral-950 dark:text-neutral-300 dark:hover:text-white font-medium transition-colors duration-150"
-                      >
-                        {link}
-                      </a>
+                  {group.items.map((link) => (
+                    <li key={link.label}>
+                      {link.href ? (
+                        <a
+                          href={link.href}
+                          onClick={(e) => handleLinkClick(e, link)}
+                          className="text-sm text-neutral-700 hover:text-neutral-950 dark:text-neutral-300 dark:hover:text-white font-medium transition-colors duration-150 cursor-pointer"
+                        >
+                          {link.label}
+                        </a>
+                      ) : (
+                        <button
+                          onClick={(e) => handleLinkClick(e, link)}
+                          className="text-sm text-neutral-700 hover:text-neutral-950 dark:text-neutral-300 dark:hover:text-white font-medium transition-colors duration-150 cursor-pointer text-left"
+                        >
+                          {link.label}
+                        </button>
+                      )}
                     </li>
                   ))}
                 </ul>

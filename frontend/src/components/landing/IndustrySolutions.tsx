@@ -151,7 +151,7 @@ export const IndustrySolutions: React.FC = () => {
   return (
     <section
       id="solutions"
-      className="py-24 sm:py-36 border-t border-black/[0.05] dark:border-white/[0.05] select-none scroll-mt-20"
+      className="py-24 sm:py-36 border-t border-black/[0.05] dark:border-white/[0.05] select-none scroll-mt-24"
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
 
@@ -160,13 +160,13 @@ export const IndustrySolutions: React.FC = () => {
           <div>
             <div className="inline-flex items-center gap-2 mb-3">
               <span className="w-1.5 h-1.5 rounded-full bg-[#0E9F6E]" />
-              <span className="font-mono text-xs tracking-[0.18em] uppercase text-[#A4A9A5]">
+              <span className="font-mono text-xs tracking-[0.18em] uppercase text-neutral-500 dark:text-neutral-400 font-semibold">
                 Soha Yechimlari
               </span>
             </div>
             <h2 className="text-3xl sm:text-4xl lg:text-[46px] font-bold tracking-[-0.03em] leading-[1.12] text-[#111111] dark:text-[#FDFDFD]">
               Har qanday soha{' '}
-              <span className="text-[#A4A9A5] font-normal">uchun aniq tahlil.</span>
+              <span className="text-neutral-400 dark:text-neutral-500 font-normal">uchun aniq tahlil.</span>
             </h2>
           </div>
 
@@ -215,7 +215,7 @@ export const IndustrySolutions: React.FC = () => {
                 <span className="font-mono text-[11px] tracking-[0.14em] uppercase text-[#0E9F6E] bg-[#0E9F6E]/10 px-2.5 py-0.5 rounded-full font-semibold">
                   {active.badge}
                 </span>
-                <span className="font-mono text-[11px] text-[#A4A9A5]">
+                <span className="font-mono text-[11px] text-neutral-500 dark:text-neutral-400">
                   • {active.district}
                 </span>
               </div>
@@ -241,7 +241,7 @@ export const IndustrySolutions: React.FC = () => {
                   <span className="w-1.5 h-1.5 rounded-full bg-[#0E9F6E] animate-pulse" />
                   {active.scoreVerdict}
                 </span>
-                <p className="text-[11px] text-[#A4A9A5] mt-0.5">Fazoviy AI bahosi</p>
+                <p className="text-[11px] text-neutral-500 dark:text-neutral-400 mt-0.5">Fazoviy AI bahosi</p>
               </div>
             </div>
           </div>
@@ -262,7 +262,7 @@ export const IndustrySolutions: React.FC = () => {
                   <div className="text-2xl font-bold text-[#111111] dark:text-[#FDFDFD] tracking-tight tabular-nums">
                     {active.footTraffic}
                   </div>
-                  <p className="text-[11.5px] text-[#A4A9A5] mt-1">{active.trafficSub}</p>
+                  <p className="text-[11.5px] text-neutral-500 dark:text-neutral-400 mt-1">{active.trafficSub}</p>
                 </div>
               </div>
 
@@ -278,7 +278,7 @@ export const IndustrySolutions: React.FC = () => {
                   <div className="text-2xl font-bold text-[#111111] dark:text-[#FDFDFD] tracking-tight tabular-nums">
                     {active.competitors}
                   </div>
-                  <p className="text-[11.5px] text-[#A4A9A5] mt-1">{active.competitorsSub}</p>
+                  <p className="text-[11.5px] text-neutral-500 dark:text-neutral-400 mt-1">{active.competitorsSub}</p>
                 </div>
               </div>
 
@@ -294,7 +294,7 @@ export const IndustrySolutions: React.FC = () => {
                   <div className="text-2xl font-bold text-[#0E9F6E] tracking-tight tabular-nums">
                     {active.revenue}
                   </div>
-                  <p className="text-[11.5px] text-[#A4A9A5] mt-1">{active.revenueSub}</p>
+                  <p className="text-[11.5px] text-neutral-500 dark:text-neutral-400 mt-1">{active.revenueSub}</p>
                 </div>
               </div>
 
@@ -310,7 +310,7 @@ export const IndustrySolutions: React.FC = () => {
                   <div className="text-lg font-bold text-[#111111] dark:text-[#FDFDFD] tracking-tight leading-snug">
                     {active.format}
                   </div>
-                  <p className="text-[11.5px] text-[#A4A9A5] mt-1">{active.formatSub}</p>
+                  <p className="text-[11.5px] text-neutral-500 dark:text-neutral-400 mt-1">{active.formatSub}</p>
                 </div>
               </div>
             </div>
@@ -319,7 +319,7 @@ export const IndustrySolutions: React.FC = () => {
             <div className="lg:col-span-5 p-6 rounded-2xl bg-black/[0.02] dark:bg-white/[0.02] border border-black/[0.05] dark:border-white/[0.08] flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between gap-3 mb-5">
-                  <p className="font-mono text-[11px] tracking-[0.14em] uppercase text-[#A4A9A5] font-semibold whitespace-nowrap">
+                  <p className="font-mono text-[11px] tracking-[0.14em] uppercase text-neutral-500 dark:text-neutral-400 font-semibold whitespace-nowrap">
                     Soatlik trafik
                   </p>
                   <span className="inline-flex items-center gap-1.5 font-mono text-[10.5px] text-[#0E9F6E] bg-[#0E9F6E]/10 px-2.5 py-1 rounded-full font-medium whitespace-nowrap flex-shrink-0">
@@ -346,12 +346,12 @@ export const IndustrySolutions: React.FC = () => {
                           className={`w-full rounded-t-sm transition-colors duration-200 ${
                             bar.peak
                               ? 'bg-[#0E9F6E]'
-                              : 'bg-[#A4A9A5]/40 hover:bg-[#A4A9A5]/60 dark:bg-white/20 dark:hover:bg-white/35'
+                              : 'bg-neutral-300 hover:bg-neutral-400 dark:bg-white/20 dark:hover:bg-white/35'
                           }`}
                         />
                       </div>
 
-                      <span className={`text-[11px] font-mono ${bar.peak ? 'text-[#0E9F6E] font-bold' : 'text-[#A4A9A5]'}`}>
+                      <span className={`text-[11px] font-mono ${bar.peak ? 'text-[#0E9F6E] font-bold' : 'text-neutral-400 dark:text-neutral-500'}`}>
                         {bar.hour}:00
                       </span>
                     </div>

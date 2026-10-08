@@ -110,7 +110,7 @@ export const LandingHero: React.FC = () => {
   return (
     <section
       id="hero"
-      className="min-h-[100svh] flex flex-col justify-center pt-24 pb-16 select-none overflow-hidden"
+      className="min-h-[100svh] flex flex-col justify-center pt-24 pb-16 select-none overflow-hidden scroll-mt-24"
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-8 w-full">
 

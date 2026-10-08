@@ -64,7 +64,7 @@ export const LocationCompareSection: React.FC = () => {
     <section
       id="compare"
       ref={ref}
-      className="py-24 sm:py-36 border-t border-black/[0.05] dark:border-white/[0.05] select-none"
+      className="py-24 sm:py-36 border-t border-black/[0.05] dark:border-white/[0.05] select-none scroll-mt-24"
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
 
@@ -75,14 +75,14 @@ export const LocationCompareSection: React.FC = () => {
           transition={{ duration: 0.5 }}
           className="mb-16"
         >
-          <span className="font-mono text-xs tracking-[0.18em] uppercase text-[#A4A9A5]">
+          <span className="font-mono text-xs tracking-[0.18em] uppercase text-neutral-500 dark:text-neutral-400 font-semibold">
             A/B Taqqoslash
           </span>
           <h2 className="mt-4 text-3xl sm:text-4xl lg:text-[46px] font-bold tracking-[-0.03em] leading-[1.12] text-[#111111] dark:text-[#FDFDFD]">
             Ikki lokatsiya.{' '}
-            <span className="text-[#A4A9A5] font-normal">Bitta to'g'ri tanlov.</span>
+            <span className="text-neutral-400 dark:text-neutral-500 font-normal">Bitta to'g'ri tanlov.</span>
           </h2>
-          <p className="mt-5 text-base text-[#A4A9A5] max-w-xl leading-relaxed">
+          <p className="mt-5 text-base text-neutral-600 dark:text-neutral-400 max-w-xl leading-relaxed">
             MakonSense raqamlar bilan ko'rsatadi: qaysi joy ko'proq daromad keltiradi.
           </p>
         </motion.div>
@@ -110,7 +110,7 @@ export const LocationCompareSection: React.FC = () => {
                     <span className={`font-mono text-[10px] tracking-[0.14em] uppercase px-2 py-0.5 rounded-sm ${
                       loc.isWinner
                         ? 'bg-[#0E9F6E]/10 text-[#0E9F6E]'
-                        : 'bg-[#A4A9A5]/10 text-[#A4A9A5]'
+                        : 'bg-neutral-500/10 text-neutral-500 dark:text-neutral-400'
                     }`}>
                       {loc.grade}
                     </span>
@@ -124,16 +124,16 @@ export const LocationCompareSection: React.FC = () => {
                   <h3 className="text-lg font-bold text-[#111111] dark:text-[#FDFDFD]">
                     {loc.name}
                   </h3>
-                  <p className="text-xs text-[#A4A9A5] mt-0.5">{loc.district}</p>
+                  <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-0.5">{loc.district}</p>
                 </div>
                 {/* Score */}
                 <div className="text-right flex-shrink-0">
                   <div className={`text-3xl font-bold tracking-[-0.03em] tabular-nums ${
-                    loc.isWinner ? 'text-[#0E9F6E]' : 'text-[#A4A9A5]'
+                    loc.isWinner ? 'text-[#0E9F6E]' : 'text-neutral-400 dark:text-neutral-500'
                   }`}>
                     {loc.score}
                   </div>
-                  <p className="text-[10px] font-mono text-[#A4A9A5] mt-0.5">/ 100</p>
+                  <p className="text-[10px] font-mono text-neutral-400 dark:text-neutral-500 mt-0.5">/ 100</p>
                 </div>
               </div>
 
@@ -141,7 +141,7 @@ export const LocationCompareSection: React.FC = () => {
               <div className="mt-5 mb-6">
                 <div className="h-[2px] bg-black/[0.05] dark:bg-white/[0.05] rounded-full overflow-hidden">
                   <motion.div
-                    className={`h-full rounded-full ${loc.isWinner ? 'bg-[#0E9F6E]' : 'bg-[#A4A9A5]'}`}
+                    className={`h-full rounded-full ${loc.isWinner ? 'bg-[#0E9F6E]' : 'bg-neutral-300 dark:bg-neutral-700'}`}
                     initial={{ width: 0 }}
                     animate={isInView ? { width: `${loc.score}%` } : { width: 0 }}
                     transition={{ duration: 0.8, delay: 0.3 + colIdx * 0.1, ease: 'easeOut' }}
@@ -153,9 +153,9 @@ export const LocationCompareSection: React.FC = () => {
               <div className="space-y-3">
                 {ROWS.map((row) => (
                   <div key={row.label} className="flex items-center justify-between gap-4 py-2 border-b border-black/[0.03] dark:border-white/[0.03]">
-                    <span className="text-xs text-[#A4A9A5]">{row.label}</span>
+                    <span className="text-xs text-neutral-500 dark:text-neutral-400">{row.label}</span>
                     <span className={`text-sm font-semibold text-right ${
-                      loc.isWinner ? 'text-[#111111] dark:text-[#FDFDFD]' : 'text-[#A4A9A5]'
+                      loc.isWinner ? 'text-[#111111] dark:text-[#FDFDFD]' : 'text-neutral-400 dark:text-neutral-500'
                     }`}>
                       {String(loc[row.keyA])}
                     </span>

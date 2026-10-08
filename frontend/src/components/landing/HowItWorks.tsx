@@ -36,7 +36,7 @@ export const HowItWorks: React.FC = () => {
     <section
       id="how-it-works"
       ref={ref}
-      className="py-24 sm:py-36 border-t border-black/[0.05] dark:border-white/[0.05] select-none"
+      className="py-24 sm:py-36 border-t border-black/[0.05] dark:border-white/[0.05] select-none scroll-mt-24"
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
 
@@ -46,14 +46,14 @@ export const HowItWorks: React.FC = () => {
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.5 }}
         >
-          <span className="font-mono text-xs tracking-[0.18em] uppercase text-[#A4A9A5]">
+          <span className="font-mono text-xs tracking-[0.18em] uppercase text-neutral-500 dark:text-neutral-400 font-semibold">
             Jarayon
           </span>
           <h2 className="mt-4 text-3xl sm:text-4xl lg:text-[46px] font-bold tracking-[-0.03em] leading-[1.12] text-[#111111] dark:text-[#FDFDFD]">
             3 qadam.{' '}
-            <span className="text-[#A4A9A5] font-normal">To'liq ekspertiza.</span>
+            <span className="text-neutral-400 dark:text-neutral-500 font-normal">To'liq ekspertiza.</span>
           </h2>
-          <p className="mt-5 text-base sm:text-lg text-[#A4A9A5] max-w-xl leading-relaxed">
+          <p className="mt-5 text-base sm:text-lg text-neutral-600 dark:text-neutral-400 max-w-xl leading-relaxed">
             Murakkab GIS dasturlar va oylik tadqiqotlar shart emas.
           </p>
         </motion.div>
@@ -86,8 +86,8 @@ export const HowItWorks: React.FC = () => {
               </div>
 
               <div className="mt-8 pt-4 border-t border-black/[0.04] dark:border-white/[0.06] flex items-center justify-between">
-                <span className="text-[11px] font-mono text-neutral-400">Bosqich</span>
-                <span className="text-xs font-mono text-[#A4A9A5]">
+                <span className="text-[11px] font-mono text-neutral-500 dark:text-neutral-400">Bosqich</span>
+                <span className="text-xs font-mono text-neutral-500 dark:text-neutral-400 font-medium">
                   {idx + 1} / {STEPS.length}
                 </span>
               </div>

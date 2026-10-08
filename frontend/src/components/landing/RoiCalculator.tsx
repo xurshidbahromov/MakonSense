@@ -18,22 +18,22 @@ export const RoiCalculator: React.FC = () => {
   return (
     <section
       id="calculator"
-      className="py-24 sm:py-36 border-t border-black/[0.05] dark:border-white/[0.05] select-none"
+      className="py-24 sm:py-36 border-t border-black/[0.05] dark:border-white/[0.05] select-none scroll-mt-24"
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
 
         {/* Label */}
-        <span className="font-mono text-xs tracking-[0.18em] uppercase text-[#A4A9A5]">
+        <span className="font-mono text-xs tracking-[0.18em] uppercase text-neutral-500 dark:text-neutral-400 font-semibold">
           ROI Kalkulyator
         </span>
 
         {/* Headline */}
         <h2 className="mt-4 text-3xl sm:text-4xl lg:text-[46px] font-bold tracking-[-0.03em] leading-[1.12] text-[#111111] dark:text-[#FDFDFD]">
           Sarmoyangizni{' '}
-          <span className="text-[#A4A9A5] font-normal">hisoblang.</span>
+          <span className="text-neutral-400 dark:text-neutral-500 font-normal">hisoblang.</span>
         </h2>
 
-        <p className="mt-5 text-base sm:text-lg text-[#A4A9A5] max-w-2xl leading-relaxed">
+        <p className="mt-5 text-base sm:text-lg text-neutral-600 dark:text-neutral-400 max-w-2xl leading-relaxed">
           Rejalashtirgan investitsiyangizni belgilang — MakonSense himoyalaydigan summa darhol ko'rinadi.
         </p>
 
@@ -42,7 +42,7 @@ export const RoiCalculator: React.FC = () => {
 
           {/* Left: Slider */}
           <div className="lg:pr-20 pb-12 lg:pb-0">
-            <p className="font-mono text-[11px] tracking-[0.16em] uppercase text-[#A4A9A5] mb-6">
+            <p className="font-mono text-[11px] tracking-[0.16em] uppercase text-neutral-500 dark:text-neutral-400 mb-6 font-semibold">
               Investitsiya miqdori
             </p>
 
@@ -65,7 +65,7 @@ export const RoiCalculator: React.FC = () => {
               }}
             />
 
-            <div className="flex justify-between text-xs font-mono text-[#A4A9A5] mt-2">
+            <div className="flex justify-between text-xs font-mono text-neutral-500 dark:text-neutral-400 mt-2">
               <span>$15,000</span>
               <span>$150,000+</span>
             </div>
@@ -94,7 +94,7 @@ export const RoiCalculator: React.FC = () => {
 
           {/* Right: Results */}
           <div className="lg:pl-20 lg:border-l border-white/70 dark:border-white/10">
-            <p className="font-mono text-[11px] tracking-[0.16em] uppercase text-[#0E9F6E] mb-6">
+            <p className="font-mono text-[11px] tracking-[0.16em] uppercase text-[#0E9F6E] mb-6 font-semibold">
               MakonSense himoyasi
             </p>
 
@@ -103,14 +103,14 @@ export const RoiCalculator: React.FC = () => {
               <div className="text-4xl sm:text-6xl font-bold tracking-[-0.035em] text-[#0E9F6E] mb-2 tabular-nums">
                 {formatUSD(himoyalangan)}
               </div>
-              <p className="text-sm text-[#A4A9A5]">
+              <p className="text-sm text-neutral-600 dark:text-neutral-400">
                 noto'g'ri lokatsiya yo'qotishidan himoyalangan kapital
               </p>
             </div>
 
             {/* Progress bar */}
             <div className="mt-8">
-              <div className="flex justify-between text-xs font-mono text-[#A4A9A5] mb-2">
+              <div className="flex justify-between text-xs font-mono text-neutral-500 dark:text-neutral-400 mb-2">
                 <span>Himoya darajasi</span>
                 <span>{himoyaPercent}%</span>
               </div>
@@ -128,7 +128,7 @@ export const RoiCalculator: React.FC = () => {
               <div className="text-3xl sm:text-4xl font-bold tracking-[-0.03em] text-[#111111] dark:text-[#FDFDFD] mb-2 tabular-nums">
                 4 hafta
               </div>
-              <p className="text-sm text-[#A4A9A5]">
+              <p className="text-sm text-neutral-600 dark:text-neutral-400">
                 qo'lda tadqiqot o'rniga avtomatik tahlil
               </p>
             </div>
@@ -145,14 +145,14 @@ export const RoiCalculator: React.FC = () => {
             <ArrowRight className="w-4 h-4 text-white/80 group-hover:text-white dark:text-[#111111]/80 dark:group-hover:text-[#111111] transition-transform duration-200 ease-out group-hover:translate-x-1" />
           </button>
 
-          <div className="flex items-center gap-6 text-xs text-[#A4A9A5]">
+          <div className="flex items-center gap-6 text-xs text-neutral-600 dark:text-neutral-400">
             <span className="flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-[#0E9F6E]" />
               Karta raqami shart emas
             </span>
             <span className="flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-[#0E9F6E]" />
-              Bepul ochiq beta
+              Ro'yxatdan o'tish shart emas
             </span>
           </div>
         </div>

@@ -18,7 +18,7 @@ const FAQS: FaqItem[] = [
     id: 'coverage',
     tag: 'Hududlar',
     q: "MakonSense O'zbekistonning qaysi hududlarini qamrab olgan?",
-    a: "Platforma butun O'zbekiston Respublikasining barcha 14 ta ma'muriy hududini, 208 ta shahar va tumanini, 500,000+ dan ortiq bino va savdo obyektlarini to'liq qamrab oladi: Toshkent shahri va viloyati, Samarqand, Farg'ona, Andijon, Namangan, Buxoro, Navoiy, Qashqadaryo, Surxondaryo, Xorazm, Jizzax, Sirdaryo va Qoraqalpog'iston.",
+    a: "Platforma butun O'zbekiston Respublikasining barcha 14 ta ma'muriy hududini, 208 ta shahar va tumanini, 524,000+ dan ortiq bino va savdo obyektlarini to'liq qamrab oladi: Toshkent shahri va viloyati, Samarqand, Farg'ona, Andijon, Namangan, Buxoro, Navoiy, Qashqadaryo, Surxondaryo, Xorazm, Jizzax, Sirdaryo va Qoraqalpog'iston.",
   },
   {
     id: 'pdf-audit',
@@ -42,7 +42,7 @@ const FAQS: FaqItem[] = [
     id: 'pricing',
     tag: 'Narx',
     q: "Platformadan hozir bepul foydalanish mumkinmi?",
-    a: "Ha! MakonSense ning barcha asosiy funksiyalari — interaktiv xarita, MakonScore hisoblagichi va PDF Audit namunasi — hozirda ochiq beta davrida to'liq bepul taqdim etilmoqda.",
+    a: "Ha! MakonSense ning barcha asosiy funksiyalari — interaktiv xarita, MakonScore hisoblagichi va PDF Audit namunasi — hozirda to'liq bepul. Karta raqami va ro'yxatdan o'tish talab qilinmaydi.",
   },
 ];
 
@@ -52,18 +52,18 @@ export const FaqSection: React.FC = () => {
   return (
     <section
       id="faq"
-      className="py-24 sm:py-36 border-t border-black/[0.05] dark:border-white/[0.05] select-none"
+      className="py-24 sm:py-36 border-t border-black/[0.05] dark:border-white/[0.05] select-none scroll-mt-24"
     >
       <div className="max-w-4xl mx-auto px-6 lg:px-8">
 
         {/* Label + Headline */}
-        <span className="font-mono text-xs tracking-[0.18em] uppercase text-[#A4A9A5]">
+        <span className="font-mono text-xs tracking-[0.18em] uppercase text-neutral-500 dark:text-neutral-400 font-semibold">
           Ko'p so'raladigan savollar
         </span>
 
         <h2 className="mt-4 text-3xl sm:text-4xl font-bold tracking-[-0.03em] leading-[1.12] text-[#111111] dark:text-[#FDFDFD]">
           Savollar &{' '}
-          <span className="text-[#A4A9A5] font-normal">javoblar.</span>
+          <span className="text-neutral-400 dark:text-neutral-500 font-normal">javoblar.</span>
         </h2>
 
         {/* FAQ List */}

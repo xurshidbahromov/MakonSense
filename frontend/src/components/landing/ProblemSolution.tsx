@@ -23,7 +23,7 @@ const STATS = [
   {
     icon: Building2,
     tag: 'Qamrov',
-    value: '500,000+',
+    value: '524,000+',
     label: 'Indekslangan bino',
     subtext: 'O\'zbekiston bo\'ylab 14 ta hudud',
   },
@@ -52,7 +52,7 @@ export const ProblemSolution: React.FC = () => {
     <section
       id="benefits"
       ref={ref}
-      className="py-24 sm:py-36 select-none"
+      className="py-24 sm:py-36 select-none scroll-mt-24"
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
 
@@ -63,12 +63,12 @@ export const ProblemSolution: React.FC = () => {
           transition={{ duration: 0.5 }}
           className="mb-16 sm:mb-20"
         >
-          <span className="font-mono text-xs tracking-[0.18em] uppercase text-[#A4A9A5] dark:text-[#A4A9A5]">
+          <span className="font-mono text-xs tracking-[0.18em] uppercase text-neutral-500 dark:text-neutral-400 font-semibold">
             Nima o'zgardi
           </span>
           <h2 className="mt-4 text-3xl sm:text-4xl lg:text-[46px] font-bold tracking-[-0.03em] leading-[1.12] text-[#111111] dark:text-[#FDFDFD]">
             Subyektiv taxminlarga emas,{' '}
-            <span className="text-[#A4A9A5] font-normal">
+            <span className="text-neutral-400 dark:text-neutral-500 font-normal">
               aniq raqamlarga ishoning.
             </span>
           </h2>
@@ -83,14 +83,14 @@ export const ProblemSolution: React.FC = () => {
             transition={{ duration: 0.55, delay: 0.1 }}
             className="p-8 sm:p-10 rounded-3xl bg-white/45 dark:bg-[#161616]/45 backdrop-blur-2xl backdrop-saturate-[180%] border-2 border-white/80 dark:border-white/[0.05] shadow-none dark:shadow-none"
           >
-            <p className="font-mono text-[11px] tracking-[0.16em] uppercase text-[#A4A9A5] mb-8">
+            <p className="font-mono text-[11px] tracking-[0.16em] uppercase text-neutral-500 dark:text-neutral-400 mb-8 font-semibold">
               Avvalgi usul
             </p>
             <ul className="space-y-5">
               {PROBLEMS.map((p, i) => (
                 <li key={i} className="flex items-start gap-3.5">
-                  <X size={15} className="mt-1 text-[#A4A9A5] flex-shrink-0" />
-                  <span className="text-[15.5px] leading-snug text-neutral-500 dark:text-neutral-400">
+                  <X size={15} className="mt-1 text-neutral-400 dark:text-neutral-500 flex-shrink-0" />
+                  <span className="text-[15.5px] leading-snug text-neutral-600 dark:text-neutral-400">
                     {p}
                   </span>
                 </li>
