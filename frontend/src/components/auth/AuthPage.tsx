@@ -136,38 +136,78 @@ export const AuthPage: React.FC = () => {
           </button>
         </div>
 
-        {/* Center: Hypnotic Minimal 3D Geodesic Sphere & Serene Editorial Copy */}
+        {/* Center: Adaptive 3D Visual & Tailored Editorial Copy */}
         <div className="relative z-10 my-auto flex flex-col items-center text-center px-4 max-w-sm mx-auto">
-          {/* Calm, Floating 3D Geodesic Sphere */}
+          {/* Calm, Floating 3D Morphing Geometry */}
           <div className="w-[200px] h-[200px] xl:w-[240px] xl:h-[240px] relative mb-5">
-            <AuthSphereVisual />
+            <AuthSphereVisual mode={authMode} />
           </div>
 
-          <h1 className="text-2xl xl:text-3xl font-bold tracking-[-0.03em] leading-[1.2] text-white">
-            Joylashuv qarorlarida <br />
-            <span className="text-[#0E9F6E]">yangi standart.</span>
-          </h1>
+          <AnimatePresence mode="wait">
+            {authMode === 'login' ? (
+              <motion.div
+                key="login-copy"
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -6 }}
+                transition={{ duration: 0.24, ease: 'easeOut' }}
+                className="flex flex-col items-center"
+              >
+                <h1 className="text-2xl xl:text-3xl font-bold tracking-[-0.03em] leading-[1.2] text-white">
+                  Sessiyaga xavfsiz <br />
+                  <span className="text-[#0E9F6E]">qaytish.</span>
+                </h1>
 
-          <p className="mt-2.5 text-xs xl:text-sm text-neutral-400 max-w-xs leading-relaxed">
-            O'zbekiston bo'ylab 524,000+ bino, piyodalar tranziti va raqobatchilar tahlili bir platformada.
-          </p>
+                <p className="mt-2.5 text-xs xl:text-sm text-neutral-400 max-w-xs leading-relaxed">
+                  Saqlangan loyihalar, hisoblangan MakonScore ko'rsatkichlari va hududiy tahlillaringizga kiring.
+                </p>
 
-          {/* Minimal Metric Ticker Pill */}
-          <div className="mt-5 inline-flex items-center gap-3 px-3.5 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.08] text-xs font-mono text-neutral-300">
-            <span>524k+ bino</span>
-            <span className="w-1 h-1 rounded-full bg-[#0E9F6E]" />
-            <span>14 hudud</span>
-            <span className="w-1 h-1 rounded-full bg-[#0E9F6E]" />
-            <span className="text-[#0E9F6E] font-semibold">94.2% aniqlik</span>
-          </div>
+                {/* Minimal Metric Ticker Pill (Login) */}
+                <div className="mt-5 inline-flex items-center gap-3 px-3.5 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.08] text-xs font-mono text-neutral-300">
+                  <span className="text-[#0E9F6E] font-semibold">256-bit SSL</span>
+                  <span className="w-1 h-1 rounded-full bg-[#0E9F6E]" />
+                  <span>Tezkor kirish</span>
+                  <span className="w-1 h-1 rounded-full bg-[#0E9F6E]" />
+                  <span>Doimiy sessiya</span>
+                </div>
+              </motion.div>
+            ) : (
+              <motion.div
+                key="register-copy"
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -6 }}
+                transition={{ duration: 0.24, ease: 'easeOut' }}
+                className="flex flex-col items-center"
+              >
+                <h1 className="text-2xl xl:text-3xl font-bold tracking-[-0.03em] leading-[1.2] text-white">
+                  Joylashuv qarorlarida <br />
+                  <span className="text-[#0E9F6E]">yangi standart.</span>
+                </h1>
+
+                <p className="mt-2.5 text-xs xl:text-sm text-neutral-400 max-w-xs leading-relaxed">
+                  O'zbekiston bo'ylab 524,000+ bino, piyodalar tranziti va raqobatchilar tahlili bir platformada.
+                </p>
+
+                {/* Minimal Metric Ticker Pill (Register) */}
+                <div className="mt-5 inline-flex items-center gap-3 px-3.5 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.08] text-xs font-mono text-neutral-300">
+                  <span>524k+ bino</span>
+                  <span className="w-1 h-1 rounded-full bg-[#0E9F6E]" />
+                  <span>14 hudud</span>
+                  <span className="w-1 h-1 rounded-full bg-[#0E9F6E]" />
+                  <span className="text-[#0E9F6E] font-semibold">94.2% aniqlik</span>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
         {/* Bottom: Quiet Status */}
         <div className="relative z-10 flex items-center justify-between text-xs text-neutral-500 pt-3 border-t border-white/[0.06]">
           <span className="font-mono text-[11px]">Toshkent · Samarqand · Farg'ona · Buxoro</span>
           <div className="flex items-center gap-1.5 text-[11px] text-[#0E9F6E]">
-            <CheckCircle2 size={13} />
-            <span>Rasmiy tahlil</span>
+            {authMode === 'login' ? <ShieldCheck size={13} /> : <CheckCircle2 size={13} />}
+            <span>{authMode === 'login' ? 'Himoyalangan kirish' : 'Rasmiy tahlil'}</span>
           </div>
         </div>
       </div>
