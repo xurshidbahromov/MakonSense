@@ -238,16 +238,19 @@ export const LandingFooter: React.FC = () => {
           </div>
         </div>
 
-        {/* Full-width Giant Vector Wordmark Logo */}
-        <div className="relative z-20 w-full select-none pointer-events-none mt-8 sm:mt-12 flex items-end justify-center px-4 sm:px-6 md:px-8">
+        {/* Full-bleed Monumental Vector Wordmark Logo (100% full screen width, bottom 25% submerged) */}
+        <div
+          className="relative z-20 w-full overflow-hidden select-none pointer-events-none mt-10 sm:mt-16 flex items-start justify-center"
+          style={{ aspectRatio: '972 / 92.25' }}
+        >
           {/* Mathematical SVG Vector Wordmark & 3D Morph Anchor Container */}
           <div
             id="makonsense-wordmark-container"
-            className="relative w-full max-w-7xl flex items-center justify-center"
+            className="absolute top-0 left-0 w-full"
           >
             <MakonSenseWordmark
               id="makonsense-wordmark-svg"
-              className="w-full h-auto select-none pointer-events-none text-neutral-900 dark:text-white opacity-32 dark:opacity-48 transition-opacity duration-500"
+              className="w-full h-auto block select-none pointer-events-none text-neutral-900 dark:text-white opacity-28 dark:opacity-44 transition-opacity duration-500"
             />
             <MorphAnchor
               shape="wordmark"

@@ -24,9 +24,10 @@ export const MakonSenseWordmark: React.FC<MakonSenseWordmarkProps> = ({
     >
       <defs>
         <linearGradient id={gradientId} x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stopColor="currentColor" stopOpacity="0.55" />
-          <stop offset="55%" stopColor="currentColor" stopOpacity="0.28" />
-          <stop offset="100%" stopColor="currentColor" stopOpacity="0.06" />
+          <stop offset="0%" stopColor="currentColor" stopOpacity="0.65" />
+          <stop offset="45%" stopColor="currentColor" stopOpacity="0.42" />
+          <stop offset="85%" stopColor="currentColor" stopOpacity="0.22" />
+          <stop offset="100%" stopColor="currentColor" stopOpacity="0.12" />
         </linearGradient>
       </defs>
       <path
