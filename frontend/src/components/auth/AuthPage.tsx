@@ -96,21 +96,12 @@ export const AuthPage: React.FC = () => {
       {/* ========================================================= */}
       {/* LEFT COLUMN: SWISS ARTISTIC BRAND VISUAL (ZERO SCROLL)    */}
       {/* ========================================================= */}
-      <div className="hidden lg:flex lg:w-[48%] xl:w-[45%] h-screen overflow-hidden relative flex-col justify-between p-8 xl:p-12 bg-[#080E0B] text-white border-r border-white/[0.08] select-none">
-        {/* Soft Ambient Geometric Glows */}
-        <div className="absolute top-[-10%] left-[-10%] w-[420px] h-[420px] rounded-full bg-[#0E9F6E]/12 blur-[120px] pointer-events-none" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[420px] h-[420px] rounded-full bg-[#0E9F6E]/10 blur-[120px] pointer-events-none" />
+      <div className="hidden lg:flex lg:w-[48%] xl:w-[45%] h-screen overflow-hidden relative flex-col justify-between p-10 xl:p-14 bg-[#0A100D] text-white border-r border-white/[0.08] select-none">
+        {/* Soft Ambient Corner Bloom */}
+        <div className="absolute top-[-15%] left-[-15%] w-[450px] h-[450px] rounded-full bg-[#0E9F6E]/12 blur-[130px] pointer-events-none" />
+        <div className="absolute bottom-[-15%] right-[-15%] w-[450px] h-[450px] rounded-full bg-[#0E9F6E]/10 blur-[130px] pointer-events-none" />
 
-        {/* Subtle Spatial Coordinate Grid Pattern */}
-        <div
-          className="absolute inset-0 pointer-events-none opacity-[0.035]"
-          style={{
-            backgroundImage: `radial-gradient(circle, rgba(255,255,255,0.8) 1px, transparent 1px)`,
-            backgroundSize: '24px 24px',
-          }}
-        />
-
-        {/* Top: Brand Header */}
+        {/* Top: Logo */}
         <div className="relative z-10 flex items-center justify-between">
           <div
             onClick={() => setCurrentView('landing')}
@@ -136,78 +127,38 @@ export const AuthPage: React.FC = () => {
           </button>
         </div>
 
-        {/* Center: Adaptive 3D Visual & Tailored Editorial Copy */}
-        <div className="relative z-10 my-auto flex flex-col items-center text-center px-4 max-w-sm mx-auto">
-          {/* Calm, Floating 3D Morphing Geometry */}
-          <div className="w-[200px] h-[200px] xl:w-[240px] xl:h-[240px] relative mb-5">
-            <AuthSphereVisual mode={authMode} />
+        {/* Center: Hypnotic Minimal 3D Sphere & Serene Editorial Copy */}
+        <div className="relative z-10 my-auto flex flex-col items-center text-center px-4 max-w-md mx-auto">
+          {/* Calm, Floating 3D Geodesic Sphere */}
+          <div className="w-[220px] h-[220px] xl:w-[260px] xl:h-[260px] relative mb-6">
+            <AuthSphereVisual />
           </div>
 
-          <AnimatePresence mode="wait">
-            {authMode === 'login' ? (
-              <motion.div
-                key="login-copy"
-                initial={{ opacity: 0, y: 6 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -6 }}
-                transition={{ duration: 0.24, ease: 'easeOut' }}
-                className="flex flex-col items-center"
-              >
-                <h1 className="text-2xl xl:text-3xl font-bold tracking-[-0.03em] leading-[1.2] text-white">
-                  Sessiyaga xavfsiz <br />
-                  <span className="text-[#0E9F6E]">qaytish.</span>
-                </h1>
+          <h1 className="text-2xl xl:text-3xl font-bold tracking-[-0.03em] leading-[1.2] text-white">
+            Joylashuv qarorlarida <br />
+            <span className="text-[#0E9F6E]">yangi standart.</span>
+          </h1>
 
-                <p className="mt-2.5 text-xs xl:text-sm text-neutral-400 max-w-xs leading-relaxed">
-                  Saqlangan loyihalar, hisoblangan MakonScore ko'rsatkichlari va hududiy tahlillaringizga kiring.
-                </p>
+          <p className="mt-3 text-xs xl:text-sm text-neutral-400 max-w-sm leading-relaxed">
+            O'zbekiston bo'ylab 524,000+ bino, piyodalar tranziti va raqobatchilar tahlili bir platformada.
+          </p>
 
-                {/* Minimal Metric Ticker Pill (Login) */}
-                <div className="mt-5 inline-flex items-center gap-3 px-3.5 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.08] text-xs font-mono text-neutral-300">
-                  <span className="text-[#0E9F6E] font-semibold">256-bit SSL</span>
-                  <span className="w-1 h-1 rounded-full bg-[#0E9F6E]" />
-                  <span>Tezkor kirish</span>
-                  <span className="w-1 h-1 rounded-full bg-[#0E9F6E]" />
-                  <span>Doimiy sessiya</span>
-                </div>
-              </motion.div>
-            ) : (
-              <motion.div
-                key="register-copy"
-                initial={{ opacity: 0, y: 6 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -6 }}
-                transition={{ duration: 0.24, ease: 'easeOut' }}
-                className="flex flex-col items-center"
-              >
-                <h1 className="text-2xl xl:text-3xl font-bold tracking-[-0.03em] leading-[1.2] text-white">
-                  Joylashuv qarorlarida <br />
-                  <span className="text-[#0E9F6E]">yangi standart.</span>
-                </h1>
-
-                <p className="mt-2.5 text-xs xl:text-sm text-neutral-400 max-w-xs leading-relaxed">
-                  O'zbekiston bo'ylab 524,000+ bino, piyodalar tranziti va raqobatchilar tahlili bir platformada.
-                </p>
-
-                {/* Minimal Metric Ticker Pill (Register) */}
-                <div className="mt-5 inline-flex items-center gap-3 px-3.5 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.08] text-xs font-mono text-neutral-300">
-                  <span>524k+ bino</span>
-                  <span className="w-1 h-1 rounded-full bg-[#0E9F6E]" />
-                  <span>14 hudud</span>
-                  <span className="w-1 h-1 rounded-full bg-[#0E9F6E]" />
-                  <span className="text-[#0E9F6E] font-semibold">94.2% aniqlik</span>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+          {/* Minimal Metric Ticker Pill */}
+          <div className="mt-6 inline-flex items-center gap-3 px-4 py-2 rounded-full bg-white/[0.04] border border-white/[0.08] text-xs font-mono text-neutral-300">
+            <span>524k+ bino</span>
+            <span className="w-1 h-1 rounded-full bg-[#0E9F6E]" />
+            <span>14 hudud</span>
+            <span className="w-1 h-1 rounded-full bg-[#0E9F6E]" />
+            <span className="text-[#0E9F6E] font-semibold">94.2% aniqlik</span>
+          </div>
         </div>
 
         {/* Bottom: Quiet Status */}
-        <div className="relative z-10 flex items-center justify-between text-xs text-neutral-500 pt-3 border-t border-white/[0.06]">
+        <div className="relative z-10 flex items-center justify-between text-xs text-neutral-500 pt-4 border-t border-white/[0.06]">
           <span className="font-mono text-[11px]">Toshkent · Samarqand · Farg'ona · Buxoro</span>
           <div className="flex items-center gap-1.5 text-[11px] text-[#0E9F6E]">
-            {authMode === 'login' ? <ShieldCheck size={13} /> : <CheckCircle2 size={13} />}
-            <span>{authMode === 'login' ? 'Himoyalangan kirish' : 'Rasmiy tahlil'}</span>
+            <CheckCircle2 size={13} />
+            <span>Rasmiy tahlil</span>
           </div>
         </div>
       </div>
@@ -215,7 +166,7 @@ export const AuthPage: React.FC = () => {
       {/* ========================================================= */}
       {/* RIGHT COLUMN: REFINED CRISP FORM (ZERO SCROLL ON DESKTOP)  */}
       {/* ========================================================= */}
-      <div className="flex-1 h-screen overflow-y-auto lg:overflow-hidden [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden flex flex-col justify-between p-6 sm:p-10 lg:py-7 lg:px-12 xl:py-10 xl:px-14 max-w-lg mx-auto w-full">
+      <div className="flex-1 h-screen overflow-y-auto lg:overflow-hidden flex flex-col justify-between p-6 sm:p-10 lg:p-12 xl:p-14 max-w-xl mx-auto w-full">
         {/* Top Controls */}
         <div className="flex items-center justify-between flex-shrink-0">
           <div
@@ -229,10 +180,10 @@ export const AuthPage: React.FC = () => {
           <div className="flex items-center gap-2 ml-auto">
             <button
               onClick={toggleTheme}
-              className="w-8.5 h-8.5 rounded-full bg-black/[0.04] hover:bg-black/[0.08] dark:bg-white/[0.08] dark:hover:bg-white/[0.14] border border-black/[0.06] dark:border-white/[0.1] flex items-center justify-center text-neutral-600 dark:text-neutral-300 transition-all cursor-pointer"
+              className="w-9 h-9 rounded-full bg-black/[0.04] hover:bg-black/[0.08] dark:bg-white/[0.08] dark:hover:bg-white/[0.14] border border-black/[0.06] dark:border-white/[0.1] flex items-center justify-center text-neutral-600 dark:text-neutral-300 transition-all cursor-pointer"
               title="Mavzu rejimi"
             >
-              {isDark ? <Moon size={14} className="text-[#0E9F6E]" /> : <Sun size={14} className="text-amber-500" />}
+              {isDark ? <Moon size={15} className="text-[#0E9F6E]" /> : <Sun size={15} className="text-amber-500" />}
             </button>
 
             <button
@@ -240,50 +191,43 @@ export const AuthPage: React.FC = () => {
               className="lg:hidden p-2 rounded-full hover:bg-black/[0.04] dark:hover:bg-white/[0.08] text-neutral-500 hover:text-neutral-900 dark:hover:text-white transition-all cursor-pointer"
               title="Bosh sahifa"
             >
-              <ArrowLeft size={17} />
+              <ArrowLeft size={18} />
             </button>
           </div>
         </div>
 
         {/* Center: The Form */}
-        <div className="my-auto py-2 flex-shrink-0">
+        <div className="my-auto py-4 flex-shrink-0">
           {/* Header */}
-          <div className="mb-4">
-            <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#0E9F6E] font-semibold">
+          <div className="mb-6">
+            <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-[#0E9F6E] font-semibold">
               {authMode === 'login' ? 'TIZIMGA KIRISH' : "RO'YXATDAN O'TISH"}
             </span>
-            <h2 className="mt-1 text-2xl sm:text-[26px] font-bold tracking-tight text-[#111111] dark:text-[#FDFDFD]">
+            <h2 className="mt-1.5 text-2xl sm:text-3xl font-bold tracking-tight text-[#111111] dark:text-[#FDFDFD]">
               {authMode === 'login' ? 'Xush kelibsiz' : 'Yangi hisob yarating'}
             </h2>
-            <p className="mt-0.5 text-xs text-neutral-500 dark:text-neutral-400">
+            <p className="mt-1 text-xs sm:text-sm text-neutral-500 dark:text-neutral-400">
               {authMode === 'login'
                 ? "Lokatsiyalaringiz va tahlillarni ko'rish uchun kiring."
                 : "Bir zumda O'zbekiston fazoviy tahlil platformasiga kiring."}
             </p>
           </div>
 
-          {/* Segmented Switcher with Fluid Spring Pill */}
-          <div className="mb-4 p-1 rounded-2xl bg-neutral-100 dark:bg-white/[0.05] border border-black/[0.04] dark:border-white/[0.08] grid grid-cols-2 gap-1 relative">
+          {/* Segmented Switcher (Kirish / Ro'yxatdan o'tish) */}
+          <div className="mb-5 p-1 rounded-2xl bg-neutral-100 dark:bg-white/[0.05] border border-black/[0.04] dark:border-white/[0.08] grid grid-cols-2 gap-1">
             <button
               type="button"
               onClick={() => {
                 setAuthMode('login');
                 setError(null);
               }}
-              className={`relative z-10 py-2 text-xs font-semibold rounded-xl transition-colors duration-200 cursor-pointer ${
+              className={`py-2 text-xs font-semibold rounded-xl transition-all duration-200 cursor-pointer ${
                 authMode === 'login'
-                  ? 'text-[#111111] dark:text-white'
+                  ? 'bg-white dark:bg-[#1E1E1E] text-[#111111] dark:text-white shadow-xs'
                   : 'text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white'
               }`}
             >
-              {authMode === 'login' && (
-                <motion.div
-                  layoutId="active-auth-pill"
-                  className="absolute inset-0 bg-white dark:bg-[#1E1E1E] rounded-xl shadow-xs"
-                  transition={{ type: 'spring', stiffness: 500, damping: 35 }}
-                />
-              )}
-              <span className="relative z-10">Kirish</span>
+              Kirish
             </button>
             <button
               type="button"
@@ -291,29 +235,22 @@ export const AuthPage: React.FC = () => {
                 setAuthMode('register');
                 setError(null);
               }}
-              className={`relative z-10 py-2 text-xs font-semibold rounded-xl transition-colors duration-200 cursor-pointer ${
+              className={`py-2 text-xs font-semibold rounded-xl transition-all duration-200 cursor-pointer ${
                 authMode === 'register'
-                  ? 'text-[#111111] dark:text-white'
+                  ? 'bg-white dark:bg-[#1E1E1E] text-[#111111] dark:text-white shadow-xs'
                   : 'text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white'
               }`}
             >
-              {authMode === 'register' && (
-                <motion.div
-                  layoutId="active-auth-pill"
-                  className="absolute inset-0 bg-white dark:bg-[#1E1E1E] rounded-xl shadow-xs"
-                  transition={{ type: 'spring', stiffness: 500, damping: 35 }}
-                />
-              )}
-              <span className="relative z-10">Ro'yxatdan o'tish</span>
+              Ro'yxatdan o'tish
             </button>
           </div>
 
           {/* Social Logins */}
-          <div className="grid grid-cols-2 gap-2.5 mb-3.5">
+          <div className="grid grid-cols-2 gap-2.5 mb-5">
             <button
               type="button"
               onClick={() => handleSocialAuth('google')}
-              className="flex items-center justify-center gap-2 px-3 py-2 rounded-xl border border-black/[0.08] dark:border-white/[0.1] bg-white dark:bg-white/[0.03] hover:bg-neutral-50 dark:hover:bg-white/[0.06] text-xs font-semibold text-neutral-800 dark:text-neutral-200 transition-all cursor-pointer shadow-xs active:scale-[0.98]"
+              className="flex items-center justify-center gap-2 px-3 py-2.5 rounded-2xl border border-black/[0.08] dark:border-white/[0.1] bg-white dark:bg-white/[0.03] hover:bg-neutral-50 dark:hover:bg-white/[0.06] text-xs font-semibold text-neutral-800 dark:text-neutral-200 transition-all cursor-pointer shadow-xs active:scale-[0.98]"
             >
               <svg className="w-4 h-4" viewBox="0 0 24 24">
                 <path
@@ -339,7 +276,7 @@ export const AuthPage: React.FC = () => {
             <button
               type="button"
               onClick={() => handleSocialAuth('telegram')}
-              className="flex items-center justify-center gap-2 px-3 py-2 rounded-xl border border-black/[0.08] dark:border-white/[0.1] bg-white dark:bg-white/[0.03] hover:bg-neutral-50 dark:hover:bg-white/[0.06] text-xs font-semibold text-neutral-800 dark:text-neutral-200 transition-all cursor-pointer shadow-xs active:scale-[0.98]"
+              className="flex items-center justify-center gap-2 px-3 py-2.5 rounded-2xl border border-black/[0.08] dark:border-white/[0.1] bg-white dark:bg-white/[0.03] hover:bg-neutral-50 dark:hover:bg-white/[0.06] text-xs font-semibold text-neutral-800 dark:text-neutral-200 transition-all cursor-pointer shadow-xs active:scale-[0.98]"
             >
               <svg className="w-4 h-4 fill-[#229ED9]" viewBox="0 0 24 24">
                 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 0 0-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .37z" />
@@ -349,11 +286,11 @@ export const AuthPage: React.FC = () => {
           </div>
 
           {/* Thin Divider */}
-          <div className="relative my-3 text-center">
+          <div className="relative my-4 text-center">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-black/[0.06] dark:border-white/[0.08]" />
             </div>
-            <span className="relative bg-[#FDFDFD] dark:bg-[#111111] px-2.5 text-[10px] font-mono uppercase text-neutral-400">
+            <span className="relative bg-[#FDFDFD] dark:bg-[#111111] px-3 text-[10px] font-mono uppercase text-neutral-400">
               yoki
             </span>
           </div>
@@ -363,7 +300,7 @@ export const AuthPage: React.FC = () => {
             <motion.div
               initial={{ opacity: 0, y: -4 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mb-3 p-2 rounded-xl bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 text-xs flex items-center gap-2"
+              className="mb-3.5 p-2.5 rounded-xl bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 text-xs flex items-center gap-2"
             >
               <AlertCircle size={14} className="flex-shrink-0" />
               <span>{error}</span>
@@ -371,7 +308,7 @@ export const AuthPage: React.FC = () => {
           )}
 
           {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-2.5">
+          <form onSubmit={handleSubmit} className="space-y-3">
             {/* Name (Register only) */}
             <AnimatePresence>
               {authMode === 'register' && (
@@ -381,18 +318,18 @@ export const AuthPage: React.FC = () => {
                   exit={{ opacity: 0, height: 0 }}
                   className="space-y-1 overflow-hidden"
                 >
-                  <label className="block text-[11px] font-semibold text-neutral-700 dark:text-neutral-300">
+                  <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300">
                     Ism yoki kompaniya
                   </label>
                   <div className="relative">
-                    <User size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-400" />
+                    <User size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-400" />
                     <input
                       type="text"
                       required
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       placeholder="Alisher Karimov"
-                      className="w-full pl-9 pr-3.5 py-2 rounded-xl bg-neutral-50 dark:bg-white/[0.04] border border-black/[0.08] dark:border-white/[0.1] text-xs sm:text-sm text-[#111111] dark:text-white placeholder:text-neutral-400 focus:outline-none focus:border-[#0E9F6E] focus:ring-2 focus:ring-[#0E9F6E]/20 transition-all"
+                      className="w-full pl-10 pr-4 py-2.5 rounded-2xl bg-neutral-50 dark:bg-white/[0.04] border border-black/[0.08] dark:border-white/[0.1] text-xs sm:text-sm text-[#111111] dark:text-white placeholder:text-neutral-400 focus:outline-none focus:border-[#0E9F6E] focus:ring-2 focus:ring-[#0E9F6E]/20 transition-all"
                     />
                   </div>
                 </motion.div>
@@ -401,18 +338,18 @@ export const AuthPage: React.FC = () => {
 
             {/* Email or Phone */}
             <div className="space-y-1">
-              <label className="block text-[11px] font-semibold text-neutral-700 dark:text-neutral-300">
+              <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300">
                 Email yoki telefon
               </label>
               <div className="relative">
-                <Mail size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-400" />
+                <Mail size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-400" />
                 <input
                   type="text"
                   required
                   value={emailOrPhone}
                   onChange={(e) => setEmailOrPhone(e.target.value)}
                   placeholder="nomi@kompaniya.uz yoki +998 (90) 123-45-67"
-                  className="w-full pl-9 pr-3.5 py-2 rounded-xl bg-neutral-50 dark:bg-white/[0.04] border border-black/[0.08] dark:border-white/[0.1] text-xs sm:text-sm text-[#111111] dark:text-white placeholder:text-neutral-400 focus:outline-none focus:border-[#0E9F6E] focus:ring-2 focus:ring-[#0E9F6E]/20 transition-all"
+                  className="w-full pl-10 pr-4 py-2.5 rounded-2xl bg-neutral-50 dark:bg-white/[0.04] border border-black/[0.08] dark:border-white/[0.1] text-xs sm:text-sm text-[#111111] dark:text-white placeholder:text-neutral-400 focus:outline-none focus:border-[#0E9F6E] focus:ring-2 focus:ring-[#0E9F6E]/20 transition-all"
                 />
               </div>
             </div>
@@ -420,35 +357,35 @@ export const AuthPage: React.FC = () => {
             {/* Password */}
             <div className="space-y-1">
               <div className="flex items-center justify-between">
-                <label className="text-[11px] font-semibold text-neutral-700 dark:text-neutral-300">
+                <label className="text-xs font-semibold text-neutral-700 dark:text-neutral-300">
                   Parol
                 </label>
                 {authMode === 'login' && (
                   <button
                     type="button"
                     onClick={() => alert("Parolni tiklash havolasi yuborildi.")}
-                    className="text-[11px] text-[#0E9F6E] hover:underline font-medium cursor-pointer"
+                    className="text-xs text-[#0E9F6E] hover:underline font-medium cursor-pointer"
                   >
                     Unutdingizmi?
                   </button>
                 )}
               </div>
               <div className="relative">
-                <Lock size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-400" />
+                <Lock size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-400" />
                 <input
                   type={showPassword ? 'text' : 'password'}
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Kamida 6 ta belgi"
-                  className="w-full pl-9 pr-10 py-2 rounded-xl bg-neutral-50 dark:bg-white/[0.04] border border-black/[0.08] dark:border-white/[0.1] text-xs sm:text-sm text-[#111111] dark:text-white placeholder:text-neutral-400 focus:outline-none focus:border-[#0E9F6E] focus:ring-2 focus:ring-[#0E9F6E]/20 transition-all"
+                  className="w-full pl-10 pr-11 py-2.5 rounded-2xl bg-neutral-50 dark:bg-white/[0.04] border border-black/[0.08] dark:border-white/[0.1] text-xs sm:text-sm text-[#111111] dark:text-white placeholder:text-neutral-400 focus:outline-none focus:border-[#0E9F6E] focus:ring-2 focus:ring-[#0E9F6E]/20 transition-all"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-200 cursor-pointer"
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-200 cursor-pointer"
                 >
-                  {showPassword ? <EyeOff size={14} /> : <Eye size={14} />}
+                  {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
                 </button>
               </div>
             </div>
@@ -457,21 +394,21 @@ export const AuthPage: React.FC = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full mt-2 py-2.5 px-5 rounded-xl bg-[#111111] hover:bg-neutral-800 text-white dark:bg-[#FDFDFD] dark:hover:bg-neutral-200 dark:text-[#111111] font-semibold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all duration-200 cursor-pointer shadow-xs active:scale-[0.99] disabled:opacity-60"
+              className="w-full mt-2 py-3 px-6 rounded-2xl bg-[#111111] hover:bg-neutral-800 text-white dark:bg-[#FDFDFD] dark:hover:bg-neutral-200 dark:text-[#111111] font-semibold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all duration-200 cursor-pointer shadow-xs active:scale-[0.99] disabled:opacity-60"
             >
               {loading ? (
                 <div className="w-4 h-4 border-2 border-white dark:border-[#111111] border-t-transparent rounded-full animate-spin" />
               ) : (
                 <>
                   <span>{authMode === 'login' ? 'Tizimga kirish' : 'Akkaunt yaratish'}</span>
-                  <ArrowRight size={14} />
+                  <ArrowRight size={15} />
                 </>
               )}
             </button>
           </form>
 
           {/* One-click Guest Pass */}
-          <div className="mt-3.5 text-center">
+          <div className="mt-4 text-center">
             <button
               type="button"
               onClick={handleGuest}
@@ -485,7 +422,7 @@ export const AuthPage: React.FC = () => {
         </div>
 
         {/* Bottom Footer Note */}
-        <div className="flex items-center justify-between text-[11px] text-neutral-400 dark:text-neutral-500 font-mono pt-2.5 border-t border-black/[0.04] dark:border-white/[0.06] flex-shrink-0">
+        <div className="flex items-center justify-between text-[11px] text-neutral-400 dark:text-neutral-500 font-mono pt-3 border-t border-black/[0.04] dark:border-white/[0.06] flex-shrink-0">
           <span>O'zbekiston · 14 hudud</span>
           <div className="flex items-center gap-1">
             <ShieldCheck size={13} className="text-[#0E9F6E]" />
