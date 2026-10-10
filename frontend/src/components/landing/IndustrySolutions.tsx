@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { useAnalyticsStore } from '../../store/useAnalyticsStore';
 import { MorphAnchor } from './MorphObject';
+import { AnimatedTabs } from '../ui/AnimatedTabs';
 
 interface IndustryCase {
   id: string;
@@ -171,34 +172,18 @@ export const IndustrySolutions: React.FC = () => {
             </h2>
           </div>
 
-          {/* Segmented Liquid Switcher Tabs */}
-          <div className="inline-flex p-1.5 rounded-full bg-black/[0.03] dark:bg-white/[0.05] border border-black/[0.06] dark:border-white/[0.08] backdrop-blur-xl">
-            {INDUSTRIES.map((ind) => {
-              const isSelected = ind.id === activeId;
-              const Icon = ind.icon;
-              return (
-                <button
-                  key={ind.id}
-                  onClick={() => setActiveId(ind.id)}
-                  className={`relative flex items-center gap-2 px-4 py-2 text-xs sm:text-sm font-semibold rounded-full transition-colors duration-200 cursor-pointer ${
-                    isSelected
-                      ? 'text-[#111111] dark:text-[#FDFDFD]'
-                      : 'text-neutral-500 hover:text-[#111111] dark:text-neutral-400 dark:hover:text-white'
-                  }`}
-                >
-                  {isSelected && (
-                    <motion.div
-                      layoutId="industry-pill-tab"
-                      transition={{ type: 'spring', stiffness: 400, damping: 28 }}
-                      className="absolute inset-0 rounded-full bg-white dark:bg-white/[0.12] border border-black/[0.05] dark:border-white/10 shadow-sm"
-                    />
-                  )}
-                  <Icon className="w-3.5 h-3.5 relative z-10" />
-                  <span className="relative z-10">{ind.label}</span>
-                </button>
-              );
-            })}
-          </div>
+          {/* Segmented Liquid Switcher Tabs (React Bits AnimatedTabs) */}
+          <AnimatedTabs
+            tabs={INDUSTRIES.map((ind) => ({
+              id: ind.id,
+              label: ind.label,
+              icon: ind.icon,
+            }))}
+            activeId={activeId}
+            onChange={(id) => setActiveId(id)}
+            layoutId="industry-pill-tab"
+            size="md"
+          />
         </div>
 
         {/* Showcase Dashboard Card with Grand 3D Clusters Hologram Backdrop */}

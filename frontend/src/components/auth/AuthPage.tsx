@@ -13,11 +13,14 @@ import {
   AlertCircle,
   ShieldCheck,
   CheckCircle2,
+  LogIn,
+  UserPlus,
 } from 'lucide-react';
 import { useAuthStore } from '../../store/useAuthStore';
 import { useAnalyticsStore } from '../../store/useAnalyticsStore';
 import { AuthSphereVisual } from './AuthSphereVisual';
 import { AmbientBackground } from '../ui/AmbientBackground';
+import { AnimatedTabs } from '../ui/AnimatedTabs';
 
 export const AuthPage: React.FC = () => {
   const { setCurrentView } = useAnalyticsStore();
@@ -246,44 +249,29 @@ export const AuthPage: React.FC = () => {
             </p>
           </div>
 
-          {/* Segmented Switcher (Kirish / Ro'yxatdan o'tish) - High Contrast Dark Mode */}
-          <div className="mb-4 p-1 rounded-2xl bg-neutral-200/60 dark:bg-[#1E1E22] border border-black/[0.08] dark:border-white/[0.14] grid grid-cols-2 gap-1 select-none shadow-xs">
-            <button
-              type="button"
-              onClick={() => {
-                setAuthMode('login');
-                setError(null);
-              }}
-              className={`py-2.5 text-xs sm:text-sm font-semibold rounded-xl transition-all duration-200 cursor-pointer flex items-center justify-center ${
-                authMode === 'login'
-                  ? 'bg-white dark:bg-[#2E2E34] text-[#111111] dark:text-white shadow-xs dark:shadow-[0_2px_8px_rgba(0,0,0,0.5)] dark:border dark:border-white/[0.16]'
-                  : 'text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white'
-              }`}
-            >
-              Kirish
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setAuthMode('register');
-                setError(null);
-              }}
-              className={`py-2.5 text-xs sm:text-sm font-semibold rounded-xl transition-all duration-200 cursor-pointer flex items-center justify-center ${
-                authMode === 'register'
-                  ? 'bg-white dark:bg-[#2E2E34] text-[#111111] dark:text-white shadow-xs dark:shadow-[0_2px_8px_rgba(0,0,0,0.5)] dark:border dark:border-white/[0.16]'
-                  : 'text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white'
-              }`}
-            >
-              Ro'yxatdan o'tish
-            </button>
-          </div>
+          {/* Segmented Liquid Switcher Tabs (React Bits AnimatedTabs with Framer Motion spring physics) */}
+          <AnimatedTabs
+            tabs={[
+              { id: 'login', label: 'Kirish', icon: LogIn },
+              { id: 'register', label: "Ro'yxatdan o'tish", icon: UserPlus },
+            ]}
+            activeId={authMode}
+            onChange={(id) => {
+              setAuthMode(id as 'login' | 'register');
+              setError(null);
+            }}
+            layoutId="auth-tab-pill"
+            fullWidth={true}
+            size="md"
+            className="mb-4"
+          />
 
           {/* Social Logins */}
           <div className="grid grid-cols-2 gap-2.5 mb-3.5">
             <button
               type="button"
               onClick={() => handleSocialAuth('google')}
-              className="flex items-center justify-center gap-2 px-3.5 py-2.5 rounded-xl border border-black/[0.08] dark:border-white/[0.1] bg-white dark:bg-white/[0.03] hover:bg-neutral-50 dark:hover:bg-white/[0.06] text-xs sm:text-sm font-semibold text-neutral-800 dark:text-neutral-200 transition-all cursor-pointer shadow-xs active:scale-[0.98]"
+              className="flex items-center justify-center gap-2 px-3.5 py-2.5 rounded-xl border border-black/[0.06] dark:border-white/[0.08] bg-black/[0.02] dark:bg-white/[0.03] hover:bg-black/[0.05] dark:hover:bg-white/[0.06] text-xs sm:text-sm font-semibold text-neutral-800 dark:text-neutral-200 transition-all cursor-pointer shadow-xs active:scale-[0.98]"
             >
               <svg className="w-4 h-4" viewBox="0 0 24 24">
                 <path
