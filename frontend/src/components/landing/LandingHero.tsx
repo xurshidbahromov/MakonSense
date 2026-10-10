@@ -128,7 +128,7 @@ export const LandingHero: React.FC = () => {
 
           {/* Right: grand atmospheric anchor slot for the 3D globe hologram (2/4 width) */}
           <div className="relative hidden lg:flex items-center justify-center">
-            <MorphAnchor shape="globe" className="w-[580px] h-[580px] lg:w-[640px] lg:h-[640px] xl:w-[680px] xl:h-[680px]" />
+            <MorphAnchor shape="globe" className="w-[500px] h-[500px] lg:w-[560px] lg:h-[560px] xl:w-[600px] xl:h-[600px]" />
             <div className="absolute -bottom-4 left-0 right-0 flex justify-center pointer-events-none">
               <span className="font-mono text-[10.5px] tracking-[0.2em] uppercase text-neutral-400 dark:text-neutral-500">
                 41.31° N · 69.28° E · TOSHKENT

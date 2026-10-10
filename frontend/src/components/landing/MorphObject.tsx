@@ -25,7 +25,7 @@ export type MorphShape =
   | 'bars'
   | 'ring';
 
-const N = 384;
+const N = 300;
 const ACCENT: [number, number, number] = [14, 159, 110]; // Signature Silky Emerald #0E9F6E
 
 /* ---------------------------- helpers ----------------------------- */
@@ -41,6 +41,24 @@ const fill = (pts: Vec3[], acc: number[]): Formation => {
   return { pts: out, accent: a };
 };
 
+const segment = (a: Vec3, b: Vec3, n: number): Vec3[] => {
+  const out: Vec3[] = [];
+  for (let i = 0; i < n; i++) {
+    const t = i / Math.max(1, n - 1);
+    out.push([a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t]);
+  }
+  return out;
+};
+
+const circleRing = (r: number, y: number, n: number, cx = 0, cz = 0): Vec3[] => {
+  const out: Vec3[] = [];
+  for (let i = 0; i < n; i++) {
+    const a = (i / n) * Math.PI * 2;
+    out.push([cx + Math.cos(a) * r, y, cz + Math.sin(a) * r]);
+  }
+  return out;
+};
+
 const fibSphere = (n: number, r: number, c: Vec3 = [0, 0, 0]): Vec3[] => {
   const ga = Math.PI * (3 - Math.sqrt(5));
   const out: Vec3[] = [];
@@ -53,150 +71,258 @@ const fibSphere = (n: number, r: number, c: Vec3 = [0, 0, 0]): Vec3[] => {
   return out;
 };
 
-const segment = (a: Vec3, b: Vec3, n: number): Vec3[] => {
-  const out: Vec3[] = [];
-  for (let i = 0; i < n; i++) {
-    const t = i / Math.max(1, n - 1);
-    out.push([a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t]);
-  }
-  return out;
-};
-
-/** Dots sampled along the 12 edges of a box. */
-const boxEdges = (cx: number, cz: number, w: number, y0: number, y1: number, density = 14): Vec3[] => {
-  const h = w / 2;
-  const x0 = cx - h, x1 = cx + h, z0 = cz - h, z1 = cz + h;
-  const c = (x: number, y: number, z: number): Vec3 => [x, y, z];
-  const edges: [Vec3, Vec3][] = [
-    [c(x0, y0, z0), c(x1, y0, z0)], [c(x1, y0, z0), c(x1, y0, z1)],
-    [c(x1, y0, z1), c(x0, y0, z1)], [c(x0, y0, z1), c(x0, y0, z0)],
-    [c(x0, y1, z0), c(x1, y1, z0)], [c(x1, y1, z0), c(x1, y1, z1)],
-    [c(x1, y1, z1), c(x0, y1, z1)], [c(x0, y1, z1), c(x0, y1, z0)],
-    [c(x0, y0, z0), c(x0, y1, z0)], [c(x1, y0, z0), c(x1, y1, z0)],
-    [c(x1, y0, z1), c(x1, y1, z1)], [c(x0, y0, z1), c(x0, y1, z1)],
-  ];
-  const out: Vec3[] = [];
-  edges.forEach(([a, b]) => {
-    const len = Math.hypot(b[0] - a[0], b[1] - a[1], b[2] - a[2]);
-    out.push(...segment(a, b, Math.max(2, Math.round(len * density))));
-  });
-  return out;
-};
-
 /* --------------------------- formations --------------------------- */
+/* Hero: Pure Round Sphere without outer ring ("dumaloq ringsiz")     */
+/* Sections 2-8: Tall, Slender, Minimalist Vertical Archetypes        */
 
 const buildFormations = (): Record<MorphShape, Formation> => {
-  // 1. Globe — Uzbekistan Highlighted (41.31° N, 69.28° E)
+  // 1. Hero: Pure Geodesic Sphere (Mukammal Dumaloq Shar — atrofidagi ringsiz)
+  // Perfectly round spherical particle orb with zero outer rings or orbits
   const globe = (() => {
-    const pts = fibSphere(N, 1.0);
-    const lat = (41.31 * Math.PI) / 180;
-    const lon = (69.28 * Math.PI) / 180;
-    const t: Vec3 = [Math.cos(lat) * Math.sin(lon), Math.sin(lat), Math.cos(lat) * Math.cos(lon)];
+    const pts = fibSphere(N, 0.98);
     const acc = pts.map((p) => {
-      const dot = p[0] * t[0] + p[1] * t[1] + p[2] * t[2];
-      return dot > 0.93 ? 1 : dot > 0.86 ? 0.45 : 0;
+      // Highlight Tashkent coordinates (~41.31° N, ~69.28° E) and gentle equator
+      if (p[1] > 0.55 && p[0] > 0.25) return 0.95;
+      if (Math.abs(p[1]) < 0.08) return 0.45;
+      return 0.04;
     });
     return fill(pts, acc);
   })();
 
-  // 2. Three stacked data layers
+  // 2. ScrollExperience: Tall Fluted Architectural Column (Baland Qavatli Kolon)
+  // Slender vertical column with 6 horizontal calibration rings and 6 vertical spines
   const layers = (() => {
     const pts: Vec3[] = [];
     const acc: number[] = [];
-    [0.55, 0, -0.55].forEach((y, li) => {
-      for (let i = 0; i < 11; i++) {
-        for (let j = 0; j < 11; j++) {
-          const x = -0.85 + (i / 10) * 1.7;
-          const z = -0.85 + (j / 10) * 1.7;
-          pts.push([x, y, z]);
-          const hot = Math.hypot(x - 0.25, z - 0.25);
-          acc.push(li === 0 && hot < 0.4 ? 1 : li === 0 ? 0.35 : 0);
-        }
-      }
-    });
+    const r = 0.62;
+    const numRings = 7;
+    for (let i = 0; i < numRings; i++) {
+      const t = i / (numRings - 1);
+      const y = -1.22 + t * 2.44;
+      const ring = circleRing(r, y, 32);
+      pts.push(...ring);
+      acc.push(...ring.map(() => (i === numRings - 1 ? 0.85 : i === 0 ? 0.3 : i === 3 ? 0.5 : 0.05)));
+    }
+    // 6 vertical fluted column ribs
+    for (let cIdx = 0; cIdx < 6; cIdx++) {
+      const a = (cIdx / 6) * Math.PI * 2;
+      const px = Math.cos(a) * r;
+      const pz = Math.sin(a) * r;
+      const vLine = segment([px, -1.22, pz], [px, 1.22, pz], 14);
+      pts.push(...vLine);
+      acc.push(...vLine.map((_, idx) => (idx === vLine.length - 1 ? 0.8 : 0.15)));
+    }
     return fill(pts, acc);
   })();
 
-  // 3. Ordered cube lattice — precision & algorithms
+  // 3. ProblemSolution: Tall Hexagonal Obelisk Prism (Baland Olti Qirrali Prizma)
+  // Tall crystalline prism: 6 vertical corner edges, 3 hex tiers, apex pyramid cap
   const cube = (() => {
     const pts: Vec3[] = [];
     const acc: number[] = [];
-    for (let i = 0; i < 7; i++) {
-      for (let j = 0; j < 7; j++) {
-        for (let k = 0; k < 7; k++) {
-          pts.push([-0.72 + i * 0.24, -0.72 + j * 0.24, -0.72 + k * 0.24]);
-          acc.push(i === 3 && j === 3 && k === 3 ? 1 : i === 3 && k === 3 ? 0.5 : 0);
-        }
+    const r = 0.66;
+    const hexVerts: [number, number][] = [];
+    for (let i = 0; i < 6; i++) {
+      const a = (i / 6) * Math.PI * 2;
+      hexVerts.push([Math.cos(a) * r, Math.sin(a) * r]);
+    }
+    // 6 vertical corner edges running full height
+    hexVerts.forEach(([hx, hz]) => {
+      const edge = segment([hx, -1.22, hz], [hx, 1.05, hz], 24);
+      pts.push(...edge);
+      acc.push(...edge.map((_, idx) => (idx === edge.length - 1 ? 0.8 : 0.15)));
+    });
+    // 3 horizontal hexagon rings
+    [-1.22, 0.0, 1.05].forEach((yTier) => {
+      for (let i = 0; i < 6; i++) {
+        const [x1, z1] = hexVerts[i];
+        const [x2, z2] = hexVerts[(i + 1) % 6];
+        const seg = segment([x1, yTier, z1], [x2, yTier, z2], 7);
+        pts.push(...seg);
+        acc.push(...seg.map(() => (yTier > 0.5 ? 0.6 : 0.1)));
       }
+    });
+    // Top pyramid apex needle
+    const topApex: Vec3 = [0, 1.34, 0];
+    hexVerts.forEach(([hx, hz]) => {
+      const cap = segment([hx, 1.05, hz], topApex, 9);
+      pts.push(...cap);
+      acc.push(...cap.map((p) => (p[1] > 1.2 ? 0.95 : 0.4)));
+    });
+    return fill(pts, acc);
+  })();
+
+  // 4. LocationCompareSection: Tall Hourglass Bicone (Baland Bikonus / Qumsoat)
+  // Two cones meeting at waist: slender waist (r = 0.16) flaring to bases (r = 0.74)
+  const towers = (() => {
+    const pts: Vec3[] = [];
+    const acc: number[] = [];
+    const numRings = 9;
+    for (let i = 0; i < numRings; i++) {
+      const t = i / (numRings - 1);
+      const y = -1.22 + t * 2.44;
+      const r = 0.16 + Math.abs(y / 1.22) * 0.58;
+      const ring = circleRing(r, y, 26);
+      pts.push(...ring);
+      const isWaist = Math.abs(y) < 0.2;
+      const isTop = y > 1.0;
+      acc.push(...ring.map(() => (isTop ? 0.9 : isWaist ? 0.75 : 0.08)));
+    }
+    // 6 vertical diagonal spiral ribs along the cone mantle
+    for (let sIdx = 0; sIdx < 6; sIdx++) {
+      const a0 = (sIdx / 6) * Math.PI * 2;
+      const rib: Vec3[] = [];
+      const ribAcc: number[] = [];
+      for (let j = 0; j < 18; j++) {
+        const t = j / 17;
+        const y = -1.22 + t * 2.44;
+        const r = 0.16 + Math.abs(y / 1.22) * 0.58;
+        const a = a0 + t * Math.PI * 0.6;
+        rib.push([Math.cos(a) * r, y, Math.sin(a) * r]);
+        ribAcc.push(t > 0.85 ? 0.8 : 0.15);
+      }
+      pts.push(...rib);
+      acc.push(...ribAcc);
     }
     return fill(pts, acc);
   })();
 
-  // 4. A/B towers — tall winner vs short
-  const towers = (() => {
-    const a = boxEdges(-0.42, 0, 0.48, -0.85, 0.85, 16);
-    const b = boxEdges(0.42, 0, 0.48, -0.85, -0.05, 16);
-    const aAcc = a.map((p) => (p[1] > 0.4 ? 1 : 0.6));
-    const bAcc = b.map(() => 0);
-    return fill([...a, ...b], [...aAcc, ...bAcc]);
-  })();
-
-  // 5. Three connected steps
+  // 5. HowItWorks: Tall Ascending Double Helix Pillar (Baland Dinamik Spiral Ustun)
+  // Slender vertical double helix climbing from Y = -1.22 to Y = +1.22, radius 0.60
   const steps = (() => {
-    const c: Vec3[] = [[-0.75, -0.5, 0], [0, 0.02, 0], [0.75, 0.55, 0]];
     const pts: Vec3[] = [];
     const acc: number[] = [];
-    c.forEach((cc, i) => {
-      const s = fibSphere(96, 0.24, cc);
-      pts.push(...s);
-      acc.push(...s.map(() => (i === 2 ? 1 : i === 1 ? 0.4 : 0)));
-    });
-    const l1 = segment(c[0], c[1], 48);
-    const l2 = segment(c[1], c[2], 48);
-    pts.push(...l1, ...l2);
-    acc.push(...l1.map(() => 0.2), ...l2.map(() => 0.6));
+    const r = 0.60;
+    const count = 125;
+    for (let i = 0; i < count; i++) {
+      const t = i / (count - 1);
+      const theta = -Math.PI * 2.5 + t * Math.PI * 5.0;
+      const y = -1.22 + t * 2.44;
+      // Strand 1
+      pts.push([Math.cos(theta) * r, y, Math.sin(theta) * r]);
+      acc.push(t > 0.85 ? 0.9 : (i % 16 === 0 ? 0.6 : 0.1));
+      // Strand 2
+      pts.push([Math.cos(theta + Math.PI) * r, y, Math.sin(theta + Math.PI) * r]);
+      acc.push(t > 0.85 ? 0.8 : (i % 16 === 0 ? 0.4 : 0.1));
+    }
+    // Cross connecting rungs between helical strands
+    for (let i = 0; i < 14; i++) {
+      const t = i / 13;
+      const theta = -Math.PI * 2.5 + t * Math.PI * 5.0;
+      const y = -1.22 + t * 2.44;
+      const p1: Vec3 = [Math.cos(theta) * r, y, Math.sin(theta) * r];
+      const p2: Vec3 = [Math.cos(theta + Math.PI) * r, y, Math.sin(theta + Math.PI) * r];
+      const cross = segment(p1, p2, 4);
+      pts.push(...cross);
+      acc.push(...cross.map(() => 0.25));
+    }
     return fill(pts, acc);
   })();
 
-  // 6. Four industry clusters
+  // 6. IndustrySolutions: Tall Diamond Needle Bipyramid (Baland Cho'ziq Olmos Shpil)
+  // Slender faceted diamond needle with top apex at Y = 1.34 and bottom apex at Y = -1.34
   const clusters = (() => {
-    const c: Vec3[] = [[-0.5, 0, -0.5], [0.5, 0, -0.5], [0.5, 0, 0.5], [-0.5, 0, 0.5]];
     const pts: Vec3[] = [];
     const acc: number[] = [];
-    c.forEach((cc, i) => {
-      const s = fibSphere(96, 0.3, cc);
-      pts.push(...s);
-      acc.push(...s.map(() => (i === 0 ? 1 : 0.2)));
+    const top: Vec3 = [0, 1.34, 0];
+    const bot: Vec3 = [0, -1.34, 0];
+    const r = 0.66;
+    const midVerts: Vec3[] = [
+      [r, 0, 0],
+      [0, 0, r],
+      [-r, 0, 0],
+      [0, 0, -r],
+    ];
+    midVerts.forEach((v, i) => {
+      const next = midVerts[(i + 1) % 4];
+      const eTop = segment(top, v, 24);
+      const eBot = segment(bot, v, 24);
+      const eMid = segment(v, next, 16);
+      pts.push(...eTop, ...eBot, ...eMid);
+      acc.push(
+        ...eTop.map((p) => (p[1] > 0.8 ? 0.95 : 0.3)),
+        ...eBot.map(() => 0.15),
+        ...eMid.map(() => 0.5)
+      );
     });
+    // Equatorial inner ring
+    const midRing = circleRing(0.48, 0, 36);
+    pts.push(...midRing);
+    acc.push(...midRing.map((_, i) => (i % 6 === 0 ? 0.8 : 0.15)));
     return fill(pts, acc);
   })();
 
-  // 7. Growth bars — ROI
+  // 7. RoiCalculator: Tall Hyperbolic Spindle (Baland Kavisli Giperbolik Minora)
+  // Slender hyperboloid: waist r = 0.22 at Y = 0, flaring to r = 0.72 at Y = +/-1.22
   const bars = (() => {
-    const heights = [0.35, 0.6, 0.9, 1.25, 1.65];
     const pts: Vec3[] = [];
     const acc: number[] = [];
-    heights.forEach((h, i) => {
-      const b = boxEdges(-0.8 + i * 0.4, 0, 0.24, -0.85, -0.85 + h, 14);
-      pts.push(...b);
-      acc.push(...b.map(() => (i === heights.length - 1 ? 1 : i >= 3 ? 0.5 : 0)));
-    });
+    const numRings = 10;
+    for (let i = 0; i < numRings; i++) {
+      const t = i / (numRings - 1);
+      const y = -1.22 + t * 2.44;
+      const r = Math.sqrt(0.24 * 0.24 + Math.pow(y * 0.54, 2));
+      const ring = circleRing(r, y, 28);
+      pts.push(...ring);
+      const isWaist = Math.abs(y) < 0.2;
+      const isTop = y > 0.9;
+      acc.push(...ring.map(() => (isTop ? 0.9 : isWaist ? 0.75 : 0.1)));
+    }
+    // 6 vertical hyperbolic generator lines
+    for (let gIdx = 0; gIdx < 6; gIdx++) {
+      const a0 = (gIdx / 6) * Math.PI * 2;
+      const vCurve: Vec3[] = [];
+      const vAcc: number[] = [];
+      for (let j = 0; j < 14; j++) {
+        const t = j / 13;
+        const y = -1.22 + t * 2.44;
+        const r = Math.sqrt(0.24 * 0.24 + Math.pow(y * 0.54, 2));
+        vCurve.push([Math.cos(a0) * r, y, Math.sin(a0) * r]);
+        vAcc.push(t > 0.85 ? 0.8 : 0.15);
+      }
+      pts.push(...vCurve);
+      acc.push(...vAcc);
+    }
     return fill(pts, acc);
   })();
 
-  // 8. Calm ring — FAQ
+  // 8. FaqSection: Tall Meridian Ellipses Nest (Baland Vertikal Meridian Halqalar)
+  // 3 tall vertical ellipses: height Y in [-1.22, 1.22], radius 0.62
   const ring = (() => {
     const pts: Vec3[] = [];
     const acc: number[] = [];
-    for (let u = 0; u < 32; u++) {
-      for (let v = 0; v < 12; v++) {
-        const a = (u / 32) * Math.PI * 2;
-        const b = (v / 12) * Math.PI * 2;
-        const R = 0.74, r = 0.2;
-        pts.push([(R + r * Math.cos(b)) * Math.cos(a), r * Math.sin(b), (R + r * Math.cos(b)) * Math.sin(a)]);
-        acc.push(u % 8 === 0 && v === 0 ? 1 : 0);
-      }
+    const rx = 0.62;
+    const ry = 1.22;
+    const steps = 64;
+
+    // Ellipse 1: Front vertical meridian (XY plane)
+    for (let i = 0; i < steps; i++) {
+      const a = (i / steps) * Math.PI * 2;
+      pts.push([Math.cos(a) * rx, Math.sin(a) * ry, 0]);
+      acc.push(i % 8 === 0 ? 0.75 : 0.1);
     }
+    // Ellipse 2: Side vertical meridian (ZY plane)
+    for (let i = 0; i < steps; i++) {
+      const a = (i / steps) * Math.PI * 2;
+      pts.push([0, Math.sin(a) * ry, Math.cos(a) * rx]);
+      acc.push(i % 8 === 0 ? 0.75 : 0.1);
+    }
+    // Ellipse 3: Tilted 45° vertical meridian
+    for (let i = 0; i < steps; i++) {
+      const a = (i / steps) * Math.PI * 2;
+      const c = Math.cos(a) * rx;
+      pts.push([c * 0.707, Math.sin(a) * ry, c * 0.707]);
+      acc.push(i % 8 === 0 ? 0.75 : 0.1);
+    }
+    // Equator horizontal circle belt
+    const equator = circleRing(rx, 0, 48);
+    pts.push(...equator);
+    acc.push(...equator.map((_, i) => (i % 6 === 0 ? 0.8 : 0.1)));
+
+    // Center calm node
+    pts.push([0, 0, 0]);
+    acc.push(0.9);
+
     return fill(pts, acc);
   })();
 
@@ -317,7 +443,7 @@ export const MorphObject: React.FC = () => {
       }
 
       if (smoothP === null) smoothP = targetP;
-      smoothP += (targetP - smoothP) * (1 - Math.exp(-dt * 8.5));
+      smoothP += (targetP - smoothP) * (1 - Math.exp(-dt * 4.6)); // Silky liquid scroll glide
       const P = smoothP;
 
       const a = Math.min(anchors.length - 1, Math.floor(P));
@@ -328,29 +454,30 @@ export const MorphObject: React.FC = () => {
       const fa = formations[A.shape];
       const fb = formations[B.shape];
 
-      // Smooth flight arc
+      // Calm, smooth flight arc
       const flight = Math.sin(e * Math.PI); // 0 when locked on anchor, 1 mid-flight
-      const cx = lerp(A.cx, B.cx, e) - flight * Math.min(120, vw * 0.08);
+      const cx = lerp(A.cx, B.cx, e) - flight * Math.min(50, vw * 0.035);
       const cy = lerp(A.cy, B.cy, e);
       const size = lerp(A.size, B.size, e);
-      const R = size * 0.46; // Enlarged, grander 3D radius
+      const R = size * 0.44; // Compact, restrained scale ("o'zgina kichikroq")
 
       /* -------- intro assembly -------- */
       const intro = reduced ? 1 : easeOutCubic(clamp((now - start) / 1400));
-      const scatter = flight * 0.52 + (1 - intro) * 1.4;
+      const scatter = flight * 0.22 + (1 - intro) * 0.9;
       const globalAlpha = clamp((now - start) / 600);
 
-      // Smooth mouse tilt
-      mouseX += (targetMouseX - mouseX) * (1 - Math.exp(-dt * 5));
-      mouseY += (targetMouseY - mouseY) * (1 - Math.exp(-dt * 5));
+      // Smooth, gentle mouse tilt
+      mouseX += (targetMouseX - mouseX) * (1 - Math.exp(-dt * 2.8));
+      mouseY += (targetMouseY - mouseY) * (1 - Math.exp(-dt * 2.8));
 
-      /* -------- rotation & 3D camera -------- */
+      /* -------- slow, serene rotation & 3D camera -------- */
       const time = reduced ? 0 : (now - start) / 1000;
-      const yaw = time * 0.26 + P * Math.PI * 0.5 + mouseX * 0.22;
-      const pitch = -0.34 + mouseY * 0.16;
+      // ~3.5x slower continuous float (time * 0.075) and gentle 36° pivot on scroll
+      const yaw = time * 0.075 + P * Math.PI * 0.20 + mouseX * 0.10;
+      const pitch = -0.24 + mouseY * 0.08;
       const cY = Math.cos(yaw), sY = Math.sin(yaw);
       const cP = Math.cos(pitch), sP = Math.sin(pitch);
-      const D = 3.5;
+      const D = 3.6;
 
       for (let k = 0; k < N; k++) {
         const pa = fa.pts[k];
@@ -376,24 +503,25 @@ export const MorphObject: React.FC = () => {
 
       const dark = document.documentElement.classList.contains('dark');
       const base = dark ? [253, 253, 253] : [17, 17, 17];
-      const scale = clamp(size / 380, 0.85, 1.65);
+      const scale = clamp(size / 380, 0.85, 1.45);
 
-      /* -------- Render Pure Elegant 3D Dots & Ambient Halos -------- */
+      /* -------- Render Pure Elegant Subtle 3D Dots & Ambient Halos -------- */
+      // Softer, understated opacity ("ko'rimsizroq" - whisper-quiet ambient presence)
       for (let n = 0; n < N; n++) {
         const k = order[n];
-        const depth = clamp((sz[k] + 1.3) / 2.6);
+        const depth = clamp((sz[k] + 1.4) / 2.8);
         const acc = sa[k];
-        const alpha = (0.2 + depth * 0.72 + acc * 0.28) * globalAlpha;
-        const rad = (1.05 + depth * 1.25 + acc * 1.05) * scale;
+        const alpha = (0.07 + depth * 0.36 + acc * 0.18) * globalAlpha;
+        const rad = (0.75 + depth * 0.85 + acc * 0.65) * scale;
         const r = Math.round(lerp(base[0], ACCENT[0], acc));
         const g = Math.round(lerp(base[1], ACCENT[1], acc));
         const bl = Math.round(lerp(base[2], ACCENT[2], acc));
 
-        // Soft emerald radial bloom for accented nodes
+        // Soft, refined emerald radial aura for accented nodes
         if (acc > 0.35) {
-          ctx.fillStyle = `rgba(14,159,110,${0.22 * alpha})`;
+          ctx.fillStyle = `rgba(14,159,110,${0.09 * alpha})`;
           ctx.beginPath();
-          ctx.arc(sx[k], sy[k], rad * 3.4, 0, Math.PI * 2);
+          ctx.arc(sx[k], sy[k], rad * 2.5, 0, Math.PI * 2);
           ctx.fill();
         }
 

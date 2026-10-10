@@ -203,9 +203,9 @@ export const IndustrySolutions: React.FC = () => {
 
         {/* Showcase Dashboard Card with Grand 3D Clusters Hologram Backdrop */}
         <div className="relative">
-          {/* Top-Left Quadrant 3D Backdrop Anchor (2/4 scale, peeks out visibly above box) */}
-          <div className="absolute -top-36 sm:-top-44 -left-12 lg:-left-6 xl:left-0 pointer-events-none -z-10">
-            <MorphAnchor shape="clusters" className="w-[580px] h-[580px] lg:w-[640px] lg:h-[640px] xl:w-[680px] xl:h-[680px]" />
+          {/* Top-Left Quadrant 3D Backdrop Anchor (tall slender vertical form) */}
+          <div className="absolute -top-28 sm:-top-36 -left-8 lg:left-0 pointer-events-none -z-10">
+            <MorphAnchor shape="clusters" className="w-[500px] h-[500px] lg:w-[560px] lg:h-[560px] xl:w-[600px] xl:h-[600px]" />
           </div>
 
           <motion.div
