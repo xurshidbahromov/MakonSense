@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { LandingPage } from './components/landing/LandingPage';
+import { AuthPage } from './components/auth/AuthPage';
 import { Header } from './components/layout/Header';
 import { MapView } from './components/map/MapView';
 import { ScoreCard } from './components/sidebar/ScoreCard';
@@ -20,7 +21,12 @@ export const App: React.FC = () => {
     return <LandingPage />;
   }
 
-  // 2. If user is inside the Interactive GIS Spatial Intelligence Workspace
+  // 2. If user is on the Auth / Register & Login experience
+  if (currentView === 'auth') {
+    return <AuthPage />;
+  }
+
+  // 3. If user is inside the Interactive GIS Spatial Intelligence Workspace
   return (
     <div className="h-screen w-screen flex flex-col bg-[#FBFBFD] text-[#0C4137] font-sans overflow-hidden">
       {/* Top Navigation & Brand Header */}

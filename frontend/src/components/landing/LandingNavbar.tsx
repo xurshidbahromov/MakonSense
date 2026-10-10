@@ -15,6 +15,7 @@ import {
   Building,
 } from 'lucide-react';
 import { useAnalyticsStore } from '../../store/useAnalyticsStore';
+import { useAuthStore } from '../../store/useAuthStore';
 import { Magnet } from '../ui/Magnet';
 
 interface TabItem {
@@ -34,6 +35,7 @@ const NAV_TABS: TabItem[] = [
 
 export const LandingNavbar: React.FC = () => {
   const { setCurrentView } = useAnalyticsStore();
+  const { setAuthMode } = useAuthStore();
   const [scrolled, setScrolled] = useState(false);
   const [activeTab, setActiveTab] = useState<string>('home');
   const [hoveredTab, setHoveredTab] = useState<string | null>(null);
@@ -515,7 +517,10 @@ export const LandingNavbar: React.FC = () => {
 
           {/* Log In Link */}
           <button
-            onClick={() => setCurrentView('app')}
+            onClick={() => {
+              setAuthMode('login');
+              setCurrentView('auth');
+            }}
             className="text-neutral-600 hover:text-[#111111] dark:text-neutral-300 dark:hover:text-white font-medium text-[13.5px] px-2.5 sm:px-3 py-1.5 rounded-full hover:bg-black/[0.04] dark:hover:bg-white/[0.08] transition-all cursor-pointer"
           >
             Kirish
@@ -525,7 +530,10 @@ export const LandingNavbar: React.FC = () => {
           <Magnet magnetStrength={4}>
             <motion.button
               whileTap={{ scale: 0.96 }}
-              onClick={() => setCurrentView('app')}
+              onClick={() => {
+                setAuthMode('register');
+                setCurrentView('auth');
+              }}
               className="group inline-flex items-center justify-center gap-1.5 h-[36px] px-4 rounded-full bg-[#111111] hover:bg-neutral-800 text-white dark:bg-[#FDFDFD] dark:hover:bg-neutral-200 dark:text-[#111111] text-[13.5px] font-semibold cursor-pointer whitespace-nowrap transition-all duration-200 shadow-sm"
             >
               <span>Boshlash</span>
@@ -591,11 +599,22 @@ export const LandingNavbar: React.FC = () => {
               <button
                 onClick={() => {
                   setMobileMenuOpen(false);
-                  setCurrentView('app');
+                  setAuthMode('login');
+                  setCurrentView('auth');
                 }}
-                className="w-full py-2.5 rounded-full bg-[#111111] hover:bg-neutral-800 text-white dark:bg-[#FDFDFD] dark:text-[#111111] dark:hover:bg-neutral-200 font-semibold text-xs text-center transition-all shadow-sm"
+                className="w-full py-2.5 rounded-full border border-black/[0.08] dark:border-white/15 bg-white/60 dark:bg-white/[0.06] hover:bg-black/[0.04] text-[#111111] dark:text-white font-semibold text-xs text-center transition-all cursor-pointer"
               >
-                Platformaga Kirish
+                Tizimga Kirish
+              </button>
+              <button
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  setAuthMode('register');
+                  setCurrentView('auth');
+                }}
+                className="w-full py-2.5 rounded-full bg-[#111111] hover:bg-neutral-800 text-white dark:bg-[#FDFDFD] dark:text-[#111111] dark:hover:bg-neutral-200 font-semibold text-xs text-center transition-all shadow-sm cursor-pointer"
+              >
+                Ro'yxatdan o'tish
               </button>
             </div>
           </motion.div>

@@ -22,7 +22,7 @@ interface AnalyticsState {
   auditLoading: boolean;
   basemapMode: 'light' | 'dark' | 'satellite';
   pitchMode: '2d' | '3d';
-  currentView: 'landing' | 'app';
+  currentView: 'landing' | 'app' | 'auth';
 
   // Actions
   setSelectedCoords: (coords: Coordinates) => void;
@@ -31,7 +31,7 @@ interface AnalyticsState {
   toggleLayer: (key: keyof LayerVisibility) => void;
   setBasemapMode: (mode: 'light' | 'dark' | 'satellite') => void;
   togglePitchMode: () => void;
-  setCurrentView: (view: 'landing' | 'app') => void;
+  setCurrentView: (view: 'landing' | 'app' | 'auth') => void;
   setReportModalOpen: (open: boolean) => void;
   inspectPoint: (coords?: Coordinates) => Promise<void>;
   generateAuditReport: () => Promise<void>;
