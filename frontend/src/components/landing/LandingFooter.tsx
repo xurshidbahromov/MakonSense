@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { ArrowRight, ArrowUp } from 'lucide-react';
 import { useAnalyticsStore } from '../../store/useAnalyticsStore';
 import { MakonSenseWordmark } from '../brand/MakonSenseWordmark';
+import { MorphAnchor } from './MorphObject';
 
 interface FooterLinkItem {
   label: string;
@@ -146,23 +147,7 @@ export const LandingFooter: React.FC = () => {
         onMouseLeave={handleMouseLeave}
         className="relative overflow-hidden pt-14 sm:pt-20 pb-0 select-none group transition-colors duration-500"
       >
-        {/* Light Mode Continuous Eased Gradient (Balanced pine-obsidian tone) */}
-        <div
-          className="dark:hidden absolute inset-0 pointer-events-none"
-          style={{
-            background:
-              'linear-gradient(to bottom, transparent 0%, rgba(11,25,18,0.06) 10%, rgba(11,25,18,0.25) 24%, rgba(11,25,18,0.55) 42%, rgba(11,25,18,0.82) 62%, rgba(11,25,18,0.95) 80%, rgba(11,25,18,1) 100%)',
-          }}
-        />
 
-        {/* Dark Mode Continuous Eased Gradient (Minimal matte graphite-noir, ultra-subtle tint) */}
-        <div
-          className="hidden dark:block absolute inset-0 pointer-events-none"
-          style={{
-            background:
-              'linear-gradient(to bottom, transparent 0%, rgba(9,11,10,0.15) 12%, rgba(9,11,10,0.45) 28%, rgba(9,11,10,0.75) 48%, rgba(9,11,10,0.92) 70%, rgba(9,11,10,1) 90%, rgba(9,11,10,1) 100%)',
-          }}
-        />
 
         {/* Interactive Mouse Reactive Spotlight Glow (Balanced 0.08 satin sheen) */}
         {mousePos.active && (
@@ -231,20 +216,20 @@ export const LandingFooter: React.FC = () => {
           </div>
 
           {/* Metadata & Back to top Row */}
-          <div className="mt-12 sm:mt-16 pt-6 border-t border-white/15 dark:border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs text-white/70 dark:text-neutral-400">
+          <div className="mt-12 sm:mt-16 pt-6 border-t border-black/[0.05] dark:border-white/[0.08] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs text-neutral-600 dark:text-neutral-400">
             <p className="font-normal tracking-wide">
               © 2026 MakonSense. Barcha huquqlar himoyalangan.
             </p>
 
             <div className="flex items-center gap-6">
-              <span className="hidden sm:inline-flex items-center gap-2 font-mono text-[11px] text-white/80 dark:text-neutral-300">
+              <span className="hidden sm:inline-flex items-center gap-2 font-mono text-[11px] text-neutral-700 dark:text-neutral-300">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#0E9F6E] animate-pulse" />
                 O'zbekiston · 14 hudud · 524,476+ bino
               </span>
 
               <button
                 onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                className="inline-flex items-center gap-1.5 text-xs text-white/80 hover:text-white dark:text-neutral-300 dark:hover:text-white transition-colors duration-200 cursor-pointer group/btn"
+                className="inline-flex items-center gap-1.5 text-xs text-neutral-700 hover:text-neutral-950 dark:text-neutral-300 dark:hover:text-white transition-colors duration-200 cursor-pointer group/btn"
               >
                 <span>Yuqoriga</span>
                 <ArrowUp className="w-3.5 h-3.5 transition-transform duration-200 group-hover/btn:-translate-y-0.5" />
@@ -253,15 +238,22 @@ export const LandingFooter: React.FC = () => {
           </div>
         </div>
 
-        {/* Full-width Giant Vector Wordmark Logo (Illuminated in Dark Mode) */}
-        <div className="relative z-20 w-full overflow-hidden select-none pointer-events-none mt-6 sm:mt-8 lg:mt-10 flex items-end justify-center px-4 sm:px-6 md:px-8 -mb-1 sm:-mb-2 lg:-mb-3">
-          {/* Subtle Ambient Floor Glow strictly under logo */}
-          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-3/4 h-14 bg-[#0E9F6E]/[0.05] dark:bg-white/[0.04] blur-3xl pointer-events-none" />
-
-          {/* Mathematical SVG Vector Wordmark (Infinite DPI, crisp & illuminated in dark mode) */}
-          <MakonSenseWordmark
-            className="w-full h-auto select-none pointer-events-none opacity-22 dark:opacity-45"
-          />
+        {/* Full-width Giant Vector Wordmark Logo */}
+        <div className="relative z-20 w-full select-none pointer-events-none mt-8 sm:mt-12 flex items-end justify-center px-4 sm:px-6 md:px-8">
+          {/* Mathematical SVG Vector Wordmark & 3D Morph Anchor Container */}
+          <div
+            id="makonsense-wordmark-container"
+            className="relative w-full max-w-7xl flex items-center justify-center"
+          >
+            <MakonSenseWordmark
+              id="makonsense-wordmark-svg"
+              className="w-full h-auto select-none pointer-events-none text-neutral-900 dark:text-white opacity-32 dark:opacity-48 transition-opacity duration-500"
+            />
+            <MorphAnchor
+              shape="wordmark"
+              className="absolute inset-0 w-full h-full"
+            />
+          </div>
         </div>
       </div>
 

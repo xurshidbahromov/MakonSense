@@ -1,18 +1,21 @@
 import React from 'react';
 
 interface MakonSenseWordmarkProps {
+  id?: string;
   className?: string;
   style?: React.CSSProperties;
   gradientId?: string;
 }
 
 export const MakonSenseWordmark: React.FC<MakonSenseWordmarkProps> = ({
+  id,
   className = 'w-full h-auto',
   style,
   gradientId = 'makonsense-wordmark-grad',
 }) => {
   return (
     <svg
+      id={id}
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 972 123"
       fill="none"
@@ -21,9 +24,9 @@ export const MakonSenseWordmark: React.FC<MakonSenseWordmarkProps> = ({
     >
       <defs>
         <linearGradient id={gradientId} x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.42" />
-          <stop offset="55%" stopColor="#FFFFFF" stopOpacity="0.22" />
-          <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.06" />
+          <stop offset="0%" stopColor="currentColor" stopOpacity="0.55" />
+          <stop offset="55%" stopColor="currentColor" stopOpacity="0.28" />
+          <stop offset="100%" stopColor="currentColor" stopOpacity="0.06" />
         </linearGradient>
       </defs>
       <path

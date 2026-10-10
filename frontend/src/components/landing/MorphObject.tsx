@@ -1,11 +1,14 @@
 import React, { useEffect, useRef } from 'react';
+import { WORDMARK_PTS, WORDMARK_ACCENT } from './wordmarkPoints';
 
 /* ------------------------------------------------------------------ */
 /* Scroll-driven morphing 3D spatial particle object                  */
-/* Clean, minimal Swiss design: 384 elegant dots with silky emerald   */
+/* Clean, minimal Swiss design: 300 elegant dots with silky emerald   */
 /* accent highlights and smooth aerodynamic scroll transitions.       */
 /* Sits at z-[2] behind section cards, softly diffusing through glass */
 /* and re-assembling into clean domain geometries per section.        */
+/* At the footer, morphs smoothly into the 10-letter MakonSense       */
+/* wordmark with illuminated signature emerald "Sense" highlight.     */
 /* ------------------------------------------------------------------ */
 
 type Vec3 = [number, number, number];
@@ -23,7 +26,8 @@ export type MorphShape =
   | 'steps'
   | 'clusters'
   | 'bars'
-  | 'ring';
+  | 'ring'
+  | 'wordmark';
 
 const N = 300;
 const ACCENT: [number, number, number] = [14, 159, 110]; // Signature Silky Emerald #0E9F6E
@@ -326,7 +330,16 @@ const buildFormations = (): Record<MorphShape, Formation> => {
     return fill(pts, acc);
   })();
 
-  return { globe, layers, cube, towers, steps, clusters, bars, ring };
+  // 9. LandingFooter: Illuminated 10-Letter MakonSense Wordmark
+  // Exactly 300 dots forming M · a · k · o · n · S · e · n · s · e
+  // First 5 letters (Makon): crisp neutral starlight (acc = 0.15)
+  // Last 5 letters (Sense): signature emerald highlight (acc = 0.95)
+  const wordmark: Formation = {
+    pts: WORDMARK_PTS,
+    accent: WORDMARK_ACCENT,
+  };
+
+  return { globe, layers, cube, towers, steps, clusters, bars, ring, wordmark };
 };
 
 /* ---------------------------- easing ------------------------------ */
@@ -421,6 +434,8 @@ export const MorphObject: React.FC = () => {
             shape: el.dataset.morph as MorphShape,
             cx: r.left + r.width / 2,
             cy: r.top + r.height / 2,
+            width: r.width,
+            height: r.height,
             size: Math.min(r.width, r.height),
           };
         })
@@ -442,6 +457,17 @@ export const MorphObject: React.FC = () => {
         targetP = idx + easeInOutCubic(clamp((t - 0.2) / 0.6));
       }
 
+      // Smooth transition into the final footer wordmark anchor as page approaches bottom
+      const lastIdx = anchors.length - 1;
+      const maxScroll = Math.max(1, document.documentElement.scrollHeight - vh);
+      const scrollY = window.scrollY || window.pageYOffset;
+      const bottomDist = maxScroll - scrollY;
+      if (bottomDist < 480) {
+        const bottomFraction = clamp((480 - bottomDist) / 460);
+        const footerTarget = (lastIdx - 1) + easeInOutCubic(bottomFraction);
+        targetP = Math.max(targetP, footerTarget);
+      }
+
       if (smoothP === null) smoothP = targetP;
       smoothP += (targetP - smoothP) * (1 - Math.exp(-dt * 4.6)); // Silky liquid scroll glide
       const P = smoothP;
@@ -454,12 +480,55 @@ export const MorphObject: React.FC = () => {
       const fa = formations[A.shape];
       const fb = formations[B.shape];
 
-      // Calm, smooth flight arc
-      const flight = Math.sin(e * Math.PI); // 0 when locked on anchor, 1 mid-flight
-      const cx = lerp(A.cx, B.cx, e) - flight * Math.min(50, vw * 0.035);
-      const cy = lerp(A.cy, B.cy, e);
+      // Wordmark active influence (0 when in sections 1-8, rises to 1 in footer)
+      const wordmarkWeight = (A.shape === 'wordmark' ? (1 - e) : 0) + (B.shape === 'wordmark' ? e : 0);
+
+      // Absorption into wordmark:
+      // Dots descend ALL THE WAY DOWN through the footer staying 100% visible (e in 0..0.84),
+      // and only plunge into the letter interiors and vanish when physically at the wordmark (e in 0.84..1.0)!
+      let absorb = 0;
+      if (a >= anchors.length - 1) {
+        absorb = 1;
+      } else if (B.shape === 'wordmark') {
+        absorb = clamp((e - 0.84) / 0.16);
+      } else if (A.shape === 'wordmark') {
+        absorb = 1 - clamp(e / 0.16);
+      }
+
+      const dotVisibility = Math.max(0, 1 - easeInOutCubic(absorb));
+      const dotScale = Math.max(0, 1 - Math.pow(absorb, 1.4) * 0.90);
+
+      // Wordmark color clarity reaction:
+      // Once particles enter into the letters, the wordmark SVG color clarifies and illuminates ("rangi tiniqlashsin")
+      const wordmarkSvg = document.getElementById('makonsense-wordmark-svg');
+      if (wordmarkSvg) {
+        const dark = document.documentElement.classList.contains('dark');
+        const baseOp = dark ? 0.44 : 0.28;
+        wordmarkSvg.style.opacity = `${(baseOp + absorb * 0.36).toFixed(3)}`;
+      }
+
+      // Dynamic z-index: sits behind glass cards (z-2) in sections 1-8,
+      // steps forward (z-25) while landing into wordmark, and slips back (z-2) once fully absorbed
+      if (wordmarkWeight > 0.05 && absorb < 0.98) {
+        canvas.style.zIndex = '25';
+      } else {
+        canvas.style.zIndex = '2';
+      }
+
+      // Aspect-ratio aware scaling: wide letterform bounds for wordmark, square for columns
+      const aRx = A.shape === 'wordmark' ? A.width * 0.50 : A.size * 0.44;
+      const aRy = A.shape === 'wordmark' ? A.height * 0.50 : A.size * 0.44;
+      const bRx = B.shape === 'wordmark' ? B.width * 0.50 : B.size * 0.44;
+      const bRy = B.shape === 'wordmark' ? B.height * 0.50 : B.size * 0.44;
+      const Rx = lerp(aRx, bRx, e);
+      const Ry = lerp(aRy, bRy, e);
       const size = lerp(A.size, B.size, e);
-      const R = size * 0.44; // Compact, restrained scale ("o'zgina kichikroq")
+
+      // Calm, smooth flight arc (gentle direct glide when locking into wordmark)
+      const flight = Math.sin(e * Math.PI); // 0 when locked on anchor, 1 mid-flight
+      const curveX = (B.shape === 'wordmark' || A.shape === 'wordmark') ? 0 : -flight * Math.min(50, vw * 0.035);
+      const cx = lerp(A.cx, B.cx, e) + curveX;
+      const cy = lerp(A.cy, B.cy, e);
 
       /* -------- intro assembly -------- */
       const intro = reduced ? 1 : easeOutCubic(clamp((now - start) / 1400));
@@ -472,12 +541,25 @@ export const MorphObject: React.FC = () => {
 
       /* -------- slow, serene rotation & 3D camera -------- */
       const time = reduced ? 0 : (now - start) / 1000;
-      // ~3.5x slower continuous float (time * 0.075) and gentle 36° pivot on scroll
-      const yaw = time * 0.075 + P * Math.PI * 0.20 + mouseX * 0.10;
-      const pitch = -0.24 + mouseY * 0.08;
+      // In sections 1-8: continuous float and gentle 36° pivot on scroll
+      // In footer wordmark: smoothly levels out to front-facing readable alignment
+      const naturalYaw = time * 0.075 + P * Math.PI * 0.20 + mouseX * 0.10;
+      const frontYawTarget =
+        Math.round(naturalYaw / (Math.PI * 2)) * Math.PI * 2 +
+        mouseX * 0.04 +
+        (reduced ? 0 : Math.sin(time * 0.5) * 0.02);
+      const yaw = lerp(naturalYaw, frontYawTarget, easeInOutCubic(wordmarkWeight));
+
+      const naturalPitch = -0.24 + mouseY * 0.08;
+      const frontPitchTarget = mouseY * 0.03;
+      const pitch = lerp(naturalPitch, frontPitchTarget, easeInOutCubic(wordmarkWeight));
+
       const cY = Math.cos(yaw), sY = Math.sin(yaw);
       const cP = Math.cos(pitch), sP = Math.sin(pitch);
       const D = 3.6;
+
+      // If dots are fully absorbed inside the wordmark, canvas is clear and nothing is drawn
+      if (dotVisibility <= 0.001) return;
 
       for (let k = 0; k < N; k++) {
         const pa = fa.pts[k];
@@ -492,9 +574,10 @@ export const MorphObject: React.FC = () => {
         const y2 = y * cP - z1 * sP;
         const z2 = y * sP + z1 * cP;
 
-        const persp = D / (D - z2);
-        sx[k] = cx + x1 * persp * R;
-        sy[k] = cy - y2 * persp * R;
+        // When locking onto wordmark, normalize perspective to 1.0 so dots never drift off letter strokes!
+        const persp = lerp(D / (D - z2), 1.0, easeInOutCubic(wordmarkWeight));
+        sx[k] = cx + x1 * persp * Rx;
+        sy[k] = cy - y2 * persp * Ry;
         sz[k] = z2;
         sa[k] = lerp(fa.accent[k], fb.accent[k], e);
       }
@@ -506,20 +589,20 @@ export const MorphObject: React.FC = () => {
       const scale = clamp(size / 380, 0.85, 1.45);
 
       /* -------- Render Pure Elegant Subtle 3D Dots & Ambient Halos -------- */
-      // Softer, understated opacity ("ko'rimsizroq" - whisper-quiet ambient presence)
+      // Whisper-quiet ambient presence in sections; plunging into letters & vanishing at footer
       for (let n = 0; n < N; n++) {
         const k = order[n];
         const depth = clamp((sz[k] + 1.4) / 2.8);
         const acc = sa[k];
-        const alpha = (0.07 + depth * 0.36 + acc * 0.18) * globalAlpha;
-        const rad = (0.75 + depth * 0.85 + acc * 0.65) * scale;
+        const alpha = (0.07 + wordmarkWeight * 0.15 + depth * 0.36 + acc * 0.18) * globalAlpha * dotVisibility;
+        const rad = (0.75 + depth * 0.85 + acc * 0.65) * scale * dotScale;
         const r = Math.round(lerp(base[0], ACCENT[0], acc));
         const g = Math.round(lerp(base[1], ACCENT[1], acc));
         const bl = Math.round(lerp(base[2], ACCENT[2], acc));
 
-        // Soft, refined emerald radial aura for accented nodes
-        if (acc > 0.35) {
-          ctx.fillStyle = `rgba(14,159,110,${0.09 * alpha})`;
+        // Soft, refined emerald radial aura for accented nodes ("Sense" portion)
+        if (acc > 0.35 && dotVisibility > 0.08) {
+          ctx.fillStyle = `rgba(14,159,110,${0.09 * alpha * dotVisibility})`;
           ctx.beginPath();
           ctx.arc(sx[k], sy[k], rad * 2.5, 0, Math.PI * 2);
           ctx.fill();
