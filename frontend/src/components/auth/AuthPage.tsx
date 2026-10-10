@@ -93,16 +93,10 @@ export const AuthPage: React.FC = () => {
 
   return (
     <div className="h-screen w-screen overflow-hidden flex bg-[#FDFDFD] dark:bg-[#111111] text-[#111111] dark:text-[#FDFDFD] font-sans selection:bg-[#0E9F6E]/20 relative">
-      {/* Soft Ambient Background across the WHOLE screen */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_120%_90%_at_25%_40%,rgba(16,185,129,0.04),transparent_70%)] dark:bg-[radial-gradient(ellipse_120%_90%_at_25%_40%,rgba(16,185,129,0.06),transparent_70%)] pointer-events-none" />
-
       {/* ========================================================= */}
       {/* LEFT COLUMN: SWISS ARTISTIC BRAND VISUAL (ZERO SCROLL)    */}
       {/* ========================================================= */}
-      <div className="hidden lg:flex lg:w-[48%] xl:w-[45%] h-screen overflow-hidden relative flex-col justify-between p-8 xl:p-12 border-r border-black/[0.06] dark:border-white/[0.08] select-none">
-        {/* Soft Ambient Corner Bloom */}
-        <div className="absolute top-[-15%] left-[-15%] w-[450px] h-[450px] rounded-full bg-[#0E9F6E]/[0.08] blur-[130px] pointer-events-none" />
-        <div className="absolute bottom-[-15%] right-[-15%] w-[450px] h-[450px] rounded-full bg-[#0E9F6E]/[0.06] blur-[130px] pointer-events-none" />
+      <div className="hidden lg:flex lg:w-[48%] xl:w-[45%] h-screen overflow-hidden relative flex-col justify-between p-8 xl:p-12 border-r border-black/[0.06] dark:border-white/[0.08] select-none bg-transparent">
 
         {/* Top: Logo */}
         <div className="relative z-10 flex items-center justify-between">
@@ -223,7 +217,7 @@ export const AuthPage: React.FC = () => {
           <div className="flex items-center gap-2 ml-auto">
             <button
               onClick={toggleTheme}
-              className="w-9 h-9 rounded-full bg-black/[0.04] hover:bg-black/[0.08] dark:bg-white/[0.08] dark:hover:bg-white/[0.14] border border-black/[0.06] dark:border-white/[0.1] flex items-center justify-center text-neutral-600 dark:text-neutral-300 transition-all cursor-pointer"
+              className="w-9 h-9 rounded-full bg-black/[0.04] hover:bg-black/[0.08] dark:bg-[#1E1E22] dark:hover:bg-[#2A2A30] border border-black/[0.08] dark:border-white/[0.14] flex items-center justify-center text-neutral-600 dark:text-neutral-200 transition-all cursor-pointer shadow-xs"
               title="Mavzu rejimi"
             >
               {isDark ? <Moon size={15} className="text-[#0E9F6E]" /> : <Sun size={15} className="text-amber-500" />}
@@ -256,18 +250,18 @@ export const AuthPage: React.FC = () => {
             </p>
           </div>
 
-          {/* Segmented Switcher (Kirish / Ro'yxatdan o'tish) */}
-          <div className="mb-5 p-1 rounded-2xl bg-neutral-100 dark:bg-white/[0.05] border border-black/[0.04] dark:border-white/[0.08] grid grid-cols-2 gap-1">
+          {/* Segmented Switcher (Kirish / Ro'yxatdan o'tish) - High Contrast Dark Mode */}
+          <div className="mb-5 p-1 rounded-2xl bg-neutral-200/60 dark:bg-[#1E1E22] border border-black/[0.08] dark:border-white/[0.14] grid grid-cols-2 gap-1 select-none shadow-xs">
             <button
               type="button"
               onClick={() => {
                 setAuthMode('login');
                 setError(null);
               }}
-              className={`py-2 text-xs font-semibold rounded-xl transition-all duration-200 cursor-pointer ${
+              className={`py-2.5 text-xs font-semibold rounded-xl transition-all duration-200 cursor-pointer flex items-center justify-center ${
                 authMode === 'login'
-                  ? 'bg-white dark:bg-[#1E1E1E] text-[#111111] dark:text-white shadow-xs'
-                  : 'text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white'
+                  ? 'bg-white dark:bg-[#2E2E34] text-[#111111] dark:text-white shadow-xs dark:shadow-[0_2px_8px_rgba(0,0,0,0.5)] dark:border dark:border-white/[0.16]'
+                  : 'text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white'
               }`}
             >
               Kirish
@@ -278,10 +272,10 @@ export const AuthPage: React.FC = () => {
                 setAuthMode('register');
                 setError(null);
               }}
-              className={`py-2 text-xs font-semibold rounded-xl transition-all duration-200 cursor-pointer ${
+              className={`py-2.5 text-xs font-semibold rounded-xl transition-all duration-200 cursor-pointer flex items-center justify-center ${
                 authMode === 'register'
-                  ? 'bg-white dark:bg-[#1E1E1E] text-[#111111] dark:text-white shadow-xs'
-                  : 'text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white'
+                  ? 'bg-white dark:bg-[#2E2E34] text-[#111111] dark:text-white shadow-xs dark:shadow-[0_2px_8px_rgba(0,0,0,0.5)] dark:border dark:border-white/[0.16]'
+                  : 'text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white'
               }`}
             >
               Ro'yxatdan o'tish
