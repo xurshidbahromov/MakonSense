@@ -13,6 +13,7 @@ import {
   Building2,
 } from 'lucide-react';
 import { useAnalyticsStore } from '../../store/useAnalyticsStore';
+import { MorphAnchor } from './MorphObject';
 
 interface IndustryCase {
   id: string;
@@ -156,18 +157,21 @@ export const IndustrySolutions: React.FC = () => {
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
 
         {/* Section Heading & Subtitle */}
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12">
-          <div>
-            <div className="inline-flex items-center gap-2 mb-3">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#0E9F6E]" />
-              <span className="font-mono text-xs tracking-[0.18em] uppercase text-neutral-500 dark:text-neutral-400 font-semibold">
-                Soha Yechimlari
-              </span>
+        <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-12">
+          <div className="flex items-center gap-8">
+            <div>
+              <div className="inline-flex items-center gap-2 mb-3">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#0E9F6E]" />
+                <span className="font-mono text-xs tracking-[0.18em] uppercase text-neutral-500 dark:text-neutral-400 font-semibold">
+                  Soha Yechimlari
+                </span>
+              </div>
+              <h2 className="text-3xl sm:text-4xl lg:text-[46px] font-bold tracking-[-0.03em] leading-[1.12] text-[#111111] dark:text-[#FDFDFD]">
+                Har qanday soha{' '}
+                <span className="text-neutral-400 dark:text-neutral-500 font-normal">uchun aniq tahlil.</span>
+              </h2>
             </div>
-            <h2 className="text-3xl sm:text-4xl lg:text-[46px] font-bold tracking-[-0.03em] leading-[1.12] text-[#111111] dark:text-[#FDFDFD]">
-              Har qanday soha{' '}
-              <span className="text-neutral-400 dark:text-neutral-500 font-normal">uchun aniq tahlil.</span>
-            </h2>
+            <MorphAnchor shape="clusters" className="w-[180px] h-[180px]" />
           </div>
 
           {/* Segmented Liquid Switcher Tabs */}

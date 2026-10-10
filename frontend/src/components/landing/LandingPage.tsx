@@ -11,6 +11,7 @@ import { LocationCompareSection } from './LocationCompareSection';
 import { FaqSection } from './FaqSection';
 import { LandingFooter } from './LandingFooter';
 import { AuditReportModal } from '../sidebar/AuditReportModal';
+import { MorphObject } from './MorphObject';
 
 import { AmbientBackground } from '../ui/AmbientBackground';
 
@@ -59,6 +60,7 @@ export const LandingPage: React.FC = () => {
 
         <LandingFooter />
         <AuditReportModal />
+        <MorphObject />
       </div>
     </div>
   );

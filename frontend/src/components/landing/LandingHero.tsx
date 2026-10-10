@@ -1,92 +1,11 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { ArrowRight, MapPin, Sparkles, Compass, TrendingUp, Users, Building2 } from 'lucide-react';
+import React from 'react';
+import { motion } from 'motion/react';
+import { ArrowRight } from 'lucide-react';
 import { useAnalyticsStore } from '../../store/useAnalyticsStore';
 import { Magnet } from '../ui/Magnet';
+import { MorphAnchor } from './MorphObject';
 
-interface HeroLocationPreset {
-  id: string;
-  name: string;
-  shortName: string;
-  coords: { lat: number; lng: number };
-  score: number;
-  grade: string;
-  traffic: string;
-  metro: string;
-  competitors: string;
-  revenue: string;
-  recommendation: string;
-  bars: { h: string; peak: boolean; time: string; count: string }[];
-}
-
-const PRESETS: HeroLocationPreset[] = [
-  {
-    id: 'temur',
-    name: 'Amir Temur Xiyoboni, Toshkent',
-    shortName: 'Amir Temur',
-    coords: { lat: 41.3123, lng: 69.2797 },
-    score: 94.0,
-    grade: 'A-Grade Lokatsiya',
-    traffic: '18,400+ / kun',
-    metro: '42 metr',
-    competitors: '2 ta (erkin bozor)',
-    revenue: '$24,000 / oy',
-    recommendation: 'Yuqori piyoda oqimi — HoReCa va Retail uchun eng qulay nuqta',
-    bars: [
-      { h: '35%', peak: false, time: '08:00', count: '1,200/s' },
-      { h: '55%', peak: false, time: '11:00', count: '2,400/s' },
-      { h: '88%', peak: true, time: '14:00', count: '3,800/s' },
-      { h: '100%', peak: true, time: '18:00', count: '4,500/s' },
-      { h: '75%', peak: false, time: '20:00', count: '3,100/s' },
-      { h: '45%', peak: false, time: '22:00', count: '1,800/s' },
-      { h: '25%', peak: false, time: '00:00', count: '600/s' },
-    ],
-  },
-  {
-    id: 'city',
-    name: 'Tashkent City Mall hududi',
-    shortName: 'Tashkent City',
-    coords: { lat: 41.3150, lng: 69.2520 },
-    score: 91.8,
-    grade: 'A-Grade Premium',
-    traffic: '15,200+ / kun',
-    metro: '180 metr',
-    competitors: '5 ta (yuqori segment)',
-    revenue: '$38,000 / oy',
-    recommendation: 'Aholi xarid quvvati yuqori — premium xizmatlar va brendlar uchun',
-    bars: [
-      { h: '20%', peak: false, time: '08:00', count: '800/s' },
-      { h: '45%', peak: false, time: '11:00', count: '1,900/s' },
-      { h: '70%', peak: false, time: '14:00', count: '2,900/s' },
-      { h: '95%', peak: true, time: '18:00', count: '4,200/s' },
-      { h: '100%', peak: true, time: '20:00', count: '4,400/s' },
-      { h: '60%', peak: false, time: '22:00', count: '2,600/s' },
-      { h: '30%', peak: false, time: '00:00', count: '900/s' },
-    ],
-  },
-  {
-    id: 'chilonzor',
-    name: 'Chilonzor 9-Mavze, Katta Ko‘cha',
-    shortName: 'Chilonzor 9',
-    coords: { lat: 41.2720, lng: 69.2040 },
-    score: 64.2,
-    grade: 'C-Grade O‘rta',
-    traffic: '6,400+ / kun',
-    metro: '1.2 km',
-    competitors: '8 ta (to‘yingan bozor)',
-    revenue: '$9,500 / oy',
-    recommendation: 'Raqobat zichligi yuqori — differensiatsiya strategiyasi zarur',
-    bars: [
-      { h: '40%', peak: false, time: '08:00', count: '1,100/s' },
-      { h: '35%', peak: false, time: '11:00', count: '900/s' },
-      { h: '50%', peak: false, time: '14:00', count: '1,400/s' },
-      { h: '80%', peak: true, time: '18:00', count: '2,300/s' },
-      { h: '65%', peak: false, time: '20:00', count: '1,700/s' },
-      { h: '35%', peak: false, time: '22:00', count: '800/s' },
-      { h: '15%', peak: false, time: '00:00', count: '300/s' },
-    ],
-  },
-];
+const DEFAULT_COORDS = { lat: 41.3123, lng: 69.2797 };
 
 const STATS = [
   { value: '524k+', label: "Indekslangan bino" },
@@ -96,17 +15,14 @@ const STATS = [
 
 export const LandingHero: React.FC = () => {
   const { setCurrentView, setSelectedCoords } = useAnalyticsStore();
-  const [activePreset, setActivePreset] = useState<HeroLocationPreset>(PRESETS[0]);
-  const [hoveredBar, setHoveredBar] = useState<{ time: string; count: string } | null>(null);
 
-  const handleLaunch = (coords?: { lat: number; lng: number }) => {
+  const handleLaunch = () => {
     setSelectedCoords({
-      latitude: coords?.lat ?? activePreset.coords.lat,
-      longitude: coords?.lng ?? activePreset.coords.lng,
+      latitude: DEFAULT_COORDS.lat,
+      longitude: DEFAULT_COORDS.lng,
     });
     setCurrentView('app');
   };
-
   return (
     <section
       id="hero"
@@ -210,241 +126,15 @@ export const LandingHero: React.FC = () => {
             </motion.div>
           </div>
 
-          {/* Right: Creative Live Radar & Spatial Analytics Card */}
-          <motion.div
-            initial={{ opacity: 0, y: 24, scale: 0.98 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ duration: 0.65, delay: 0.25, ease: [0.2, 0, 0, 1] }}
-            className="relative"
-          >
-            <div className="rounded-3xl border-2 border-white/80 dark:border-white/[0.05] bg-white/45 dark:bg-[#161616]/50 backdrop-blur-2xl backdrop-saturate-[180%] overflow-hidden shadow-none dark:shadow-none">
-
-              {/* Card Top: Location Selector Pills */}
-              <div className="px-5 pt-4 pb-3 border-b border-black/[0.04] dark:border-white/[0.05] bg-black/[0.015] dark:bg-white/[0.015]">
-                <div className="flex items-center justify-between gap-2 mb-2.5">
-                  <div className="flex items-center gap-1.5 font-mono text-[11px] text-neutral-400 dark:text-neutral-500">
-                    <Compass size={13} className="text-[#0E9F6E]" />
-                    <span>FAZOVIY RADAR</span>
-                  </div>
-                  <span className="font-mono text-[10px] text-neutral-400">
-                    {activePreset.coords.lat.toFixed(4)}° N, {activePreset.coords.lng.toFixed(4)}° E
-                  </span>
-                </div>
-
-                {/* Switchable Location Chips */}
-                <div className="flex items-center gap-1.5 p-1 rounded-xl bg-white/45 dark:bg-white/[0.04] border border-white/70 dark:border-white/10 backdrop-blur-md">
-                  {PRESETS.map((p) => {
-                    const isSelected = p.id === activePreset.id;
-                    return (
-                      <button
-                        key={p.id}
-                        onClick={() => setActivePreset(p)}
-                        className={`relative flex-1 py-1.5 px-2.5 text-xs font-medium rounded-lg transition-all duration-150 text-center truncate cursor-pointer ${
-                          isSelected
-                            ? 'text-[#111111] dark:text-[#FDFDFD] font-semibold'
-                            : 'text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-200'
-                        }`}
-                      >
-                        {isSelected && (
-                          <motion.div
-                            layoutId="hero-preset-indicator"
-                            className="absolute inset-0 bg-white/95 dark:bg-[#252525] rounded-lg border border-white/90 dark:border-white/10 shadow-none dark:shadow-none"
-                            transition={{ type: 'spring', stiffness: 450, damping: 30 }}
-                          />
-                        )}
-                        <span className="relative z-10 flex items-center justify-center gap-1.5">
-                          {p.shortName}
-                          <span
-                            className={`text-[9px] font-mono px-1 py-0.2 rounded ${
-                              p.score >= 90
-                                ? 'bg-[#0E9F6E]/15 text-[#0E9F6E]'
-                                : 'bg-neutral-200 dark:bg-white/10 text-neutral-600 dark:text-neutral-300'
-                            }`}
-                          >
-                            {p.score}
-                          </span>
-                        </span>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Main Info Body with AnimatePresence on location change */}
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={activePreset.id}
-                  initial={{ opacity: 0, y: 6 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -6 }}
-                  transition={{ duration: 0.2 }}
-                  className="px-5 pt-5 pb-5"
-                >
-                  {/* Location Title & MakonScore Ring */}
-                  <div className="flex items-start justify-between gap-4 mb-5">
-                    <div>
-                      <div className="flex items-center gap-1.5 text-xs text-neutral-500 dark:text-neutral-400 mb-1">
-                        <MapPin size={12} className="text-[#0E9F6E] flex-shrink-0" />
-                        <span className="font-mono text-[11px] truncate max-w-[240px]">
-                          {activePreset.name}
-                        </span>
-                      </div>
-                      <div className="flex items-baseline gap-2">
-                        <div className="text-5xl font-bold text-[#111111] dark:text-[#FDFDFD] tracking-[-0.03em] tabular-nums">
-                          {activePreset.score.toFixed(1)}
-                        </div>
-                        <span className="font-mono text-xs text-neutral-400">/ 100</span>
-                      </div>
-                      <span
-                        className={`inline-block mt-1.5 text-[10px] font-mono px-2 py-0.5 rounded-sm uppercase tracking-wide ${
-                          activePreset.score >= 90
-                            ? 'text-[#0E9F6E] bg-[#0E9F6E]/10'
-                            : 'text-amber-600 dark:text-amber-400 bg-amber-500/10'
-                        }`}
-                      >
-                        {activePreset.grade}
-                      </span>
-                    </div>
-
-                    {/* Animated Radial SVG Progress Ring */}
-                    <div className="relative w-16 h-16 flex-shrink-0">
-                      <svg viewBox="0 0 60 60" className="w-full h-full -rotate-90">
-                        <circle
-                          cx="30"
-                          cy="30"
-                          r="24"
-                          fill="none"
-                          stroke="currentColor"
-                          className="text-black/[0.06] dark:text-white/[0.08]"
-                          strokeWidth="4"
-                        />
-                        <motion.circle
-                          cx="30"
-                          cy="30"
-                          r="24"
-                          fill="none"
-                          stroke={activePreset.score >= 90 ? '#0E9F6E' : '#D97706'}
-                          strokeWidth="4"
-                          strokeLinecap="round"
-                          strokeDasharray={2 * Math.PI * 24}
-                          initial={{ strokeDashoffset: 2 * Math.PI * 24 }}
-                          animate={{
-                            strokeDashoffset:
-                              2 * Math.PI * 24 * (1 - activePreset.score / 100),
-                          }}
-                          transition={{ duration: 0.6, ease: 'easeOut' }}
-                        />
-                      </svg>
-                      <span className="absolute inset-0 flex items-center justify-center text-[11px] font-bold text-[#111111] dark:text-[#FDFDFD]">
-                        {Math.round(activePreset.score)}%
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* 4 Interactive Key Spatial Metrics */}
-                  <div className="grid grid-cols-2 gap-2.5 mb-5">
-                    <div className="p-3 rounded-xl bg-white/45 dark:bg-white/[0.04] backdrop-blur-xl border border-black/[0.06] dark:border-white/10 shadow-none dark:shadow-none">
-                      <div className="flex items-center gap-1.5 text-[10px] font-mono text-neutral-400 uppercase tracking-wider mb-1">
-                        <Users size={11} className="text-[#0E9F6E]" />
-                        <span>Kunlik trafik</span>
-                      </div>
-                      <p className="text-[13.5px] font-bold text-[#111111] dark:text-[#FDFDFD] tabular-nums">
-                        {activePreset.traffic}
-                      </p>
-                    </div>
-
-                    <div className="p-3 rounded-xl bg-white/45 dark:bg-white/[0.04] backdrop-blur-xl border border-black/[0.06] dark:border-white/10 shadow-none dark:shadow-none">
-                      <div className="flex items-center gap-1.5 text-[10px] font-mono text-neutral-400 uppercase tracking-wider mb-1">
-                        <Building2 size={11} className="text-[#0E9F6E]" />
-                        <span>Metro masofasi</span>
-                      </div>
-                      <p className="text-[13.5px] font-bold text-[#111111] dark:text-[#FDFDFD] tabular-nums">
-                        {activePreset.metro}
-                      </p>
-                    </div>
-
-                    <div className="p-3 rounded-xl bg-white/45 dark:bg-white/[0.04] backdrop-blur-xl border border-black/[0.06] dark:border-white/10 shadow-none dark:shadow-none">
-                      <div className="flex items-center gap-1.5 text-[10px] font-mono text-neutral-400 uppercase tracking-wider mb-1">
-                        <Compass size={11} className="text-[#0E9F6E]" />
-                        <span>Raqobatchilar</span>
-                      </div>
-                      <p className="text-[13.5px] font-bold text-[#111111] dark:text-[#FDFDFD] tabular-nums">
-                        {activePreset.competitors}
-                      </p>
-                    </div>
-
-                    <div className="p-3 rounded-xl bg-white/45 dark:bg-white/[0.04] backdrop-blur-xl border border-black/[0.06] dark:border-white/10 shadow-none dark:shadow-none">
-                      <div className="flex items-center gap-1.5 text-[10px] font-mono text-neutral-400 uppercase tracking-wider mb-1">
-                        <TrendingUp size={11} className="text-[#0E9F6E]" />
-                        <span>Prognoz</span>
-                      </div>
-                      <p className="text-[13.5px] font-bold text-[#0E9F6E] tabular-nums">
-                        {activePreset.revenue}
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* 24-Hour Traffic Chart with interactive hover tooltips */}
-                  <div className="pt-3 border-t border-black/[0.04] dark:border-white/[0.04]">
-                    <div className="flex items-center justify-between text-[10px] font-mono text-neutral-400 uppercase tracking-wider mb-2">
-                      <span>24 soatlik oqim ritmi</span>
-                      <span className="text-[#0E9F6E] font-semibold">
-                        {hoveredBar ? `${hoveredBar.time}: ${hoveredBar.count}` : 'Ustunga olib boring'}
-                      </span>
-                    </div>
-
-                    <div className="flex items-end gap-1.5 h-16 pt-2">
-                      {activePreset.bars.map((bar, i) => (
-                        <div
-                          key={i}
-                          onMouseEnter={() => setHoveredBar({ time: bar.time, count: bar.count })}
-                          onMouseLeave={() => setHoveredBar(null)}
-                          className="flex-1 h-full flex flex-col justify-end group cursor-pointer"
-                        >
-                          <motion.div
-                            initial={{ height: 0 }}
-                            animate={{ height: bar.h }}
-                            transition={{ duration: 0.4, delay: i * 0.04 }}
-                            className={`w-full rounded-t-sm transition-all duration-150 ${
-                              bar.peak
-                                ? 'bg-[#0E9F6E] group-hover:bg-[#0E9F6E]/80'
-                                : 'bg-neutral-300 dark:bg-white/15 group-hover:bg-neutral-400 dark:group-hover:bg-white/30'
-                            }`}
-                          />
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* AI Recommendation Summary */}
-                  <div className="mt-4 p-2.5 rounded-xl bg-white/45 dark:bg-white/[0.04] backdrop-blur-xl border border-black/[0.06] dark:border-white/10 flex items-center justify-between gap-3 shadow-none dark:shadow-none">
-                    <div className="flex items-center gap-2 min-w-0">
-                      <Sparkles size={13} className="text-[#0E9F6E] flex-shrink-0" />
-                      <p className="text-[11px] text-neutral-600 dark:text-neutral-400 leading-snug line-clamp-1 truncate">
-                        {activePreset.recommendation}
-                      </p>
-                    </div>
-                    <button
-                      onClick={() => handleLaunch(activePreset.coords)}
-                      className="text-[11px] font-semibold text-[#0E9F6E] hover:underline whitespace-nowrap flex items-center gap-1 cursor-pointer flex-shrink-0"
-                    >
-                      Audit
-                      <ArrowRight size={11} />
-                    </button>
-                  </div>
-                </motion.div>
-              </AnimatePresence>
-
-            </div>
-
-            {/* Floating Live Badge */}
-            <div className="absolute -bottom-3 -right-2 sm:-right-4 flex items-center gap-2 bg-white/70 dark:bg-[#1e1e1e]/70 backdrop-blur-xl border-[1.5px] border-white/80 dark:border-white/[0.05] rounded-full px-3.5 py-1.5 shadow-none dark:shadow-none">
-              <Sparkles size={12} className="text-[#0E9F6E]" />
-              <span className="text-[11px] font-semibold text-[#111111] dark:text-[#FDFDFD]">
-                AI Tahlil tayyor
+          {/* Right: anchor slot for the scroll-traveling morph object */}
+          <div className="relative hidden lg:block">
+            <MorphAnchor shape="globe" className="w-full aspect-square" />
+            <div className="absolute bottom-2 left-0 right-0 flex justify-center pointer-events-none">
+              <span className="font-mono text-[10.5px] tracking-[0.16em] uppercase text-neutral-400 dark:text-neutral-500">
+                41.31° N · 69.28° E
               </span>
             </div>
-          </motion.div>
+          </div>
         </div>
 
       </div>

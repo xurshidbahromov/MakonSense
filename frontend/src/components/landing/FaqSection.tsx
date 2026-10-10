@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { MorphAnchor } from './MorphObject';
 
 interface FaqItem {
   id: string;
@@ -57,14 +58,19 @@ export const FaqSection: React.FC = () => {
       <div className="max-w-4xl mx-auto px-6 lg:px-8">
 
         {/* Label + Headline */}
-        <span className="font-mono text-xs tracking-[0.18em] uppercase text-neutral-500 dark:text-neutral-400 font-semibold">
-          Ko'p so'raladigan savollar
-        </span>
+        <div className="flex items-center justify-between gap-10">
+          <div>
+            <span className="font-mono text-xs tracking-[0.18em] uppercase text-neutral-500 dark:text-neutral-400 font-semibold">
+              Ko'p so'raladigan savollar
+            </span>
 
-        <h2 className="mt-4 text-3xl sm:text-4xl font-bold tracking-[-0.03em] leading-[1.12] text-[#111111] dark:text-[#FDFDFD]">
-          Savollar &{' '}
-          <span className="text-neutral-400 dark:text-neutral-500 font-normal">javoblar.</span>
-        </h2>
+            <h2 className="mt-4 text-3xl sm:text-4xl font-bold tracking-[-0.03em] leading-[1.12] text-[#111111] dark:text-[#FDFDFD]">
+              Savollar &{' '}
+              <span className="text-neutral-400 dark:text-neutral-500 font-normal">javoblar.</span>
+            </h2>
+          </div>
+          <MorphAnchor shape="ring" className="w-[180px] h-[180px]" />
+        </div>
 
         {/* FAQ List */}
         <div className="mt-14 p-6 sm:p-10 rounded-3xl bg-white/45 dark:bg-[#161616]/45 backdrop-blur-2xl backdrop-saturate-[180%] border-2 border-white/80 dark:border-white/[0.05] shadow-none dark:shadow-none divide-y divide-black/[0.05] dark:divide-white/[0.07]">

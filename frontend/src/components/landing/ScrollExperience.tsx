@@ -2,6 +2,7 @@ import React, { useRef } from 'react';
 import { motion, useInView } from 'motion/react';
 import { ArrowDownRight, ArrowRight } from 'lucide-react';
 import { useAnalyticsStore } from '../../store/useAnalyticsStore';
+import { MorphAnchor } from './MorphObject';
 
 const STAGES = [
   {
@@ -51,15 +52,18 @@ export const ScrollExperience: React.FC = () => {
           initial={{ opacity: 0, y: 12 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.5 }}
-          className="mb-16 sm:mb-20"
+          className="mb-16 sm:mb-20 flex items-center justify-between gap-10"
         >
-          <span className="font-mono text-xs tracking-[0.18em] uppercase text-neutral-500 dark:text-neutral-400 font-semibold">
-            Fazoviy Razvedka
-          </span>
-          <h2 className="mt-4 text-3xl sm:text-4xl lg:text-[46px] font-bold tracking-[-0.03em] leading-[1.12] text-[#111111] dark:text-[#FDFDFD]">
-            Uch qatlam tahlil.{' '}
-            <span className="text-neutral-400 dark:text-neutral-500 font-normal">Bir hisobot.</span>
-          </h2>
+          <div>
+            <span className="font-mono text-xs tracking-[0.18em] uppercase text-neutral-500 dark:text-neutral-400 font-semibold">
+              Fazoviy Razvedka
+            </span>
+            <h2 className="mt-4 text-3xl sm:text-4xl lg:text-[46px] font-bold tracking-[-0.03em] leading-[1.12] text-[#111111] dark:text-[#FDFDFD]">
+              Uch qatlam tahlil.{' '}
+              <span className="text-neutral-400 dark:text-neutral-500 font-normal">Bir hisobot.</span>
+            </h2>
+          </div>
+          <MorphAnchor shape="layers" className="w-[240px] h-[240px]" />
         </motion.div>
 
         {/* Stages in Glass Panel */}

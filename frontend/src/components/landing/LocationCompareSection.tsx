@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import { motion, useInView } from 'motion/react';
 import { Check, ArrowRight } from 'lucide-react';
 import { useAnalyticsStore } from '../../store/useAnalyticsStore';
+import { MorphAnchor } from './MorphObject';
 
 interface CompareLocation {
   name: string;
@@ -73,18 +74,21 @@ export const LocationCompareSection: React.FC = () => {
           initial={{ opacity: 0, y: 12 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.5 }}
-          className="mb-16"
+          className="mb-16 flex items-center justify-between gap-10"
         >
-          <span className="font-mono text-xs tracking-[0.18em] uppercase text-neutral-500 dark:text-neutral-400 font-semibold">
-            A/B Taqqoslash
-          </span>
-          <h2 className="mt-4 text-3xl sm:text-4xl lg:text-[46px] font-bold tracking-[-0.03em] leading-[1.12] text-[#111111] dark:text-[#FDFDFD]">
-            Ikki lokatsiya.{' '}
-            <span className="text-neutral-400 dark:text-neutral-500 font-normal">Bitta to'g'ri tanlov.</span>
-          </h2>
-          <p className="mt-5 text-base text-neutral-600 dark:text-neutral-400 max-w-xl leading-relaxed">
-            MakonSense raqamlar bilan ko'rsatadi: qaysi joy ko'proq daromad keltiradi.
-          </p>
+          <div>
+            <span className="font-mono text-xs tracking-[0.18em] uppercase text-neutral-500 dark:text-neutral-400 font-semibold">
+              A/B Taqqoslash
+            </span>
+            <h2 className="mt-4 text-3xl sm:text-4xl lg:text-[46px] font-bold tracking-[-0.03em] leading-[1.12] text-[#111111] dark:text-[#FDFDFD]">
+              Ikki lokatsiya.{' '}
+              <span className="text-neutral-400 dark:text-neutral-500 font-normal">Bitta to'g'ri tanlov.</span>
+            </h2>
+            <p className="mt-5 text-base text-neutral-600 dark:text-neutral-400 max-w-xl leading-relaxed">
+              MakonSense raqamlar bilan ko'rsatadi: qaysi joy ko'proq daromad keltiradi.
+            </p>
+          </div>
+          <MorphAnchor shape="towers" className="w-[220px] h-[220px]" />
         </motion.div>
 
         {/* Comparison grid */}

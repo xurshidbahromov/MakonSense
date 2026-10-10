@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import { ArrowRight } from 'lucide-react';
 import { useAnalyticsStore } from '../../store/useAnalyticsStore';
+import { MorphAnchor } from './MorphObject';
 
 export const RoiCalculator: React.FC = () => {
   const { setCurrentView } = useAnalyticsStore();
@@ -22,20 +23,24 @@ export const RoiCalculator: React.FC = () => {
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
 
-        {/* Label */}
-        <span className="font-mono text-xs tracking-[0.18em] uppercase text-neutral-500 dark:text-neutral-400 font-semibold">
-          ROI Kalkulyator
-        </span>
+        {/* Label & Headline */}
+        <div className="flex items-center justify-between gap-10">
+          <div>
+            <span className="font-mono text-xs tracking-[0.18em] uppercase text-neutral-500 dark:text-neutral-400 font-semibold">
+              ROI Kalkulyator
+            </span>
 
-        {/* Headline */}
-        <h2 className="mt-4 text-3xl sm:text-4xl lg:text-[46px] font-bold tracking-[-0.03em] leading-[1.12] text-[#111111] dark:text-[#FDFDFD]">
-          Sarmoyangizni{' '}
-          <span className="text-neutral-400 dark:text-neutral-500 font-normal">hisoblang.</span>
-        </h2>
+            <h2 className="mt-4 text-3xl sm:text-4xl lg:text-[46px] font-bold tracking-[-0.03em] leading-[1.12] text-[#111111] dark:text-[#FDFDFD]">
+              Sarmoyangizni{' '}
+              <span className="text-neutral-400 dark:text-neutral-500 font-normal">hisoblang.</span>
+            </h2>
 
-        <p className="mt-5 text-base sm:text-lg text-neutral-600 dark:text-neutral-400 max-w-2xl leading-relaxed">
-          Rejalashtirgan investitsiyangizni belgilang — MakonSense himoyalaydigan summa darhol ko'rinadi.
-        </p>
+            <p className="mt-5 text-base sm:text-lg text-neutral-600 dark:text-neutral-400 max-w-2xl leading-relaxed">
+              Rejalashtirgan investitsiyangizni belgilang — MakonSense himoyalaydigan summa darhol ko'rinadi.
+            </p>
+          </div>
+          <MorphAnchor shape="bars" className="w-[220px] h-[220px]" />
+        </div>
 
         {/* Content */}
         <div className="mt-14 p-8 sm:p-12 rounded-3xl bg-white/45 dark:bg-[#161616]/45 backdrop-blur-2xl backdrop-saturate-[180%] border-2 border-white/80 dark:border-white/[0.05] shadow-none dark:shadow-none grid grid-cols-1 lg:grid-cols-2 gap-0">
