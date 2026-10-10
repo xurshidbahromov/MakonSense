@@ -25,8 +25,8 @@ export const AuthSphereVisual: React.FC = () => {
     resize();
     window.addEventListener('resize', resize);
 
-    // 160 Geodesic Fibonacci sphere points
-    const N = 160;
+    // 150 Geodesic Fibonacci sphere points
+    const N = 150;
     const pts: Vec3[] = [];
     const accents: number[] = [];
     const ga = Math.PI * (3 - Math.sqrt(5));
@@ -36,8 +36,22 @@ export const AuthSphereVisual: React.FC = () => {
       const r = Math.sqrt(Math.max(0, 1 - y * y));
       const theta = ga * i;
       pts.push([Math.cos(theta) * r, y, Math.sin(theta) * r]);
-      // Accent cluster around top-right
-      accents.push(y > 0.35 && Math.cos(theta) > 0.2 ? 0.95 : 0.08);
+      // Accent cluster around top-right quadrant
+      accents.push(y > 0.25 && Math.cos(theta) > 0.2 ? 0.95 : 0.08);
+    }
+
+    // Precompute geodesic network edges
+    const edges: [number, number][] = [];
+    for (let i = 0; i < N; i++) {
+      for (let j = i + 1; j < N; j++) {
+        const dx = pts[i][0] - pts[j][0];
+        const dy = pts[i][1] - pts[j][1];
+        const dz = pts[i][2] - pts[j][2];
+        const d2 = dx * dx + dy * dy + dz * dz;
+        if (d2 < 0.14) {
+          edges.push([i, j]);
+        }
+      }
     }
 
     let mouseX = 0;
@@ -61,7 +75,7 @@ export const AuthSphereVisual: React.FC = () => {
       const dt = Math.min(0.05, (now - last) / 1000);
       last = now;
 
-      // Mouse smooth interpolation
+      // Smooth mouse interpolation
       mouseX += (targetMouseX - mouseX) * (1 - Math.exp(-dt * 3.5));
       mouseY += (targetMouseY - mouseY) * (1 - Math.exp(-dt * 3.5));
 
@@ -69,8 +83,8 @@ export const AuthSphereVisual: React.FC = () => {
       ctx.clearRect(0, 0, w, h);
 
       const time = (now - start) / 1000;
-      const yaw = time * 0.15 + mouseX * 0.18;
-      const pitch = -0.22 + mouseY * 0.12;
+      const yaw = time * 0.16 + mouseX * 0.2;
+      const pitch = -0.2 + mouseY * 0.15;
 
       const cY = Math.cos(yaw), sY = Math.sin(yaw);
       const cP = Math.cos(pitch), sP = Math.sin(pitch);
@@ -78,7 +92,7 @@ export const AuthSphereVisual: React.FC = () => {
 
       const cx = w * 0.5;
       const cy = h * 0.5;
-      const radius = Math.min(w, h) * 0.42;
+      const radius = Math.min(w, h) * 0.44;
 
       // 3D Projection
       const projected: { x: number; y: number; z: number; acc: number }[] = [];
@@ -99,19 +113,46 @@ export const AuthSphereVisual: React.FC = () => {
         });
       }
 
-      projected.sort((a, b) => a.z - b.z);
+      // Draw faint geodesic network lines (connecting nodes)
+      ctx.lineWidth = 0.75;
+      for (let e = 0; e < edges.length; e++) {
+        const [i, j] = edges[e];
+        const p1 = projected[i];
+        const p2 = projected[j];
+        const avgZ = (p1.z + p2.z) * 0.5;
+        if (avgZ > -0.6) {
+          const depth = Math.max(0, Math.min(1, (avgZ + 1.2) / 2.4));
+          const lineAlpha = (0.04 + depth * 0.16) * 0.9;
+          const isAccent = p1.acc > 0.4 || p2.acc > 0.4;
 
-      // Render dots & subtle emerald halos
-      for (let i = 0; i < N; i++) {
+          ctx.strokeStyle = isAccent
+            ? `rgba(14,159,110,${lineAlpha * 1.5})`
+            : `rgba(255,255,255,${lineAlpha})`;
+
+          ctx.beginPath();
+          ctx.moveTo(p1.x, p1.y);
+          ctx.lineTo(p2.x, p2.y);
+          ctx.stroke();
+        }
+      }
+
+      // Draw nodes sorted by depth
+      const sortedIndices = Array.from({ length: N }, (_, i) => i).sort(
+        (a, b) => projected[a].z - projected[b].z
+      );
+
+      for (let s = 0; s < N; s++) {
+        const i = sortedIndices[s];
         const p = projected[i];
         const depth = Math.max(0, Math.min(1, (p.z + 1.2) / 2.4));
-        const alpha = 0.12 + depth * 0.72 + p.acc * 0.16;
-        const rad = 1.0 + depth * 1.6 + p.acc * 0.8;
+        const alpha = 0.15 + depth * 0.75 + p.acc * 0.15;
+        const rad = 1.0 + depth * 1.6 + p.acc * 0.9;
 
+        // Glowing halo for accent nodes
         if (p.acc > 0.4) {
-          ctx.fillStyle = `rgba(14,159,110,${0.25 * alpha})`;
+          ctx.fillStyle = `rgba(14,159,110,${0.3 * alpha})`;
           ctx.beginPath();
-          ctx.arc(p.x, p.y, rad * 2.8, 0, Math.PI * 2);
+          ctx.arc(p.x, p.y, rad * 3, 0, Math.PI * 2);
           ctx.fill();
         }
 
