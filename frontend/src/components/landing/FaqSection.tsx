@@ -71,8 +71,8 @@ export const FaqSection: React.FC = () => {
 
         {/* FAQ List with Grand 3D Gyroscope Ring Hologram Backdrop */}
         <div className="relative mt-14">
-          {/* Top-Right Quadrant 3D Backdrop Anchor (~1/4 section size) */}
-          <div className="absolute -top-12 -right-8 lg:right-4 pointer-events-none -z-10">
+          {/* Top-Right Quadrant 3D Backdrop Anchor (peeks out visibly above box) */}
+          <div className="absolute -top-32 sm:-top-40 -right-8 lg:right-2 pointer-events-none -z-10">
             <MorphAnchor shape="ring" className="w-[360px] h-[360px] lg:w-[400px] lg:h-[400px]" />
           </div>
 

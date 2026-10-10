@@ -62,8 +62,8 @@ export const HowItWorks: React.FC = () => {
 
         {/* Steps Grid with Grand 3D Steps Hologram Backdrop */}
         <div className="relative mt-16">
-          {/* Bottom-Right Quadrant 3D Backdrop Anchor (~1/4 section size) */}
-          <div className="absolute -bottom-10 -right-8 lg:right-4 pointer-events-none -z-10">
+          {/* Bottom-Right Quadrant 3D Backdrop Anchor (peeks out visibly below box) */}
+          <div className="absolute -bottom-32 sm:-bottom-40 -right-8 lg:right-2 pointer-events-none -z-10">
             <MorphAnchor shape="steps" className="w-[360px] h-[360px] lg:w-[400px] lg:h-[400px]" />
           </div>
 
