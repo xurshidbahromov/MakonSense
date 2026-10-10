@@ -58,22 +58,25 @@ export const FaqSection: React.FC = () => {
       <div className="max-w-4xl mx-auto px-6 lg:px-8">
 
         {/* Label + Headline */}
-        <div className="flex items-center justify-between gap-10">
-          <div>
-            <span className="font-mono text-xs tracking-[0.18em] uppercase text-neutral-500 dark:text-neutral-400 font-semibold">
-              Ko'p so'raladigan savollar
-            </span>
+        <div className="max-w-2xl">
+          <span className="font-mono text-xs tracking-[0.18em] uppercase text-neutral-500 dark:text-neutral-400 font-semibold">
+            Ko'p so'raladigan savollar
+          </span>
 
-            <h2 className="mt-4 text-3xl sm:text-4xl font-bold tracking-[-0.03em] leading-[1.12] text-[#111111] dark:text-[#FDFDFD]">
-              Savollar &{' '}
-              <span className="text-neutral-400 dark:text-neutral-500 font-normal">javoblar.</span>
-            </h2>
-          </div>
-          <MorphAnchor shape="ring" className="w-[180px] h-[180px]" />
+          <h2 className="mt-4 text-3xl sm:text-4xl font-bold tracking-[-0.03em] leading-[1.12] text-[#111111] dark:text-[#FDFDFD]">
+            Savollar &{' '}
+            <span className="text-neutral-400 dark:text-neutral-500 font-normal">javoblar.</span>
+          </h2>
         </div>
 
-        {/* FAQ List */}
-        <div className="mt-14 p-6 sm:p-10 rounded-3xl bg-white/45 dark:bg-[#161616]/45 backdrop-blur-2xl backdrop-saturate-[180%] border-2 border-white/80 dark:border-white/[0.05] shadow-none dark:shadow-none divide-y divide-black/[0.05] dark:divide-white/[0.07]">
+        {/* FAQ List with Grand 3D Gyroscope Ring Hologram Backdrop */}
+        <div className="relative mt-14">
+          {/* Top-Right Quadrant 3D Backdrop Anchor (~1/4 section size) */}
+          <div className="absolute -top-12 -right-8 lg:right-4 pointer-events-none -z-10">
+            <MorphAnchor shape="ring" className="w-[360px] h-[360px] lg:w-[400px] lg:h-[400px]" />
+          </div>
+
+          <div className="relative z-10 p-6 sm:p-10 rounded-3xl bg-white/45 dark:bg-[#161616]/45 backdrop-blur-2xl backdrop-saturate-[180%] border-2 border-white/80 dark:border-white/[0.05] shadow-none dark:shadow-none divide-y divide-black/[0.05] dark:divide-white/[0.07]">
           {FAQS.map((faq) => {
             const isOpen = openId === faq.id;
             return (
@@ -114,6 +117,7 @@ export const FaqSection: React.FC = () => {
               </div>
             );
           })}
+          </div>
         </div>
 
       </div>

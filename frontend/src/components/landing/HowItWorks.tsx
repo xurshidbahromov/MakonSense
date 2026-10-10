@@ -46,25 +46,28 @@ export const HowItWorks: React.FC = () => {
           initial={{ opacity: 0, y: 12 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.5 }}
-          className="flex items-center justify-between gap-10"
+          className="max-w-3xl"
         >
-          <div>
-            <span className="font-mono text-xs tracking-[0.18em] uppercase text-neutral-500 dark:text-neutral-400 font-semibold">
-              Jarayon
-            </span>
-            <h2 className="mt-4 text-3xl sm:text-4xl lg:text-[46px] font-bold tracking-[-0.03em] leading-[1.12] text-[#111111] dark:text-[#FDFDFD]">
-              3 qadam.{' '}
-              <span className="text-neutral-400 dark:text-neutral-500 font-normal">To'liq ekspertiza.</span>
-            </h2>
-            <p className="mt-5 text-base sm:text-lg text-neutral-600 dark:text-neutral-400 max-w-xl leading-relaxed">
-              Murakkab GIS dasturlar va oylik tadqiqotlar shart emas.
-            </p>
-          </div>
-          <MorphAnchor shape="steps" className="w-[220px] h-[220px]" />
+          <span className="font-mono text-xs tracking-[0.18em] uppercase text-neutral-500 dark:text-neutral-400 font-semibold">
+            Jarayon
+          </span>
+          <h2 className="mt-4 text-3xl sm:text-4xl lg:text-[46px] font-bold tracking-[-0.03em] leading-[1.12] text-[#111111] dark:text-[#FDFDFD]">
+            3 qadam.{' '}
+            <span className="text-neutral-400 dark:text-neutral-500 font-normal">To'liq ekspertiza.</span>
+          </h2>
+          <p className="mt-5 text-base sm:text-lg text-neutral-600 dark:text-neutral-400 max-w-xl leading-relaxed">
+            Murakkab GIS dasturlar va oylik tadqiqotlar shart emas.
+          </p>
         </motion.div>
 
-        {/* Steps Grid */}
-        <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Steps Grid with Grand 3D Steps Hologram Backdrop */}
+        <div className="relative mt-16">
+          {/* Bottom-Right Quadrant 3D Backdrop Anchor (~1/4 section size) */}
+          <div className="absolute -bottom-10 -right-8 lg:right-4 pointer-events-none -z-10">
+            <MorphAnchor shape="steps" className="w-[360px] h-[360px] lg:w-[400px] lg:h-[400px]" />
+          </div>
+
+          <div className="relative z-10 grid grid-cols-1 md:grid-cols-3 gap-6">
           {STEPS.map((item, idx) => (
             <motion.div
               key={idx}
@@ -98,6 +101,7 @@ export const HowItWorks: React.FC = () => {
               </div>
             </motion.div>
           ))}
+          </div>
         </div>
 
         {/* CTA */}

@@ -62,24 +62,30 @@ export const ProblemSolution: React.FC = () => {
           initial={{ opacity: 0, y: 12 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.5 }}
-          className="mb-16 sm:mb-20 flex items-center justify-between gap-10"
+          className="mb-16 sm:mb-20 max-w-3xl"
         >
-          <div>
-            <span className="font-mono text-xs tracking-[0.18em] uppercase text-neutral-500 dark:text-neutral-400 font-semibold">
-              Nima o'zgardi
+          <span className="font-mono text-xs tracking-[0.18em] uppercase text-neutral-500 dark:text-neutral-400 font-semibold">
+            Nima o'zgardi
+          </span>
+          <h2 className="mt-4 text-3xl sm:text-4xl lg:text-[46px] font-bold tracking-[-0.03em] leading-[1.12] text-[#111111] dark:text-[#FDFDFD]">
+            Subyektiv taxminlarga emas,{' '}
+            <span className="text-neutral-400 dark:text-neutral-500 font-normal">
+              aniq raqamlarga ishoning.
             </span>
-            <h2 className="mt-4 text-3xl sm:text-4xl lg:text-[46px] font-bold tracking-[-0.03em] leading-[1.12] text-[#111111] dark:text-[#FDFDFD]">
-              Subyektiv taxminlarga emas,{' '}
-              <span className="text-neutral-400 dark:text-neutral-500 font-normal">
-                aniq raqamlarga ishoning.
-              </span>
-            </h2>
-          </div>
-          <MorphAnchor shape="cube" className="w-[220px] h-[220px]" />
+          </h2>
+          <p className="mt-4 text-base sm:text-lg text-neutral-600 dark:text-neutral-400 max-w-2xl leading-relaxed">
+            Eski usulda oylab ko'chada odam sanash o'rniga, sun'iy intellekt modeli millionlab fazoviy ma'lumotlar bilan xatarlarni bartaraf etadi.
+          </p>
         </motion.div>
 
-        {/* Problem / Solution split */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Problem / Solution split with Grand 3D Algorithmic Cube Backdrop */}
+        <div className="relative">
+          {/* Bottom-Left Quadrant 3D Backdrop Anchor (~1/4 section size) */}
+          <div className="absolute -bottom-10 -left-8 lg:left-4 pointer-events-none -z-10">
+            <MorphAnchor shape="cube" className="w-[360px] h-[360px] lg:w-[400px] lg:h-[400px]" />
+          </div>
+
+          <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Problems */}
           <motion.div
             initial={{ opacity: 0, x: -16 }}
@@ -123,6 +129,7 @@ export const ProblemSolution: React.FC = () => {
               ))}
             </ul>
           </motion.div>
+          </div>
         </div>
 
         {/* Stats band */}

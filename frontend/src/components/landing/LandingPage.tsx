@@ -32,7 +32,10 @@ export const LandingPage: React.FC = () => {
       {/* Reusable Silky Emerald Atmospheric Background (fixed at z-0) */}
       <AmbientBackground />
 
-      {/* Content Layer (relative z-10, safely above ambient background) */}
+      {/* Scroll-driven 3D Morphing Object (fixed at z-[2] - sits directly behind content layer) */}
+      <MorphObject />
+
+      {/* Content Layer (relative z-10, safely above ambient background and 3D hologram) */}
       <div className="relative z-10">
         {/* Minimalist Smooth Scroll Progress Bar */}
         <div className="fixed top-0 left-0 right-0 h-[2px] z-[100] pointer-events-none">
@@ -60,7 +63,6 @@ export const LandingPage: React.FC = () => {
 
         <LandingFooter />
         <AuditReportModal />
-        <MorphObject />
       </div>
     </div>
   );

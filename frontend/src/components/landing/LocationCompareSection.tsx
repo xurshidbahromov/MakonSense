@@ -74,30 +74,33 @@ export const LocationCompareSection: React.FC = () => {
           initial={{ opacity: 0, y: 12 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.5 }}
-          className="mb-16 flex items-center justify-between gap-10"
+          className="mb-16 max-w-3xl"
         >
-          <div>
-            <span className="font-mono text-xs tracking-[0.18em] uppercase text-neutral-500 dark:text-neutral-400 font-semibold">
-              A/B Taqqoslash
-            </span>
-            <h2 className="mt-4 text-3xl sm:text-4xl lg:text-[46px] font-bold tracking-[-0.03em] leading-[1.12] text-[#111111] dark:text-[#FDFDFD]">
-              Ikki lokatsiya.{' '}
-              <span className="text-neutral-400 dark:text-neutral-500 font-normal">Bitta to'g'ri tanlov.</span>
-            </h2>
-            <p className="mt-5 text-base text-neutral-600 dark:text-neutral-400 max-w-xl leading-relaxed">
-              MakonSense raqamlar bilan ko'rsatadi: qaysi joy ko'proq daromad keltiradi.
-            </p>
-          </div>
-          <MorphAnchor shape="towers" className="w-[220px] h-[220px]" />
+          <span className="font-mono text-xs tracking-[0.18em] uppercase text-neutral-500 dark:text-neutral-400 font-semibold">
+            A/B Taqqoslash
+          </span>
+          <h2 className="mt-4 text-3xl sm:text-4xl lg:text-[46px] font-bold tracking-[-0.03em] leading-[1.12] text-[#111111] dark:text-[#FDFDFD]">
+            Ikki lokatsiya.{' '}
+            <span className="text-neutral-400 dark:text-neutral-500 font-normal">Bitta to'g'ri tanlov.</span>
+          </h2>
+          <p className="mt-5 text-base sm:text-lg text-neutral-600 dark:text-neutral-400 max-w-xl leading-relaxed">
+            MakonSense raqamlar bilan ko'rsatadi: qaysi joy ko'proq daromad keltiradi.
+          </p>
         </motion.div>
 
-        {/* Comparison grid */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.55, delay: 0.12 }}
-          className="grid grid-cols-1 lg:grid-cols-2 gap-0 border-2 border-white/80 dark:border-white/[0.05] bg-white/45 dark:bg-[#161616]/45 backdrop-blur-2xl backdrop-saturate-[180%] rounded-3xl overflow-hidden shadow-none dark:shadow-none"
-        >
+        {/* Comparison grid with Grand 3D Towers Hologram Backdrop */}
+        <div className="relative">
+          {/* Top-Right Quadrant 3D Backdrop Anchor (~1/4 section size) */}
+          <div className="absolute -top-12 -right-8 lg:right-4 pointer-events-none -z-10">
+            <MorphAnchor shape="towers" className="w-[360px] h-[360px] lg:w-[400px] lg:h-[400px]" />
+          </div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.55, delay: 0.12 }}
+            className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-0 border-2 border-white/80 dark:border-white/[0.05] bg-white/45 dark:bg-[#161616]/45 backdrop-blur-2xl backdrop-saturate-[180%] rounded-3xl overflow-hidden shadow-none dark:shadow-none"
+          >
           {[LOC_A, LOC_B].map((loc, colIdx) => (
             <div
               key={colIdx}
@@ -169,6 +172,7 @@ export const LocationCompareSection: React.FC = () => {
             </div>
           ))}
         </motion.div>
+        </div>
 
         {/* CTA */}
         <motion.div

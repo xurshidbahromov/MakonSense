@@ -52,22 +52,28 @@ export const ScrollExperience: React.FC = () => {
           initial={{ opacity: 0, y: 12 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.5 }}
-          className="mb-16 sm:mb-20 flex items-center justify-between gap-10"
+          className="mb-16 sm:mb-20 max-w-3xl"
         >
-          <div>
-            <span className="font-mono text-xs tracking-[0.18em] uppercase text-neutral-500 dark:text-neutral-400 font-semibold">
-              Fazoviy Razvedka
-            </span>
-            <h2 className="mt-4 text-3xl sm:text-4xl lg:text-[46px] font-bold tracking-[-0.03em] leading-[1.12] text-[#111111] dark:text-[#FDFDFD]">
-              Uch qatlam tahlil.{' '}
-              <span className="text-neutral-400 dark:text-neutral-500 font-normal">Bir hisobot.</span>
-            </h2>
-          </div>
-          <MorphAnchor shape="layers" className="w-[240px] h-[240px]" />
+          <span className="font-mono text-xs tracking-[0.18em] uppercase text-neutral-500 dark:text-neutral-400 font-semibold">
+            Fazoviy Razvedka
+          </span>
+          <h2 className="mt-4 text-3xl sm:text-4xl lg:text-[46px] font-bold tracking-[-0.03em] leading-[1.12] text-[#111111] dark:text-[#FDFDFD]">
+            Uch qatlam tahlil.{' '}
+            <span className="text-neutral-400 dark:text-neutral-500 font-normal">Bir hisobot.</span>
+          </h2>
+          <p className="mt-4 text-base sm:text-lg text-neutral-600 dark:text-neutral-400 max-w-2xl leading-relaxed">
+            Piyodalar oqimi, raqobat radiusi va oylik daromad prognozi — har bir qatlam sun'iy intellekt modeli orqali sintez qilinadi.
+          </p>
         </motion.div>
 
-        {/* Stages in Glass Panel */}
-        <div className="rounded-3xl bg-white/45 dark:bg-[#161616]/45 backdrop-blur-2xl backdrop-saturate-[180%] border-2 border-white/80 dark:border-white/[0.05] p-6 sm:p-10 divide-y divide-black/[0.05] dark:divide-white/[0.07] shadow-none dark:shadow-none">
+        {/* Stages in Glass Panel with 3D Layers Hologram Backdrop */}
+        <div className="relative">
+          {/* Top-Right Quadrant 3D Backdrop Anchor (~1/4 section size) */}
+          <div className="absolute -top-12 -right-8 lg:right-4 pointer-events-none -z-10">
+            <MorphAnchor shape="layers" className="w-[360px] h-[360px] lg:w-[400px] lg:h-[400px]" />
+          </div>
+
+          <div className="relative z-10 rounded-3xl bg-white/45 dark:bg-[#161616]/45 backdrop-blur-2xl backdrop-saturate-[180%] border-2 border-white/80 dark:border-white/[0.05] p-6 sm:p-10 divide-y divide-black/[0.05] dark:divide-white/[0.07] shadow-none dark:shadow-none">
           {STAGES.map((stage, idx) => (
             <motion.div
               key={idx}
@@ -108,6 +114,7 @@ export const ScrollExperience: React.FC = () => {
               </div>
             </motion.div>
           ))}
+          </div>
         </div>
 
         {/* CTA */}

@@ -158,20 +158,17 @@ export const IndustrySolutions: React.FC = () => {
 
         {/* Section Heading & Subtitle */}
         <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-12">
-          <div className="flex items-center gap-8">
-            <div>
-              <div className="inline-flex items-center gap-2 mb-3">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#0E9F6E]" />
-                <span className="font-mono text-xs tracking-[0.18em] uppercase text-neutral-500 dark:text-neutral-400 font-semibold">
-                  Soha Yechimlari
-                </span>
-              </div>
-              <h2 className="text-3xl sm:text-4xl lg:text-[46px] font-bold tracking-[-0.03em] leading-[1.12] text-[#111111] dark:text-[#FDFDFD]">
-                Har qanday soha{' '}
-                <span className="text-neutral-400 dark:text-neutral-500 font-normal">uchun aniq tahlil.</span>
-              </h2>
+          <div className="max-w-2xl">
+            <div className="inline-flex items-center gap-2 mb-3">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#0E9F6E]" />
+              <span className="font-mono text-xs tracking-[0.18em] uppercase text-neutral-500 dark:text-neutral-400 font-semibold">
+                Soha Yechimlari
+              </span>
             </div>
-            <MorphAnchor shape="clusters" className="w-[180px] h-[180px]" />
+            <h2 className="text-3xl sm:text-4xl lg:text-[46px] font-bold tracking-[-0.03em] leading-[1.12] text-[#111111] dark:text-[#FDFDFD]">
+              Har qanday soha{' '}
+              <span className="text-neutral-400 dark:text-neutral-500 font-normal">uchun aniq tahlil.</span>
+            </h2>
           </div>
 
           {/* Segmented Liquid Switcher Tabs */}
@@ -204,14 +201,20 @@ export const IndustrySolutions: React.FC = () => {
           </div>
         </div>
 
-        {/* Showcase Dashboard Card */}
-        <motion.div
-          key={activeId}
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.28 }}
-          className="rounded-3xl bg-white/45 dark:bg-[#161616]/45 backdrop-blur-2xl backdrop-saturate-[180%] border-2 border-white/80 dark:border-white/[0.05] p-6 sm:p-10 shadow-none dark:shadow-none"
-        >
+        {/* Showcase Dashboard Card with Grand 3D Clusters Hologram Backdrop */}
+        <div className="relative">
+          {/* Top-Left Quadrant 3D Backdrop Anchor (~1/4 section size) */}
+          <div className="absolute -top-12 -left-8 lg:left-4 pointer-events-none -z-10">
+            <MorphAnchor shape="clusters" className="w-[360px] h-[360px] lg:w-[400px] lg:h-[400px]" />
+          </div>
+
+          <motion.div
+            key={activeId}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.28 }}
+            className="relative z-10 rounded-3xl bg-white/45 dark:bg-[#161616]/45 backdrop-blur-2xl backdrop-saturate-[180%] border-2 border-white/80 dark:border-white/[0.05] p-6 sm:p-10 shadow-none dark:shadow-none"
+          >
           {/* Card Top Bar: Location metadata & MakonScore showcase */}
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 pb-8 border-b border-black/[0.05] dark:border-white/[0.06]">
             <div>
@@ -392,6 +395,7 @@ export const IndustrySolutions: React.FC = () => {
             </button>
           </div>
         </motion.div>
+        </div>
 
       </div>
     </section>

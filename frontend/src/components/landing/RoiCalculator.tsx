@@ -24,26 +24,29 @@ export const RoiCalculator: React.FC = () => {
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
 
         {/* Label & Headline */}
-        <div className="flex items-center justify-between gap-10">
-          <div>
-            <span className="font-mono text-xs tracking-[0.18em] uppercase text-neutral-500 dark:text-neutral-400 font-semibold">
-              ROI Kalkulyator
-            </span>
+        <div className="max-w-3xl">
+          <span className="font-mono text-xs tracking-[0.18em] uppercase text-neutral-500 dark:text-neutral-400 font-semibold">
+            ROI Kalkulyator
+          </span>
 
-            <h2 className="mt-4 text-3xl sm:text-4xl lg:text-[46px] font-bold tracking-[-0.03em] leading-[1.12] text-[#111111] dark:text-[#FDFDFD]">
-              Sarmoyangizni{' '}
-              <span className="text-neutral-400 dark:text-neutral-500 font-normal">hisoblang.</span>
-            </h2>
+          <h2 className="mt-4 text-3xl sm:text-4xl lg:text-[46px] font-bold tracking-[-0.03em] leading-[1.12] text-[#111111] dark:text-[#FDFDFD]">
+            Sarmoyangizni{' '}
+            <span className="text-neutral-400 dark:text-neutral-500 font-normal">hisoblang.</span>
+          </h2>
 
-            <p className="mt-5 text-base sm:text-lg text-neutral-600 dark:text-neutral-400 max-w-2xl leading-relaxed">
-              Rejalashtirgan investitsiyangizni belgilang — MakonSense himoyalaydigan summa darhol ko'rinadi.
-            </p>
-          </div>
-          <MorphAnchor shape="bars" className="w-[220px] h-[220px]" />
+          <p className="mt-5 text-base sm:text-lg text-neutral-600 dark:text-neutral-400 max-w-2xl leading-relaxed">
+            Rejalashtirgan investitsiyangizni belgilang — MakonSense himoyalaydigan summa darhol ko'rinadi.
+          </p>
         </div>
 
-        {/* Content */}
-        <div className="mt-14 p-8 sm:p-12 rounded-3xl bg-white/45 dark:bg-[#161616]/45 backdrop-blur-2xl backdrop-saturate-[180%] border-2 border-white/80 dark:border-white/[0.05] shadow-none dark:shadow-none grid grid-cols-1 lg:grid-cols-2 gap-0">
+        {/* Content with Grand 3D Rising Bars Backdrop */}
+        <div className="relative mt-14">
+          {/* Bottom-Left Quadrant 3D Backdrop Anchor (~1/4 section size) */}
+          <div className="absolute -bottom-10 -left-8 lg:left-4 pointer-events-none -z-10">
+            <MorphAnchor shape="bars" className="w-[360px] h-[360px] lg:w-[400px] lg:h-[400px]" />
+          </div>
+
+          <div className="relative z-10 p-8 sm:p-12 rounded-3xl bg-white/45 dark:bg-[#161616]/45 backdrop-blur-2xl backdrop-saturate-[180%] border-2 border-white/80 dark:border-white/[0.05] shadow-none dark:shadow-none grid grid-cols-1 lg:grid-cols-2 gap-0">
 
           {/* Left: Slider */}
           <div className="lg:pr-20 pb-12 lg:pb-0">
@@ -138,6 +141,7 @@ export const RoiCalculator: React.FC = () => {
               </p>
             </div>
           </div>
+        </div>
         </div>
 
         {/* Trust pills + CTA */}
