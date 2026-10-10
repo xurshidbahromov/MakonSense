@@ -92,14 +92,17 @@ export const AuthPage: React.FC = () => {
   };
 
   return (
-    <div className="h-screen w-screen overflow-hidden flex bg-[#FDFDFD] dark:bg-[#111111] text-[#111111] dark:text-[#FDFDFD] font-sans selection:bg-[#0E9F6E]/20">
+    <div className="h-screen w-screen overflow-hidden flex bg-[#FDFDFD] dark:bg-[#111111] text-[#111111] dark:text-[#FDFDFD] font-sans selection:bg-[#0E9F6E]/20 relative">
+      {/* Soft Ambient Background across the WHOLE screen */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_120%_90%_at_25%_40%,rgba(16,185,129,0.04),transparent_70%)] dark:bg-[radial-gradient(ellipse_120%_90%_at_25%_40%,rgba(16,185,129,0.06),transparent_70%)] pointer-events-none" />
+
       {/* ========================================================= */}
       {/* LEFT COLUMN: SWISS ARTISTIC BRAND VISUAL (ZERO SCROLL)    */}
       {/* ========================================================= */}
-      <div className="hidden lg:flex lg:w-[48%] xl:w-[45%] h-screen overflow-hidden relative flex-col justify-between p-10 xl:p-14 bg-[#0A100D] text-white border-r border-white/[0.08] select-none">
+      <div className="hidden lg:flex lg:w-[48%] xl:w-[45%] h-screen overflow-hidden relative flex-col justify-between p-8 xl:p-12 border-r border-black/[0.06] dark:border-white/[0.08] select-none">
         {/* Soft Ambient Corner Bloom */}
-        <div className="absolute top-[-15%] left-[-15%] w-[450px] h-[450px] rounded-full bg-[#0E9F6E]/12 blur-[130px] pointer-events-none" />
-        <div className="absolute bottom-[-15%] right-[-15%] w-[450px] h-[450px] rounded-full bg-[#0E9F6E]/10 blur-[130px] pointer-events-none" />
+        <div className="absolute top-[-15%] left-[-15%] w-[450px] h-[450px] rounded-full bg-[#0E9F6E]/[0.08] blur-[130px] pointer-events-none" />
+        <div className="absolute bottom-[-15%] right-[-15%] w-[450px] h-[450px] rounded-full bg-[#0E9F6E]/[0.06] blur-[130px] pointer-events-none" />
 
         {/* Top: Logo */}
         <div className="relative z-10 flex items-center justify-between">
@@ -112,49 +115,89 @@ export const AuthPage: React.FC = () => {
               alt="MakonSense Icon"
               className="h-8 w-auto object-contain drop-shadow-[0_2px_12px_rgba(14,159,110,0.45)] transition-transform duration-200 group-hover:scale-105"
             />
-            <span className="text-xl font-bold tracking-tight text-white">MakonSense</span>
-            <span className="text-[9px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-full bg-[#0E9F6E]/20 text-[#0E9F6E] border border-[#0E9F6E]/30 font-semibold">
+            <span className="text-xl font-bold tracking-tight text-[#111111] dark:text-white">MakonSense</span>
+            <span className="text-[9px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-full bg-[#0E9F6E]/15 text-[#0E9F6E] border border-[#0E9F6E]/30 font-semibold">
               Spatial AI
             </span>
           </div>
 
           <button
             onClick={() => setCurrentView('landing')}
-            className="inline-flex items-center gap-1.5 text-xs text-white/70 hover:text-white px-3 py-1.5 rounded-full bg-white/[0.06] hover:bg-white/[0.12] border border-white/[0.08] transition-all duration-200 cursor-pointer group"
+            className="inline-flex items-center gap-1.5 text-xs text-neutral-600 dark:text-neutral-300 hover:text-black dark:hover:text-white px-3 py-1.5 rounded-full bg-black/[0.04] hover:bg-black/[0.08] dark:bg-white/[0.06] dark:hover:bg-white/[0.12] border border-black/[0.06] dark:border-white/[0.08] transition-all duration-200 cursor-pointer group"
           >
             <ArrowLeft size={13} className="transition-transform duration-200 group-hover:-translate-x-0.5" />
             <span>Bosh sahifa</span>
           </button>
         </div>
 
-        {/* Center: Hypnotic Minimal 3D Sphere & Serene Editorial Copy */}
+        {/* Center: Hypnotic Minimal 3D Visual & Serene Editorial Copy */}
         <div className="relative z-10 my-auto flex flex-col items-center text-center px-4 max-w-md mx-auto">
-          {/* Calm, Floating 3D Geodesic Sphere */}
-          <div className="w-[220px] h-[220px] xl:w-[260px] xl:h-[260px] relative mb-6">
-            <AuthSphereVisual />
+          {/* Calm, Floating 3D Visual */}
+          <div className="w-[280px] h-[280px] xl:w-[320px] xl:h-[320px] relative mb-5">
+            <AuthSphereVisual mode={authMode} />
           </div>
 
-          <h1 className="text-2xl xl:text-3xl font-bold tracking-[-0.03em] leading-[1.2] text-white">
-            Joylashuv qarorlarida <br />
-            <span className="text-[#0E9F6E]">yangi standart.</span>
-          </h1>
+          <AnimatePresence mode="wait">
+            {authMode === 'login' ? (
+              <motion.div
+                key="login-copy"
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -6 }}
+                transition={{ duration: 0.2 }}
+                className="flex flex-col items-center"
+              >
+                <h1 className="text-2xl xl:text-3xl font-bold tracking-[-0.03em] leading-[1.2] text-[#111111] dark:text-white">
+                  Sessiyaga xavfsiz <br />
+                  <span className="text-[#0E9F6E]">qaytish.</span>
+                </h1>
 
-          <p className="mt-3 text-xs xl:text-sm text-neutral-400 max-w-sm leading-relaxed">
-            O'zbekiston bo'ylab 524,000+ bino, piyodalar tranziti va raqobatchilar tahlili bir platformada.
-          </p>
+                <p className="mt-3 text-xs xl:text-sm text-neutral-500 dark:text-neutral-400 max-w-sm leading-relaxed">
+                  Saqlangan tahlillar, hududiy ko'rsatkichlar va biznes auditlariga darhol kiring.
+                </p>
 
-          {/* Minimal Metric Ticker Pill */}
-          <div className="mt-6 inline-flex items-center gap-3 px-4 py-2 rounded-full bg-white/[0.04] border border-white/[0.08] text-xs font-mono text-neutral-300">
-            <span>524k+ bino</span>
-            <span className="w-1 h-1 rounded-full bg-[#0E9F6E]" />
-            <span>14 hudud</span>
-            <span className="w-1 h-1 rounded-full bg-[#0E9F6E]" />
-            <span className="text-[#0E9F6E] font-semibold">94.2% aniqlik</span>
-          </div>
+                {/* Minimal Metric Ticker Pill */}
+                <div className="mt-6 inline-flex items-center gap-3 px-4 py-2 rounded-full bg-black/[0.03] dark:bg-white/[0.04] border border-black/[0.06] dark:border-white/[0.08] text-xs font-mono text-neutral-600 dark:text-neutral-300">
+                  <span>256-bit SSL</span>
+                  <span className="w-1 h-1 rounded-full bg-[#0E9F6E]" />
+                  <span>Tezkor kirish</span>
+                  <span className="w-1 h-1 rounded-full bg-[#0E9F6E]" />
+                  <span className="text-[#0E9F6E] font-semibold">Doimiy sessiya</span>
+                </div>
+              </motion.div>
+            ) : (
+              <motion.div
+                key="register-copy"
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -6 }}
+                transition={{ duration: 0.2 }}
+                className="flex flex-col items-center"
+              >
+                <h1 className="text-2xl xl:text-3xl font-bold tracking-[-0.03em] leading-[1.2] text-[#111111] dark:text-white">
+                  Joylashuv qarorlarida <br />
+                  <span className="text-[#0E9F6E]">yangi standart.</span>
+                </h1>
+
+                <p className="mt-3 text-xs xl:text-sm text-neutral-500 dark:text-neutral-400 max-w-sm leading-relaxed">
+                  O'zbekiston bo'ylab 524,000+ bino, piyodalar tranziti va raqobatchilar tahlili bir platformada.
+                </p>
+
+                {/* Minimal Metric Ticker Pill */}
+                <div className="mt-6 inline-flex items-center gap-3 px-4 py-2 rounded-full bg-black/[0.03] dark:bg-white/[0.04] border border-black/[0.06] dark:border-white/[0.08] text-xs font-mono text-neutral-600 dark:text-neutral-300">
+                  <span>524k+ bino</span>
+                  <span className="w-1 h-1 rounded-full bg-[#0E9F6E]" />
+                  <span>14 hudud</span>
+                  <span className="w-1 h-1 rounded-full bg-[#0E9F6E]" />
+                  <span className="text-[#0E9F6E] font-semibold">94.2% aniqlik</span>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
         {/* Bottom: Quiet Status */}
-        <div className="relative z-10 flex items-center justify-between text-xs text-neutral-500 pt-4 border-t border-white/[0.06]">
+        <div className="relative z-10 flex items-center justify-between text-xs text-neutral-500 dark:text-neutral-400 pt-4 border-t border-black/[0.06] dark:border-white/[0.06]">
           <span className="font-mono text-[11px]">Toshkent · Samarqand · Farg'ona · Buxoro</span>
           <div className="flex items-center gap-1.5 text-[11px] text-[#0E9F6E]">
             <CheckCircle2 size={13} />
