@@ -43,7 +43,7 @@ export const LandingHero: React.FC = () => {
         </motion.div>
 
         {/* Main layout: headline left, creative radar mockup right */}
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_520px] xl:grid-cols-[1fr_580px] gap-12 lg:gap-16 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_560px] xl:grid-cols-[1fr_620px] gap-12 lg:gap-16 items-center">
 
           {/* Left: headline + sub + CTAs */}
           <div>
@@ -126,9 +126,9 @@ export const LandingHero: React.FC = () => {
             </motion.div>
           </div>
 
-          {/* Right: grand atmospheric anchor slot for the 3D globe hologram */}
+          {/* Right: grand atmospheric anchor slot for the 3D globe hologram (2/4 width) */}
           <div className="relative hidden lg:flex items-center justify-center">
-            <MorphAnchor shape="globe" className="w-[520px] h-[520px] xl:w-[580px] xl:h-[580px]" />
+            <MorphAnchor shape="globe" className="w-[580px] h-[580px] lg:w-[640px] lg:h-[640px] xl:w-[680px] xl:h-[680px]" />
             <div className="absolute -bottom-4 left-0 right-0 flex justify-center pointer-events-none">
               <span className="font-mono text-[10.5px] tracking-[0.2em] uppercase text-neutral-400 dark:text-neutral-500">
                 41.31° N · 69.28° E · TOSHKENT

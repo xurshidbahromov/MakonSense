@@ -41,9 +41,9 @@ export const RoiCalculator: React.FC = () => {
 
         {/* Content with Grand 3D Rising Bars Backdrop */}
         <div className="relative mt-14">
-          {/* Bottom-Left Quadrant 3D Backdrop Anchor (enlarged, peeks out visibly below box) */}
-          <div className="absolute -bottom-28 sm:-bottom-36 -left-8 lg:left-0 pointer-events-none -z-10">
-            <MorphAnchor shape="bars" className="w-[460px] h-[460px] lg:w-[520px] lg:h-[520px]" />
+          {/* Bottom-Left Quadrant 3D Backdrop Anchor (2/4 scale, peeks out visibly below box) */}
+          <div className="absolute -bottom-36 sm:-bottom-44 -left-12 lg:-left-6 xl:left-0 pointer-events-none -z-10">
+            <MorphAnchor shape="bars" className="w-[580px] h-[580px] lg:w-[640px] lg:h-[640px] xl:w-[680px] xl:h-[680px]" />
           </div>
 
           <div className="relative z-10 p-8 sm:p-12 rounded-3xl bg-white/35 dark:bg-[#161616]/35 backdrop-blur-md backdrop-saturate-[150%] border-2 border-white/80 dark:border-white/[0.05] shadow-none dark:shadow-none grid grid-cols-1 lg:grid-cols-2 gap-0">

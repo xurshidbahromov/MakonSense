@@ -68,9 +68,9 @@ export const ScrollExperience: React.FC = () => {
 
         {/* Stages in Glass Panel with 3D Layers Hologram Backdrop */}
         <div className="relative">
-          {/* Top-Right Quadrant 3D Backdrop Anchor (enlarged, peeks out visibly above box) */}
-          <div className="absolute -top-28 sm:-top-36 -right-8 lg:right-0 pointer-events-none -z-10">
-            <MorphAnchor shape="layers" className="w-[460px] h-[460px] lg:w-[520px] lg:h-[520px]" />
+          {/* Top-Right Quadrant 3D Backdrop Anchor (2/4 scale, peeks out visibly above box) */}
+          <div className="absolute -top-36 sm:-top-44 -right-12 lg:-right-6 xl:right-0 pointer-events-none -z-10">
+            <MorphAnchor shape="layers" className="w-[580px] h-[580px] lg:w-[640px] lg:h-[640px] xl:w-[680px] xl:h-[680px]" />
           </div>
 
           <div className="relative z-10 rounded-3xl bg-white/35 dark:bg-[#161616]/35 backdrop-blur-md backdrop-saturate-[150%] border-2 border-white/80 dark:border-white/[0.05] p-6 sm:p-10 divide-y divide-black/[0.05] dark:divide-white/[0.07] shadow-none dark:shadow-none">

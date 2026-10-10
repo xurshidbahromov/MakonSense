@@ -90,9 +90,9 @@ export const LocationCompareSection: React.FC = () => {
 
         {/* Comparison grid with Grand 3D Towers Hologram Backdrop */}
         <div className="relative">
-          {/* Top-Right Quadrant 3D Backdrop Anchor (enlarged, peeks out visibly above box) */}
-          <div className="absolute -top-28 sm:-top-36 -right-8 lg:right-0 pointer-events-none -z-10">
-            <MorphAnchor shape="towers" className="w-[460px] h-[460px] lg:w-[520px] lg:h-[520px]" />
+          {/* Top-Right Quadrant 3D Backdrop Anchor (2/4 scale, peeks out visibly above box) */}
+          <div className="absolute -top-36 sm:-top-44 -right-12 lg:-right-6 xl:right-0 pointer-events-none -z-10">
+            <MorphAnchor shape="towers" className="w-[580px] h-[580px] lg:w-[640px] lg:h-[640px] xl:w-[680px] xl:h-[680px]" />
           </div>
 
           <motion.div

@@ -80,9 +80,9 @@ export const ProblemSolution: React.FC = () => {
 
         {/* Problem / Solution split with Grand 3D Algorithmic Cube Backdrop */}
         <div className="relative">
-          {/* Bottom-Left Quadrant 3D Backdrop Anchor (enlarged, peeks out visibly below box) */}
-          <div className="absolute -bottom-28 sm:-bottom-36 -left-8 lg:left-0 pointer-events-none -z-10">
-            <MorphAnchor shape="cube" className="w-[460px] h-[460px] lg:w-[520px] lg:h-[520px]" />
+          {/* Bottom-Left Quadrant 3D Backdrop Anchor (2/4 scale, peeks out visibly below box) */}
+          <div className="absolute -bottom-36 sm:-bottom-44 -left-12 lg:-left-6 xl:left-0 pointer-events-none -z-10">
+            <MorphAnchor shape="cube" className="w-[580px] h-[580px] lg:w-[640px] lg:h-[640px] xl:w-[680px] xl:h-[680px]" />
           </div>
 
           <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-6">

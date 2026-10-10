@@ -376,7 +376,7 @@ export const MorphObject: React.FC = () => {
 
       const dark = document.documentElement.classList.contains('dark');
       const base = dark ? [253, 253, 253] : [17, 17, 17];
-      const scale = clamp(size / 380, 0.85, 1.45);
+      const scale = clamp(size / 380, 0.85, 1.65);
 
       /* -------- Render Pure Elegant 3D Dots & Ambient Halos -------- */
       for (let n = 0; n < N; n++) {
