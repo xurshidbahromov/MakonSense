@@ -203,9 +203,9 @@ export const IndustrySolutions: React.FC = () => {
 
         {/* Showcase Dashboard Card with Grand 3D Clusters Hologram Backdrop */}
         <div className="relative">
-          {/* Top-Left Quadrant 3D Backdrop Anchor (peeks out visibly above box) */}
-          <div className="absolute -top-32 sm:-top-40 -left-8 lg:left-2 pointer-events-none -z-10">
-            <MorphAnchor shape="clusters" className="w-[360px] h-[360px] lg:w-[400px] lg:h-[400px]" />
+          {/* Top-Left Quadrant 3D Backdrop Anchor (enlarged, peeks out visibly above box) */}
+          <div className="absolute -top-28 sm:-top-36 -left-8 lg:left-0 pointer-events-none -z-10">
+            <MorphAnchor shape="clusters" className="w-[460px] h-[460px] lg:w-[520px] lg:h-[520px]" />
           </div>
 
           <motion.div
@@ -213,7 +213,7 @@ export const IndustrySolutions: React.FC = () => {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.28 }}
-            className="relative z-10 rounded-3xl bg-white/45 dark:bg-[#161616]/45 backdrop-blur-2xl backdrop-saturate-[180%] border-2 border-white/80 dark:border-white/[0.05] p-6 sm:p-10 shadow-none dark:shadow-none"
+            className="relative z-10 rounded-3xl bg-white/35 dark:bg-[#161616]/35 backdrop-blur-md backdrop-saturate-[150%] border-2 border-white/80 dark:border-white/[0.05] p-6 sm:p-10 shadow-none dark:shadow-none"
           >
           {/* Card Top Bar: Location metadata & MakonScore showcase */}
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 pb-8 border-b border-black/[0.05] dark:border-white/[0.06]">

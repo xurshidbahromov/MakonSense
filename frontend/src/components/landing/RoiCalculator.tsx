@@ -41,12 +41,12 @@ export const RoiCalculator: React.FC = () => {
 
         {/* Content with Grand 3D Rising Bars Backdrop */}
         <div className="relative mt-14">
-          {/* Bottom-Left Quadrant 3D Backdrop Anchor (peeks out visibly below box) */}
-          <div className="absolute -bottom-32 sm:-bottom-40 -left-8 lg:left-2 pointer-events-none -z-10">
-            <MorphAnchor shape="bars" className="w-[360px] h-[360px] lg:w-[400px] lg:h-[400px]" />
+          {/* Bottom-Left Quadrant 3D Backdrop Anchor (enlarged, peeks out visibly below box) */}
+          <div className="absolute -bottom-28 sm:-bottom-36 -left-8 lg:left-0 pointer-events-none -z-10">
+            <MorphAnchor shape="bars" className="w-[460px] h-[460px] lg:w-[520px] lg:h-[520px]" />
           </div>
 
-          <div className="relative z-10 p-8 sm:p-12 rounded-3xl bg-white/45 dark:bg-[#161616]/45 backdrop-blur-2xl backdrop-saturate-[180%] border-2 border-white/80 dark:border-white/[0.05] shadow-none dark:shadow-none grid grid-cols-1 lg:grid-cols-2 gap-0">
+          <div className="relative z-10 p-8 sm:p-12 rounded-3xl bg-white/35 dark:bg-[#161616]/35 backdrop-blur-md backdrop-saturate-[150%] border-2 border-white/80 dark:border-white/[0.05] shadow-none dark:shadow-none grid grid-cols-1 lg:grid-cols-2 gap-0">
 
           {/* Left: Slider */}
           <div className="lg:pr-20 pb-12 lg:pb-0">

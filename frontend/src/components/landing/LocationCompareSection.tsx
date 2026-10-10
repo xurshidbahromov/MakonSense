@@ -90,16 +90,16 @@ export const LocationCompareSection: React.FC = () => {
 
         {/* Comparison grid with Grand 3D Towers Hologram Backdrop */}
         <div className="relative">
-          {/* Top-Right Quadrant 3D Backdrop Anchor (peeks out visibly above box) */}
-          <div className="absolute -top-32 sm:-top-40 -right-8 lg:right-2 pointer-events-none -z-10">
-            <MorphAnchor shape="towers" className="w-[360px] h-[360px] lg:w-[400px] lg:h-[400px]" />
+          {/* Top-Right Quadrant 3D Backdrop Anchor (enlarged, peeks out visibly above box) */}
+          <div className="absolute -top-28 sm:-top-36 -right-8 lg:right-0 pointer-events-none -z-10">
+            <MorphAnchor shape="towers" className="w-[460px] h-[460px] lg:w-[520px] lg:h-[520px]" />
           </div>
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.55, delay: 0.12 }}
-            className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-0 border-2 border-white/80 dark:border-white/[0.05] bg-white/45 dark:bg-[#161616]/45 backdrop-blur-2xl backdrop-saturate-[180%] rounded-3xl overflow-hidden shadow-none dark:shadow-none"
+            className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-0 border-2 border-white/80 dark:border-white/[0.05] bg-white/35 dark:bg-[#161616]/35 backdrop-blur-md backdrop-saturate-[150%] rounded-3xl overflow-hidden shadow-none dark:shadow-none"
           >
           {[LOC_A, LOC_B].map((loc, colIdx) => (
             <div

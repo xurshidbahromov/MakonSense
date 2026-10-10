@@ -62,9 +62,9 @@ export const HowItWorks: React.FC = () => {
 
         {/* Steps Grid with Grand 3D Steps Hologram Backdrop */}
         <div className="relative mt-16">
-          {/* Bottom-Right Quadrant 3D Backdrop Anchor (peeks out visibly below box) */}
-          <div className="absolute -bottom-32 sm:-bottom-40 -right-8 lg:right-2 pointer-events-none -z-10">
-            <MorphAnchor shape="steps" className="w-[360px] h-[360px] lg:w-[400px] lg:h-[400px]" />
+          {/* Bottom-Right Quadrant 3D Backdrop Anchor (enlarged, peeks out visibly below box) */}
+          <div className="absolute -bottom-28 sm:-bottom-36 -right-8 lg:right-0 pointer-events-none -z-10">
+            <MorphAnchor shape="steps" className="w-[460px] h-[460px] lg:w-[520px] lg:h-[520px]" />
           </div>
 
           <div className="relative z-10 grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -74,7 +74,7 @@ export const HowItWorks: React.FC = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.5, delay: 0.12 + idx * 0.1 }}
-              className="p-8 rounded-3xl bg-white/45 dark:bg-[#161616]/45 backdrop-blur-2xl backdrop-saturate-[180%] border-2 border-white/80 dark:border-white/[0.05] shadow-none dark:shadow-none flex flex-col justify-between"
+              className="p-8 rounded-3xl bg-white/35 dark:bg-[#161616]/35 backdrop-blur-md backdrop-saturate-[150%] border-2 border-white/80 dark:border-white/[0.05] shadow-none dark:shadow-none flex flex-col justify-between"
             >
               <div>
                 <div className="flex items-center justify-between mb-6">

@@ -333,7 +333,7 @@ export const MorphObject: React.FC = () => {
       const cx = lerp(A.cx, B.cx, e) - flight * Math.min(120, vw * 0.08);
       const cy = lerp(A.cy, B.cy, e);
       const size = lerp(A.size, B.size, e);
-      const R = size * 0.42;
+      const R = size * 0.46; // Enlarged, grander 3D radius
 
       /* -------- intro assembly -------- */
       const intro = reduced ? 1 : easeOutCubic(clamp((now - start) / 1400));
@@ -376,24 +376,24 @@ export const MorphObject: React.FC = () => {
 
       const dark = document.documentElement.classList.contains('dark');
       const base = dark ? [253, 253, 253] : [17, 17, 17];
-      const scale = clamp(size / 380, 0.75, 1.25);
+      const scale = clamp(size / 380, 0.85, 1.45);
 
       /* -------- Render Pure Elegant 3D Dots & Ambient Halos -------- */
       for (let n = 0; n < N; n++) {
         const k = order[n];
         const depth = clamp((sz[k] + 1.3) / 2.6);
         const acc = sa[k];
-        const alpha = (0.16 + depth * 0.68 + acc * 0.24) * globalAlpha;
-        const rad = (0.9 + depth * 1.1 + acc * 0.9) * scale;
+        const alpha = (0.2 + depth * 0.72 + acc * 0.28) * globalAlpha;
+        const rad = (1.05 + depth * 1.25 + acc * 1.05) * scale;
         const r = Math.round(lerp(base[0], ACCENT[0], acc));
         const g = Math.round(lerp(base[1], ACCENT[1], acc));
         const bl = Math.round(lerp(base[2], ACCENT[2], acc));
 
         // Soft emerald radial bloom for accented nodes
         if (acc > 0.35) {
-          ctx.fillStyle = `rgba(14,159,110,${0.18 * alpha})`;
+          ctx.fillStyle = `rgba(14,159,110,${0.22 * alpha})`;
           ctx.beginPath();
-          ctx.arc(sx[k], sy[k], rad * 3.2, 0, Math.PI * 2);
+          ctx.arc(sx[k], sy[k], rad * 3.4, 0, Math.PI * 2);
           ctx.fill();
         }
 

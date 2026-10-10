@@ -71,12 +71,12 @@ export const FaqSection: React.FC = () => {
 
         {/* FAQ List with Grand 3D Gyroscope Ring Hologram Backdrop */}
         <div className="relative mt-14">
-          {/* Top-Right Quadrant 3D Backdrop Anchor (peeks out visibly above box) */}
-          <div className="absolute -top-32 sm:-top-40 -right-8 lg:right-2 pointer-events-none -z-10">
-            <MorphAnchor shape="ring" className="w-[360px] h-[360px] lg:w-[400px] lg:h-[400px]" />
+          {/* Top-Right Quadrant 3D Backdrop Anchor (enlarged, peeks out visibly above box) */}
+          <div className="absolute -top-28 sm:-top-36 -right-8 lg:right-0 pointer-events-none -z-10">
+            <MorphAnchor shape="ring" className="w-[460px] h-[460px] lg:w-[520px] lg:h-[520px]" />
           </div>
 
-          <div className="relative z-10 p-6 sm:p-10 rounded-3xl bg-white/45 dark:bg-[#161616]/45 backdrop-blur-2xl backdrop-saturate-[180%] border-2 border-white/80 dark:border-white/[0.05] shadow-none dark:shadow-none divide-y divide-black/[0.05] dark:divide-white/[0.07]">
+          <div className="relative z-10 p-6 sm:p-10 rounded-3xl bg-white/35 dark:bg-[#161616]/35 backdrop-blur-md backdrop-saturate-[150%] border-2 border-white/80 dark:border-white/[0.05] shadow-none dark:shadow-none divide-y divide-black/[0.05] dark:divide-white/[0.07]">
           {FAQS.map((faq) => {
             const isOpen = openId === faq.id;
             return (
