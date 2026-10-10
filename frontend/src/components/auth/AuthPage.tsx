@@ -17,6 +17,7 @@ import {
 import { useAuthStore } from '../../store/useAuthStore';
 import { useAnalyticsStore } from '../../store/useAnalyticsStore';
 import { AuthSphereVisual } from './AuthSphereVisual';
+import { AmbientBackground } from '../ui/AmbientBackground';
 
 export const AuthPage: React.FC = () => {
   const { setCurrentView } = useAnalyticsStore();
@@ -93,13 +94,16 @@ export const AuthPage: React.FC = () => {
 
   return (
     <div className="h-screen w-screen overflow-hidden flex bg-[#FDFDFD] dark:bg-[#111111] text-[#111111] dark:text-[#FDFDFD] font-sans selection:bg-[#0E9F6E]/20 relative">
+      {/* Reusable Landing Page Ambient Atmosphere (fixed at z-0) */}
+      <AmbientBackground fixed={false} intensity="subtle" />
+
       {/* ========================================================= */}
       {/* LEFT COLUMN: SWISS ARTISTIC BRAND VISUAL (ZERO SCROLL)    */}
       {/* ========================================================= */}
-      <div className="hidden lg:flex lg:w-[48%] xl:w-[45%] h-screen overflow-hidden relative flex-col justify-between p-8 xl:p-12 border-r border-black/[0.06] dark:border-white/[0.08] select-none bg-transparent">
+      <div className="hidden lg:flex lg:w-1/2 h-screen overflow-hidden relative flex-col justify-between p-6 sm:p-8 xl:p-12 select-none bg-transparent">
 
         {/* Top: Logo */}
-        <div className="relative z-10 flex items-center justify-between">
+        <div className="relative z-10 flex items-center justify-between flex-shrink-0">
           <div
             onClick={() => setCurrentView('landing')}
             className="flex items-center gap-2.5 cursor-pointer group"
@@ -114,14 +118,6 @@ export const AuthPage: React.FC = () => {
               Spatial AI
             </span>
           </div>
-
-          <button
-            onClick={() => setCurrentView('landing')}
-            className="inline-flex items-center gap-1.5 text-xs text-neutral-600 dark:text-neutral-300 hover:text-black dark:hover:text-white px-3 py-1.5 rounded-full bg-black/[0.04] hover:bg-black/[0.08] dark:bg-white/[0.06] dark:hover:bg-white/[0.12] border border-black/[0.06] dark:border-white/[0.08] transition-all duration-200 cursor-pointer group"
-          >
-            <ArrowLeft size={13} className="transition-transform duration-200 group-hover:-translate-x-0.5" />
-            <span>Bosh sahifa</span>
-          </button>
         </div>
 
         {/* Center: Hypnotic Minimal 3D Visual & Serene Editorial Copy */}
@@ -191,7 +187,7 @@ export const AuthPage: React.FC = () => {
         </div>
 
         {/* Bottom: Quiet Status */}
-        <div className="relative z-10 flex items-center justify-between text-xs text-neutral-500 dark:text-neutral-400 pt-4 border-t border-black/[0.06] dark:border-white/[0.06]">
+        <div className="relative z-10 flex items-center justify-between text-xs text-neutral-500 dark:text-neutral-400 pt-4 border-t border-black/[0.06] dark:border-white/[0.06] flex-shrink-0">
           <span className="font-mono text-[11px]">Toshkent · Samarqand · Farg'ona · Buxoro</span>
           <div className="flex items-center gap-1.5 text-[11px] text-[#0E9F6E]">
             <CheckCircle2 size={13} />
@@ -201,9 +197,9 @@ export const AuthPage: React.FC = () => {
       </div>
 
       {/* ========================================================= */}
-      {/* RIGHT COLUMN: REFINED CRISP FORM (ZERO SCROLL ON DESKTOP)  */}
+      {/* RIGHT COLUMN: REFINED CRISP FORM (50% WIDTH, PERFECT FIT)  */}
       {/* ========================================================= */}
-      <div className="flex-1 h-screen overflow-y-auto lg:overflow-hidden flex flex-col justify-between p-6 sm:p-10 lg:p-12 xl:p-14 max-w-xl mx-auto w-full">
+      <div className="relative z-10 w-full lg:w-1/2 h-screen overflow-y-auto flex flex-col justify-between p-6 sm:p-8 xl:p-12">
         {/* Top Controls */}
         <div className="flex items-center justify-between flex-shrink-0">
           <div
@@ -214,33 +210,33 @@ export const AuthPage: React.FC = () => {
             <span className="font-bold text-base tracking-tight text-[#111111] dark:text-white">MakonSense</span>
           </div>
 
-          <div className="flex items-center gap-2 ml-auto">
+          <div className="flex items-center gap-2.5 ml-auto">
             <button
-              onClick={toggleTheme}
-              className="w-9 h-9 rounded-full bg-black/[0.04] hover:bg-black/[0.08] dark:bg-[#1E1E22] dark:hover:bg-[#2A2A30] border border-black/[0.08] dark:border-white/[0.14] flex items-center justify-center text-neutral-600 dark:text-neutral-200 transition-all cursor-pointer shadow-xs"
-              title="Mavzu rejimi"
+              onClick={() => setCurrentView('landing')}
+              className="inline-flex items-center gap-1.5 text-xs text-neutral-600 dark:text-neutral-300 hover:text-black dark:hover:text-white px-3.5 py-1.5 rounded-full bg-black/[0.04] hover:bg-black/[0.08] dark:bg-white/[0.06] dark:hover:bg-white/[0.12] border border-black/[0.06] dark:border-white/[0.08] transition-all duration-200 cursor-pointer group"
             >
-              {isDark ? <Moon size={15} className="text-[#0E9F6E]" /> : <Sun size={15} className="text-amber-500" />}
+              <ArrowLeft size={13} className="transition-transform duration-200 group-hover:-translate-x-0.5" />
+              <span>Bosh sahifa</span>
             </button>
 
             <button
-              onClick={() => setCurrentView('landing')}
-              className="lg:hidden p-2 rounded-full hover:bg-black/[0.04] dark:hover:bg-white/[0.08] text-neutral-500 hover:text-neutral-900 dark:hover:text-white transition-all cursor-pointer"
-              title="Bosh sahifa"
+              onClick={toggleTheme}
+              className="w-8 h-8 rounded-full bg-black/[0.04] hover:bg-black/[0.08] dark:bg-[#1E1E22] dark:hover:bg-[#2A2A30] border border-black/[0.08] dark:border-white/[0.14] flex items-center justify-center text-neutral-600 dark:text-neutral-200 transition-all cursor-pointer shadow-xs"
+              title="Mavzu rejimi"
             >
-              <ArrowLeft size={18} />
+              {isDark ? <Moon size={14} className="text-[#0E9F6E]" /> : <Sun size={14} className="text-amber-500" />}
             </button>
           </div>
         </div>
 
         {/* Center: The Form */}
-        <div className="my-auto py-4 flex-shrink-0">
+        <div className="my-auto py-2 w-full max-w-[450px] mx-auto">
           {/* Header */}
-          <div className="mb-6">
+          <div className="mb-4">
             <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-[#0E9F6E] font-semibold">
               {authMode === 'login' ? 'TIZIMGA KIRISH' : "RO'YXATDAN O'TISH"}
             </span>
-            <h2 className="mt-1.5 text-2xl sm:text-3xl font-bold tracking-tight text-[#111111] dark:text-[#FDFDFD]">
+            <h2 className="mt-1 text-2xl sm:text-3xl font-bold tracking-tight text-[#111111] dark:text-[#FDFDFD]">
               {authMode === 'login' ? 'Xush kelibsiz' : 'Yangi hisob yarating'}
             </h2>
             <p className="mt-1 text-xs sm:text-sm text-neutral-500 dark:text-neutral-400">
@@ -251,14 +247,14 @@ export const AuthPage: React.FC = () => {
           </div>
 
           {/* Segmented Switcher (Kirish / Ro'yxatdan o'tish) - High Contrast Dark Mode */}
-          <div className="mb-5 p-1 rounded-2xl bg-neutral-200/60 dark:bg-[#1E1E22] border border-black/[0.08] dark:border-white/[0.14] grid grid-cols-2 gap-1 select-none shadow-xs">
+          <div className="mb-4 p-1 rounded-2xl bg-neutral-200/60 dark:bg-[#1E1E22] border border-black/[0.08] dark:border-white/[0.14] grid grid-cols-2 gap-1 select-none shadow-xs">
             <button
               type="button"
               onClick={() => {
                 setAuthMode('login');
                 setError(null);
               }}
-              className={`py-2.5 text-xs font-semibold rounded-xl transition-all duration-200 cursor-pointer flex items-center justify-center ${
+              className={`py-2.5 text-xs sm:text-sm font-semibold rounded-xl transition-all duration-200 cursor-pointer flex items-center justify-center ${
                 authMode === 'login'
                   ? 'bg-white dark:bg-[#2E2E34] text-[#111111] dark:text-white shadow-xs dark:shadow-[0_2px_8px_rgba(0,0,0,0.5)] dark:border dark:border-white/[0.16]'
                   : 'text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white'
@@ -272,7 +268,7 @@ export const AuthPage: React.FC = () => {
                 setAuthMode('register');
                 setError(null);
               }}
-              className={`py-2.5 text-xs font-semibold rounded-xl transition-all duration-200 cursor-pointer flex items-center justify-center ${
+              className={`py-2.5 text-xs sm:text-sm font-semibold rounded-xl transition-all duration-200 cursor-pointer flex items-center justify-center ${
                 authMode === 'register'
                   ? 'bg-white dark:bg-[#2E2E34] text-[#111111] dark:text-white shadow-xs dark:shadow-[0_2px_8px_rgba(0,0,0,0.5)] dark:border dark:border-white/[0.16]'
                   : 'text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white'
@@ -283,11 +279,11 @@ export const AuthPage: React.FC = () => {
           </div>
 
           {/* Social Logins */}
-          <div className="grid grid-cols-2 gap-2.5 mb-5">
+          <div className="grid grid-cols-2 gap-2.5 mb-3.5">
             <button
               type="button"
               onClick={() => handleSocialAuth('google')}
-              className="flex items-center justify-center gap-2 px-3 py-2.5 rounded-2xl border border-black/[0.08] dark:border-white/[0.1] bg-white dark:bg-white/[0.03] hover:bg-neutral-50 dark:hover:bg-white/[0.06] text-xs font-semibold text-neutral-800 dark:text-neutral-200 transition-all cursor-pointer shadow-xs active:scale-[0.98]"
+              className="flex items-center justify-center gap-2 px-3.5 py-2.5 rounded-xl border border-black/[0.08] dark:border-white/[0.1] bg-white dark:bg-white/[0.03] hover:bg-neutral-50 dark:hover:bg-white/[0.06] text-xs sm:text-sm font-semibold text-neutral-800 dark:text-neutral-200 transition-all cursor-pointer shadow-xs active:scale-[0.98]"
             >
               <svg className="w-4 h-4" viewBox="0 0 24 24">
                 <path
@@ -313,7 +309,7 @@ export const AuthPage: React.FC = () => {
             <button
               type="button"
               onClick={() => handleSocialAuth('telegram')}
-              className="flex items-center justify-center gap-2 px-3 py-2.5 rounded-2xl border border-black/[0.08] dark:border-white/[0.1] bg-white dark:bg-white/[0.03] hover:bg-neutral-50 dark:hover:bg-white/[0.06] text-xs font-semibold text-neutral-800 dark:text-neutral-200 transition-all cursor-pointer shadow-xs active:scale-[0.98]"
+              className="flex items-center justify-center gap-2 px-3.5 py-2.5 rounded-xl border border-black/[0.08] dark:border-white/[0.1] bg-white dark:bg-white/[0.03] hover:bg-neutral-50 dark:hover:bg-white/[0.06] text-xs sm:text-sm font-semibold text-neutral-800 dark:text-neutral-200 transition-all cursor-pointer shadow-xs active:scale-[0.98]"
             >
               <svg className="w-4 h-4 fill-[#229ED9]" viewBox="0 0 24 24">
                 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 0 0-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .37z" />
@@ -323,7 +319,7 @@ export const AuthPage: React.FC = () => {
           </div>
 
           {/* Thin Divider */}
-          <div className="relative my-4 text-center">
+          <div className="relative my-3 text-center">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-black/[0.06] dark:border-white/[0.08]" />
             </div>
@@ -337,15 +333,15 @@ export const AuthPage: React.FC = () => {
             <motion.div
               initial={{ opacity: 0, y: -4 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mb-3.5 p-2.5 rounded-xl bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 text-xs flex items-center gap-2"
+              className="mb-3 p-2.5 rounded-xl bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 text-xs sm:text-sm flex items-center gap-2"
             >
-              <AlertCircle size={14} className="flex-shrink-0" />
+              <AlertCircle size={15} className="flex-shrink-0" />
               <span>{error}</span>
             </motion.div>
           )}
 
           {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-3">
+          <form onSubmit={handleSubmit} className="space-y-2.5">
             {/* Name (Register only) */}
             <AnimatePresence>
               {authMode === 'register' && (
@@ -366,7 +362,7 @@ export const AuthPage: React.FC = () => {
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       placeholder="Alisher Karimov"
-                      className="w-full pl-10 pr-4 py-2.5 rounded-2xl bg-neutral-50 dark:bg-white/[0.04] border border-black/[0.08] dark:border-white/[0.1] text-xs sm:text-sm text-[#111111] dark:text-white placeholder:text-neutral-400 focus:outline-none focus:border-[#0E9F6E] focus:ring-2 focus:ring-[#0E9F6E]/20 transition-all"
+                      className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-neutral-50 dark:bg-white/[0.04] border border-black/[0.08] dark:border-white/[0.1] text-xs sm:text-sm text-[#111111] dark:text-white placeholder:text-neutral-400 focus:outline-none focus:border-[#0E9F6E] focus:ring-2 focus:ring-[#0E9F6E]/20 transition-all"
                     />
                   </div>
                 </motion.div>
@@ -386,7 +382,7 @@ export const AuthPage: React.FC = () => {
                   value={emailOrPhone}
                   onChange={(e) => setEmailOrPhone(e.target.value)}
                   placeholder="nomi@kompaniya.uz yoki +998 (90) 123-45-67"
-                  className="w-full pl-10 pr-4 py-2.5 rounded-2xl bg-neutral-50 dark:bg-white/[0.04] border border-black/[0.08] dark:border-white/[0.1] text-xs sm:text-sm text-[#111111] dark:text-white placeholder:text-neutral-400 focus:outline-none focus:border-[#0E9F6E] focus:ring-2 focus:ring-[#0E9F6E]/20 transition-all"
+                  className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-neutral-50 dark:bg-white/[0.04] border border-black/[0.08] dark:border-white/[0.1] text-xs sm:text-sm text-[#111111] dark:text-white placeholder:text-neutral-400 focus:outline-none focus:border-[#0E9F6E] focus:ring-2 focus:ring-[#0E9F6E]/20 transition-all"
                 />
               </div>
             </div>
@@ -415,7 +411,7 @@ export const AuthPage: React.FC = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Kamida 6 ta belgi"
-                  className="w-full pl-10 pr-11 py-2.5 rounded-2xl bg-neutral-50 dark:bg-white/[0.04] border border-black/[0.08] dark:border-white/[0.1] text-xs sm:text-sm text-[#111111] dark:text-white placeholder:text-neutral-400 focus:outline-none focus:border-[#0E9F6E] focus:ring-2 focus:ring-[#0E9F6E]/20 transition-all"
+                  className="w-full pl-10 pr-11 py-2.5 rounded-xl bg-neutral-50 dark:bg-white/[0.04] border border-black/[0.08] dark:border-white/[0.1] text-xs sm:text-sm text-[#111111] dark:text-white placeholder:text-neutral-400 focus:outline-none focus:border-[#0E9F6E] focus:ring-2 focus:ring-[#0E9F6E]/20 transition-all"
                 />
                 <button
                   type="button"
@@ -431,7 +427,7 @@ export const AuthPage: React.FC = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full mt-2 py-3 px-6 rounded-2xl bg-[#111111] hover:bg-neutral-800 text-white dark:bg-[#FDFDFD] dark:hover:bg-neutral-200 dark:text-[#111111] font-semibold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all duration-200 cursor-pointer shadow-xs active:scale-[0.99] disabled:opacity-60"
+              className="w-full mt-2 py-3 px-6 rounded-xl bg-[#111111] hover:bg-neutral-800 text-white dark:bg-[#FDFDFD] dark:hover:bg-neutral-200 dark:text-[#111111] font-semibold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all duration-200 cursor-pointer shadow-xs active:scale-[0.99] disabled:opacity-60"
             >
               {loading ? (
                 <div className="w-4 h-4 border-2 border-white dark:border-[#111111] border-t-transparent rounded-full animate-spin" />
@@ -445,23 +441,23 @@ export const AuthPage: React.FC = () => {
           </form>
 
           {/* One-click Guest Pass */}
-          <div className="mt-4 text-center">
+          <div className="mt-3 text-center">
             <button
               type="button"
               onClick={handleGuest}
-              className="text-xs text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white font-medium hover:underline cursor-pointer inline-flex items-center gap-1.5"
+              className="text-xs sm:text-sm text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white font-medium hover:underline cursor-pointer inline-flex items-center gap-1.5"
             >
               <span className="w-1.5 h-1.5 rounded-full bg-[#0E9F6E]" />
               <span>Mehmon sifatida davom etish (Ro'yxatdan o'tmasdan)</span>
-              <ArrowRight size={12} />
+              <ArrowRight size={13} />
             </button>
           </div>
         </div>
 
         {/* Bottom Footer Note */}
-        <div className="flex items-center justify-between text-[11px] text-neutral-400 dark:text-neutral-500 font-mono pt-3 border-t border-black/[0.04] dark:border-white/[0.06] flex-shrink-0">
-          <span>O'zbekiston · 14 hudud</span>
-          <div className="flex items-center gap-1">
+        <div className="relative z-10 flex items-center justify-between text-xs text-neutral-500 dark:text-neutral-400 pt-4 border-t border-black/[0.06] dark:border-white/[0.06] flex-shrink-0">
+          <span className="font-mono text-[11px]">O'zbekiston · 14 hudud</span>
+          <div className="flex items-center gap-1.5 text-[11px] text-[#0E9F6E]">
             <ShieldCheck size={13} className="text-[#0E9F6E]" />
             <span>SSL Himoyalangan</span>
           </div>
