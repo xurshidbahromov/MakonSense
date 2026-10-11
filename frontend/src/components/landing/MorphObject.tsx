@@ -75,11 +75,31 @@ const fibSphere = (n: number, r: number, c: Vec3 = [0, 0, 0]): Vec3[] => {
   return out;
 };
 
-/* --------------------------- formations --------------------------- */
-/* Hero: Pure Round Sphere without outer ring ("dumaloq ringsiz")     */
+const geoToSphere = (latDeg: number, lonDeg: number, r = 1.0): Vec3 => {
+  const phi = (latDeg * Math.PI) / 180;
+  const theta = (lonDeg * Math.PI) / 180;
+  const cosPhi = Math.cos(phi);
+  return [
+    r * cosPhi * Math.sin(theta),
+    r * Math.sin(phi),
+    r * cosPhi * Math.cos(theta),
+  ];
+};
+
+const segGeo = (p1: [number, number], p2: [number, number], n: number, r = 1.0): Vec3[] => {
+  const res: Vec3[] = [];
+  for (let i = 0; i < n; i++) {
+    const t = i / Math.max(1, n - 1);
+    const lat = p1[0] + (p2[0] - p1[0]) * t;
+    const lon = p1[1] + (p2[1] - p1[1]) * t;
+    res.push(geoToSphere(lat, lon, r));
+  }
+  return res;
+};
+
 /* --------------------------- formations --------------------------- */
 /* 8 Completely Distinct, Signature 3D Archetypes Tailored to Each Section:
-   1. Hero (globe)           -> Grand Geodesic Fibonacci Spatial Sphere with Tashkent Beacon
+   1. Hero (globe)           -> 3D Global Earth Map with Selected & Highlighted Uzbekistan
    2. ScrollExperience (layers) -> 3 Floating Geospatial Strata / Disc Decks with Vertical Laser Links
    3. ProblemSolution (cube)  -> 3D Isometric Tesseract / Hypercube with Inner Glowing Core
    4. LocationCompare (towers)-> Dual Comparative Monolith Towers Side-by-Side with Analytical Bridge
@@ -91,16 +111,105 @@ const fibSphere = (n: number, r: number, c: Vec3 = [0, 0, 0]): Vec3[] => {
 */
 
 const buildFormations = (): Record<MorphShape, Formation> => {
-  // 1. Hero: Geodesic Fibonacci Spatial Sphere (Dumaloq Shar)
+  // 1. Hero: 3D Global Earth Map with Highlighted & Selected Uzbekistan (Global Yer Xaritasi va O'zbekiston Tanlovi)
   const globe = (() => {
-    const pts = fibSphere(N, 1.0);
-    const acc = pts.map((p) => {
-      // Beacon at Tashkent coordinates (~41.31° N, ~69.28° E)
-      if (p[1] > 0.50 && p[0] > 0.22) return 0.95;
-      // Glowing equatorial ring band
-      if (Math.abs(p[1]) < 0.075) return 0.60;
-      return 0.10;
+    const pts: Vec3[] = [];
+    const acc: number[] = [];
+
+    // --- A. UZBEKISTAN: Precise Geographic Contour & Selected Region Highlight ---
+    // True border vertices along Karakalpakstan, Kyzylkum, Tashkent Oasis, Fergana Valley, Surkhandarya
+    const uzContour: [number, number][] = [
+      [45.0, 56.0], [45.5, 58.5], [43.5, 59.0], [42.46, 59.6], [41.5, 60.5],
+      [40.8, 62.5], [39.77, 64.42], [38.5, 66.8], [37.22, 67.28], [38.2, 68.2],
+      [40.8, 68.7], [41.31, 69.28], [41.5, 70.0], [40.9, 71.5], [40.75, 72.35],
+      [40.38, 71.78], [40.2, 70.8], [41.2, 67.5], [43.0, 64.0], [44.5, 61.5], [45.0, 56.0],
+    ];
+    for (let i = 0; i < uzContour.length - 1; i++) {
+      const edge = segGeo(uzContour[i], uzContour[i + 1], 3, 1.006);
+      pts.push(...edge);
+      acc.push(...edge.map(() => 0.98));
+    }
+
+    // Major Regional Hub Nodes in Uzbekistan (Tashkent, Samarkand, Bukhara, Fergana, Nukus, Termez, etc.)
+    const uzHubs: [number, number][] = [
+      [41.31, 69.28], // Tashkent Capital
+      [39.65, 66.97], // Samarkand
+      [39.77, 64.42], // Bukhara
+      [40.38, 71.78], // Fergana
+      [42.46, 59.60], // Nukus
+      [37.22, 67.28], // Termez
+      [40.10, 65.37], // Navoiy
+      [40.78, 72.34], // Andijan
+      [40.99, 71.67], // Namangan
+      [41.55, 60.63], // Urgench
+    ];
+    uzHubs.forEach((coord) => {
+      pts.push(geoToSphere(coord[0], coord[1], 1.01));
+      acc.push(1.0);
     });
+
+    // Tashkent Radial Pin Laser Beacon (rising out from Tashkent coords)
+    for (let step = 1; step <= 5; step++) {
+      pts.push(geoToSphere(41.31, 69.28, 1.0 + step * 0.04));
+      acc.push(0.96);
+    }
+
+    // High-Tech Selector Radar Ring around Uzbekistan
+    const centerUz: [number, number] = [41.0, 66.0];
+    for (let i = 0; i < 16; i++) {
+      const a = (i / 16) * Math.PI * 2;
+      const lat = centerUz[0] + Math.sin(a) * 4.5;
+      const lon = centerUz[1] + Math.cos(a) * 6.5;
+      pts.push(geoToSphere(lat, lon, 1.008));
+      acc.push(0.92);
+    }
+
+    // --- B. WORLD CONTINENTS: Fine Starlight Global Landmass Outline ---
+    const continents: [number, number][][] = [
+      // Europe & Mediterranean
+      [[36, -6], [43, -9], [48, -4], [55, 5], [60, 18], [69, 20], [60, 30], [55, 37], [45, 38], [41, 28], [38, 15], [36, -6]],
+      // British Isles
+      [[50, -5], [58, -3], [55, -1], [50, 1]],
+      // Africa
+      [[36, -5], [32, 25], [12, 51], [-4, 40], [-25, 33], [-34, 20], [-10, 14], [5, 1], [15, -16], [30, -10], [36, -5]],
+      // Middle East & Arabia
+      [[30, 34], [13, 48], [24, 57], [30, 48], [37, 45], [30, 34]],
+      // Asia Coastline & Eastern Archipelago
+      [[24, 68], [8, 77], [22, 88], [1, 104], [22, 115], [38, 120], [42, 130], [55, 140], [68, 140], [70, 80], [55, 60]],
+      // Japan
+      [[31, 131], [36, 138], [43, 143]],
+      // North America
+      [[15, -92], [30, -115], [48, -125], [65, -165], [70, -140], [60, -95], [50, -60], [25, -80], [18, -90]],
+      // South America
+      [[12, -72], [-5, -35], [-23, -43], [-55, -68], [-40, -73], [-10, -78], [12, -72]],
+      // Australia
+      [[-15, 128], [-35, 118], [-38, 144], [-24, 153], [-11, 142], [-15, 128]],
+    ];
+
+    continents.forEach((poly) => {
+      for (let i = 0; i < poly.length - 1; i++) {
+        const edge = segGeo(poly[i], poly[i + 1], 2, 1.0);
+        pts.push(...edge);
+        acc.push(...edge.map(() => 0.14));
+      }
+    });
+
+    // Equator Reference Grid Belt
+    for (let i = 0; i < 24; i++) {
+      const lon = (i / 24) * 360 - 180;
+      pts.push(geoToSphere(0, lon, 0.996));
+      acc.push(0.18);
+    }
+
+    // Latitude Tropic Reference Bands (23.5° N & -23.5° S)
+    for (let i = 0; i < 16; i++) {
+      const lon = (i / 16) * 360 - 180;
+      pts.push(geoToSphere(23.5, lon, 0.996));
+      acc.push(0.10);
+      pts.push(geoToSphere(-23.5, lon, 0.996));
+      acc.push(0.10);
+    }
+
     return fill(pts, acc);
   })();
 
@@ -634,7 +743,10 @@ export const MorphObject: React.FC = () => {
         absorb = 1 - clamp(e / 0.16);
       }
 
-      const dotVisibility = Math.max(0, 1 - easeInOutCubic(absorb));
+      // On hero section (scrollY near 0), keep 3D particles transparent so FlatWorldMap shines cleanly.
+      // As user scrolls down towards Section 2, 3D particles fluidly assemble into the 3D formations.
+      const heroFade = clamp(scrollY / Math.min(320, vh * 0.4));
+      const dotVisibility = Math.max(0, 1 - easeInOutCubic(absorb)) * heroFade;
       const dotScale = Math.max(0, 1 - Math.pow(absorb, 1.4) * 0.90);
 
       // Wordmark color clarity reaction:
@@ -681,7 +793,7 @@ export const MorphObject: React.FC = () => {
       const time = reduced ? 0 : (now - start) / 1000;
       // In sections 1-8: continuous float and gentle 36° pivot on scroll
       // In footer wordmark: smoothly levels out to front-facing readable alignment
-      const naturalYaw = time * 0.075 + P * Math.PI * 0.20 + mouseX * 0.10;
+      const naturalYaw = -0.42 + time * 0.075 + P * Math.PI * 0.20 + mouseX * 0.10;
       const frontYawTarget =
         Math.round(naturalYaw / (Math.PI * 2)) * Math.PI * 2 +
         mouseX * 0.04 +
