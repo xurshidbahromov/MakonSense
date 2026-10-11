@@ -8,21 +8,21 @@ import {
 export const UzbekistanDottedMap: React.FC = () => {
   const [activeHub, setActiveHub] = useState<MapHub | null>(null);
 
-  // Exact 3D Isometric Viewport Bounds
-  const VB_X = 0;
-  const VB_Y = 60;
-  const VB_W = 1000;
-  const VB_H = 510;
+  // Low-Angle Curved Flat-Oval Viewport Bounds
+  const VB_X = 10;
+  const VB_Y = 170;
+  const VB_W = 980;
+  const VB_H = 340;
 
   return (
     <div className="relative w-full max-w-5xl mx-auto select-none mt-2 sm:mt-4">
-      {/* 1. Subtle 3D Depth Shadow under the floating map */}
+      {/* 1. Subtle 3D Curved Earth Depth Shadow under the floating map */}
       <div
-        className="absolute bottom-2 left-1/2 -translate-x-1/2 w-[85%] h-12 bg-black/[0.06] dark:bg-black/30 rounded-full blur-2xl pointer-events-none"
+        className="absolute bottom-1 left-1/2 -translate-x-1/2 w-[88%] h-10 bg-black/[0.05] dark:bg-black/25 rounded-full blur-2xl pointer-events-none"
         aria-hidden
       />
 
-      {/* 2. Seamless 3D Isometric Map Viewport with Soft Lower Edge Fade */}
+      {/* 2. Seamless Low-Angle Curved Map Viewport with Soft Lower Edge Fade */}
       <div
         className="relative w-full overflow-visible"
         style={{
@@ -35,29 +35,29 @@ export const UzbekistanDottedMap: React.FC = () => {
         <svg
           viewBox={`${VB_X} ${VB_Y} ${VB_W} ${VB_H}`}
           className="w-full h-auto overflow-visible block"
-          style={{ maxHeight: 'min(56vh, 500px)' }}
+          style={{ maxHeight: 'min(50vh, 440px)' }}
         >
           <defs>
             {/* Soft glow for regional beacon cores */}
             <filter id="hub-emerald-glow" x="-50%" y="-50%" width="200%" height="200%">
               <feDropShadow dx="0" dy="0" stdDeviation="2.5" floodColor="#0E9F6E" floodOpacity="0.8" />
             </filter>
-            {/* Subtle 3D floor shadow */}
+            {/* Curved Earth floor shadow */}
             <radialGradient id="map-floor-shadow" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="#000000" stopOpacity="0.12" />
+              <stop offset="0%" stopColor="#000000" stopOpacity="0.10" />
               <stop offset="100%" stopColor="#000000" stopOpacity="0" />
             </radialGradient>
           </defs>
 
-          {/* 3D Grounding Shadow */}
-          <ellipse cx="500" cy="510" rx="420" ry="30" fill="url(#map-floor-shadow)" className="dark:opacity-40" />
+          {/* Curved Oval Earth Grounding Shadow */}
+          <ellipse cx="500" cy="495" rx="440" ry="22" fill="url(#map-floor-shadow)" className="dark:opacity-35" />
 
-          {/* 3. Dotted Matrix forming True 3D Isometric Uzbekistan Silhouette (853 points) */}
+          {/* 3. Dotted Matrix forming Low-Angle Curved Oval Uzbekistan (853 points) */}
           <g className="dots-layer pointer-events-none">
             {UZBEKISTAN_DOTS.map((dot, idx) => {
-              // Scale and optical depth from 3D isometric model
-              const r = 1.7 * dot.s;
-              const opacity = Math.min(0.78, Math.max(0.38, 0.42 + (dot.s - 0.9) * 0.35));
+              // Perspective scale and optical depth from low-angle projection
+              const r = 1.65 * dot.s;
+              const opacity = Math.min(0.78, Math.max(0.38, 0.40 + (dot.s - 0.85) * 0.35));
 
               return (
                 <circle
@@ -76,8 +76,8 @@ export const UzbekistanDottedMap: React.FC = () => {
           <g className="hubs-layer">
             {UZBEKISTAN_HUBS.map((hub) => {
               const isHovered = activeHub?.id === hub.id;
-              const baseR = 2.7 * hub.scale;
-              const haloR = isHovered ? 7.2 * hub.scale : 4.8 * hub.scale;
+              const baseR = 2.6 * hub.scale;
+              const haloR = isHovered ? 7.0 * hub.scale : 4.6 * hub.scale;
 
               return (
                 <g
@@ -87,9 +87,9 @@ export const UzbekistanDottedMap: React.FC = () => {
                   onMouseLeave={() => setActiveHub(null)}
                 >
                   {/* Comfortable touch/cursor target */}
-                  <circle cx={hub.x} cy={hub.y} r={20} fill="transparent" />
+                  <circle cx={hub.x} cy={hub.y} r={18} fill="transparent" />
 
-                  {/* Outer beacon aura */}
+                  {/* Outer beacon aura halo */}
                   <circle
                     cx={hub.x}
                     cy={hub.y}
