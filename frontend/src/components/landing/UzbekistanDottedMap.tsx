@@ -8,56 +8,42 @@ import {
 export const UzbekistanDottedMap: React.FC = () => {
   const [activeHub, setActiveHub] = useState<MapHub | null>(null);
 
-  // Low-Angle Curved Flat-Oval Viewport Bounds
-  const VB_X = 10;
-  const VB_Y = 170;
-  const VB_W = 980;
-  const VB_H = 340;
+  // Exact Tight-Fitting Low-Angle Curved Viewport Bounds (Scaled Up & Shifted Up)
+  const VB_X = 15;
+  const VB_Y = 184;
+  const VB_W = 965;
+  const VB_H = 322;
 
   return (
-    <div className="relative w-full max-w-5xl mx-auto select-none mt-2 sm:mt-4">
-      {/* 1. Subtle 3D Curved Earth Depth Shadow under the floating map */}
-      <div
-        className="absolute bottom-1 left-1/2 -translate-x-1/2 w-[88%] h-10 bg-black/[0.05] dark:bg-black/25 rounded-full blur-2xl pointer-events-none"
-        aria-hidden
-      />
-
-      {/* 2. Seamless Low-Angle Curved Map Viewport with Soft Lower Edge Fade */}
+    <div className="relative w-full max-w-6xl xl:max-w-7xl mx-auto select-none">
+      {/* Seamless Low-Angle Curved Map Viewport with Soft Lower Edge Fade */}
       <div
         className="relative w-full overflow-visible"
         style={{
           maskImage:
-            'linear-gradient(to bottom, black 0%, black 88%, transparent 100%)',
+            'linear-gradient(to bottom, black 0%, black 90%, transparent 100%)',
           WebkitMaskImage:
-            'linear-gradient(to bottom, black 0%, black 88%, transparent 100%)',
+            'linear-gradient(to bottom, black 0%, black 90%, transparent 100%)',
         }}
       >
         <svg
           viewBox={`${VB_X} ${VB_Y} ${VB_W} ${VB_H}`}
           className="w-full h-auto overflow-visible block"
-          style={{ maxHeight: 'min(50vh, 440px)' }}
+          style={{ maxHeight: 'min(62vh, 560px)' }}
         >
           <defs>
             {/* Soft glow for regional beacon cores */}
             <filter id="hub-emerald-glow" x="-50%" y="-50%" width="200%" height="200%">
               <feDropShadow dx="0" dy="0" stdDeviation="2.5" floodColor="#0E9F6E" floodOpacity="0.8" />
             </filter>
-            {/* Curved Earth floor shadow */}
-            <radialGradient id="map-floor-shadow" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="#000000" stopOpacity="0.10" />
-              <stop offset="100%" stopColor="#000000" stopOpacity="0" />
-            </radialGradient>
           </defs>
 
-          {/* Curved Oval Earth Grounding Shadow */}
-          <ellipse cx="500" cy="495" rx="440" ry="22" fill="url(#map-floor-shadow)" className="dark:opacity-35" />
-
-          {/* 3. Dotted Matrix forming Low-Angle Curved Oval Uzbekistan (853 points) */}
+          {/* Dotted Matrix forming Low-Angle Curved Oval Uzbekistan (853 points, Enriched Sizing) */}
           <g className="dots-layer pointer-events-none">
             {UZBEKISTAN_DOTS.map((dot, idx) => {
-              // Perspective scale and optical depth from low-angle projection
-              const r = 1.65 * dot.s;
-              const opacity = Math.min(0.78, Math.max(0.38, 0.40 + (dot.s - 0.85) * 0.35));
+              // Enriched dot sizing for prominent high-resolution display
+              const r = 1.85 * dot.s;
+              const opacity = Math.min(0.82, Math.max(0.40, 0.42 + (dot.s - 0.85) * 0.36));
 
               return (
                 <circle
@@ -66,7 +52,7 @@ export const UzbekistanDottedMap: React.FC = () => {
                   cy={dot.y}
                   r={+r.toFixed(2)}
                   opacity={+opacity.toFixed(2)}
-                  className="fill-[#64748B] dark:fill-white/35 transition-colors duration-150"
+                  className="fill-[#64748B] dark:fill-white/40 transition-colors duration-150"
                 />
               );
             })}
@@ -76,8 +62,8 @@ export const UzbekistanDottedMap: React.FC = () => {
           <g className="hubs-layer">
             {UZBEKISTAN_HUBS.map((hub) => {
               const isHovered = activeHub?.id === hub.id;
-              const baseR = 2.6 * hub.scale;
-              const haloR = isHovered ? 7.0 * hub.scale : 4.6 * hub.scale;
+              const baseR = 2.9 * hub.scale;
+              const haloR = isHovered ? 7.6 * hub.scale : 5.0 * hub.scale;
 
               return (
                 <g
@@ -87,7 +73,7 @@ export const UzbekistanDottedMap: React.FC = () => {
                   onMouseLeave={() => setActiveHub(null)}
                 >
                   {/* Comfortable touch/cursor target */}
-                  <circle cx={hub.x} cy={hub.y} r={18} fill="transparent" />
+                  <circle cx={hub.x} cy={hub.y} r={20} fill="transparent" />
 
                   {/* Outer beacon aura halo */}
                   <circle
