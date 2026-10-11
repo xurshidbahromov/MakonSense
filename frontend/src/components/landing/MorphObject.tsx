@@ -77,263 +77,402 @@ const fibSphere = (n: number, r: number, c: Vec3 = [0, 0, 0]): Vec3[] => {
 
 /* --------------------------- formations --------------------------- */
 /* Hero: Pure Round Sphere without outer ring ("dumaloq ringsiz")     */
-/* Sections 2-8: Tall, Slender, Minimalist Vertical Archetypes        */
+/* --------------------------- formations --------------------------- */
+/* 8 Completely Distinct, Signature 3D Archetypes Tailored to Each Section:
+   1. Hero (globe)           -> Grand Geodesic Fibonacci Spatial Sphere with Tashkent Beacon
+   2. ScrollExperience (layers) -> 3 Floating Geospatial Strata / Disc Decks with Vertical Laser Links
+   3. ProblemSolution (cube)  -> 3D Isometric Tesseract / Hypercube with Inner Glowing Core
+   4. LocationCompare (towers)-> Dual Comparative Monolith Towers Side-by-Side with Analytical Bridge
+   5. HowItWorks (steps)      -> Ascending 3-Tier Spiral Helix Platform (Step 01 -> Step 02 -> Step 03)
+   6. IndustrySolutions (clusters)-> Multi-Satellite Constellation Network (Central Hub + 4 Orbital Pods)
+   7. RoiCalculator (bars)    -> 3D Exponential Financial Bar Matrix with Curved Parabolic Growth Arc
+   8. FaqSection (ring)       -> Tri-Axial Precision Gyroscope / Armillary Sphere with Diamond Center
+   9. Footer (wordmark)       -> Illuminated 10-Letter MakonSense Wordmark
+*/
 
 const buildFormations = (): Record<MorphShape, Formation> => {
-  // 1. Hero: Pure Geodesic Sphere (Mukammal Dumaloq Shar — atrofidagi ringsiz)
-  // Perfectly round spherical particle orb with zero outer rings or orbits
+  // 1. Hero: Grand Geodesic Fibonacci Spatial Sphere (Mukammal Dumaloq Shar)
   const globe = (() => {
-    const pts = fibSphere(N, 0.98);
+    const pts = fibSphere(N, 1.08);
     const acc = pts.map((p) => {
-      // Highlight Tashkent coordinates (~41.31° N, ~69.28° E) and gentle equator
+      // Beacon at Tashkent coordinates (~41.31° N, ~69.28° E)
       if (p[1] > 0.55 && p[0] > 0.25) return 0.95;
-      if (Math.abs(p[1]) < 0.08) return 0.45;
-      return 0.04;
+      // Glowing equatorial ring band
+      if (Math.abs(p[1]) < 0.08) return 0.60;
+      return 0.10;
     });
     return fill(pts, acc);
   })();
 
-  // 2. ScrollExperience: Tall Fluted Architectural Column (Baland Qavatli Kolon)
-  // Slender vertical column with 6 horizontal calibration rings and 6 vertical spines
+  // 2. ScrollExperience: 3 Floating Geospatial Strata / Disc Decks (3 Ta Mustaqil Qatlam Disk)
+  // 3 distinct horizontal spatial map strata stacked in 3D:
+  // Layer 1 (Bottom, Transit): y = -0.75, radius = 1.15 disc with grid
+  // Layer 2 (Middle, Radar/Buffer): y = 0.0, radius = 0.95 disc with radial spokes
+  // Layer 3 (Top, MakonScore/Revenue): y = +0.75, radius = 0.75 disc with glowing beacon
   const layers = (() => {
     const pts: Vec3[] = [];
     const acc: number[] = [];
-    const r = 0.62;
-    const numRings = 7;
-    for (let i = 0; i < numRings; i++) {
-      const t = i / (numRings - 1);
-      const y = -1.22 + t * 2.44;
-      const ring = circleRing(r, y, 32);
-      pts.push(...ring);
-      acc.push(...ring.map(() => (i === numRings - 1 ? 0.85 : i === 0 ? 0.3 : i === 3 ? 0.5 : 0.05)));
+
+    // Layer 1 (Bottom, Transit): y = -0.75
+    const r1 = 1.15;
+    const ring1Outer = circleRing(r1, -0.75, 42);
+    const ring1Inner = circleRing(r1 * 0.55, -0.75, 26);
+    pts.push(...ring1Outer, ...ring1Inner);
+    acc.push(...ring1Outer.map(() => 0.15), ...ring1Inner.map(() => 0.35));
+
+    // Layer 2 (Middle, Buffer): y = 0.0
+    const r2 = 0.95;
+    const ring2Outer = circleRing(r2, 0.0, 36);
+    const ring2Inner = circleRing(r2 * 0.50, 0.0, 22);
+    pts.push(...ring2Outer, ...ring2Inner);
+    acc.push(...ring2Outer.map(() => 0.40), ...ring2Inner.map(() => 0.65));
+
+    // Layer 3 (Top, Revenue/Score): y = +0.75
+    const r3 = 0.75;
+    const ring3Outer = circleRing(r3, 0.75, 30);
+    const ring3Inner = circleRing(r3 * 0.45, 0.75, 18);
+    pts.push(...ring3Outer, ...ring3Inner);
+    acc.push(...ring3Outer.map(() => 0.75), ...ring3Inner.map(() => 0.95));
+
+    // Pinnacle apex beacon on top of Layer 3
+    const apexPin = segment([0, 0.75, 0], [0, 1.15, 0], 8);
+    pts.push(...apexPin);
+    acc.push(...apexPin.map((p) => (p[1] > 1.05 ? 0.98 : 0.6)));
+
+    // 4 vertical laser pillars connecting the 3 strata
+    for (let i = 0; i < 4; i++) {
+      const a = (i / 4) * Math.PI * 2;
+      const x = Math.cos(a) * 0.55;
+      const z = Math.sin(a) * 0.55;
+      const vBeam = segment([x, -0.75, z], [x, 0.75, z], 14);
+      pts.push(...vBeam);
+      acc.push(...vBeam.map(() => 0.25));
     }
-    // 6 vertical fluted column ribs
-    for (let cIdx = 0; cIdx < 6; cIdx++) {
-      const a = (cIdx / 6) * Math.PI * 2;
-      const px = Math.cos(a) * r;
-      const pz = Math.sin(a) * r;
-      const vLine = segment([px, -1.22, pz], [px, 1.22, pz], 14);
-      pts.push(...vLine);
-      acc.push(...vLine.map((_, idx) => (idx === vLine.length - 1 ? 0.8 : 0.15)));
-    }
+
     return fill(pts, acc);
   })();
 
-  // 3. ProblemSolution: Tall Hexagonal Obelisk Prism (Baland Olti Qirrali Prizma)
-  // Tall crystalline prism: 6 vertical corner edges, 3 hex tiers, apex pyramid cap
+  // 3. ProblemSolution: 3D Isometric Tesseract / Hypercube (Hajmdor 3D Kub va Ichki Yadrosi)
+  // An unmistakable 3D wireframe hypercube: outer cube (size = 1.6) with an inner glowing core cube (size = 0.8)
   const cube = (() => {
     const pts: Vec3[] = [];
     const acc: number[] = [];
-    const r = 0.66;
-    const hexVerts: [number, number][] = [];
-    for (let i = 0; i < 6; i++) {
-      const a = (i / 6) * Math.PI * 2;
-      hexVerts.push([Math.cos(a) * r, Math.sin(a) * r]);
+
+    const S = 0.82; // half-size of outer cube
+    const s = 0.40; // half-size of inner cube
+
+    // 8 outer vertices
+    const outerVerts: Vec3[] = [
+      [-S, -S, -S], [S, -S, -S], [S, S, -S], [-S, S, -S],
+      [-S, -S, S], [S, -S, S], [S, S, S], [-S, S, S],
+    ];
+
+    // 8 inner vertices
+    const innerVerts: Vec3[] = [
+      [-s, -s, -s], [s, -s, -s], [s, s, -s], [-s, s, -s],
+      [-s, -s, s], [s, -s, s], [s, s, s], [-s, s, s],
+    ];
+
+    // 12 edges for a cube:
+    const edges = [
+      [0, 1], [1, 2], [2, 3], [3, 0], // bottom/back ring
+      [4, 5], [5, 6], [6, 7], [7, 4], // top/front ring
+      [0, 4], [1, 5], [2, 6], [3, 7], // connectors
+    ];
+
+    // Build outer cube edges
+    edges.forEach(([i, j]) => {
+      const e = segment(outerVerts[i], outerVerts[j], 10);
+      pts.push(...e);
+      acc.push(...e.map(() => 0.15));
+    });
+
+    // Build inner cube edges
+    edges.forEach(([i, j]) => {
+      const e = segment(innerVerts[i], innerVerts[j], 7);
+      pts.push(...e);
+      acc.push(...e.map(() => 0.75));
+    });
+
+    // 8 diagonal hypercube rays connecting outer vertices to inner vertices
+    for (let k = 0; k < 8; k++) {
+      const ray = segment(outerVerts[k], innerVerts[k], 7);
+      pts.push(...ray);
+      acc.push(...ray.map((_, idx) => (idx === ray.length - 1 ? 0.95 : 0.35)));
     }
-    // 6 vertical corner edges running full height
-    hexVerts.forEach(([hx, hz]) => {
-      const edge = segment([hx, -1.22, hz], [hx, 1.05, hz], 24);
-      pts.push(...edge);
-      acc.push(...edge.map((_, idx) => (idx === edge.length - 1 ? 0.8 : 0.15)));
-    });
-    // 3 horizontal hexagon rings
-    [-1.22, 0.0, 1.05].forEach((yTier) => {
-      for (let i = 0; i < 6; i++) {
-        const [x1, z1] = hexVerts[i];
-        const [x2, z2] = hexVerts[(i + 1) % 6];
-        const seg = segment([x1, yTier, z1], [x2, yTier, z2], 7);
-        pts.push(...seg);
-        acc.push(...seg.map(() => (yTier > 0.5 ? 0.6 : 0.1)));
-      }
-    });
-    // Top pyramid apex needle
-    const topApex: Vec3 = [0, 1.34, 0];
-    hexVerts.forEach(([hx, hz]) => {
-      const cap = segment([hx, 1.05, hz], topApex, 9);
-      pts.push(...cap);
-      acc.push(...cap.map((p) => (p[1] > 1.2 ? 0.95 : 0.4)));
-    });
+
+    // Glowing core center node
+    pts.push([0, 0, 0]);
+    acc.push(0.98);
+
     return fill(pts, acc);
   })();
 
-  // 4. LocationCompareSection: Tall Hourglass Bicone (Baland Bikonus / Qumsoat)
-  // Two cones meeting at waist: slender waist (r = 0.16) flaring to bases (r = 0.74)
+  // 4. LocationCompareSection: Dual Side-by-Side Comparison Monoliths (Yonma-Yon Taqqoslash Minoralari)
+  // Two distinct columns standing side-by-side:
+  // Tower A (Winner, left at X = -0.55): Tall, full height Y in [-0.95, +1.0], crowned with pyramid apex
+  // Tower B (Competitor, right at X = +0.55): Shorter, height Y in [-0.95, +0.3]
+  // Joined by a glowing analytical bridge arc at mid-height
   const towers = (() => {
     const pts: Vec3[] = [];
     const acc: number[] = [];
-    const numRings = 9;
-    for (let i = 0; i < numRings; i++) {
-      const t = i / (numRings - 1);
-      const y = -1.22 + t * 2.44;
-      const r = 0.16 + Math.abs(y / 1.22) * 0.58;
-      const ring = circleRing(r, y, 26);
+
+    // --- Tower A (Winner: Amir Temur, X = -0.55) ---
+    const cxA = -0.55;
+    const rA = 0.36;
+    // 6 horizontal rings along Tower A
+    const numRingsA = 7;
+    for (let i = 0; i < numRingsA; i++) {
+      const t = i / (numRingsA - 1);
+      const y = -0.95 + t * 1.90;
+      const ring = circleRing(rA, y, 22, cxA, 0);
       pts.push(...ring);
-      const isWaist = Math.abs(y) < 0.2;
-      const isTop = y > 1.0;
-      acc.push(...ring.map(() => (isTop ? 0.9 : isWaist ? 0.75 : 0.08)));
+      acc.push(...ring.map(() => (t > 0.8 ? 0.85 : 0.25)));
     }
-    // 6 vertical diagonal spiral ribs along the cone mantle
-    for (let sIdx = 0; sIdx < 6; sIdx++) {
-      const a0 = (sIdx / 6) * Math.PI * 2;
-      const rib: Vec3[] = [];
-      const ribAcc: number[] = [];
-      for (let j = 0; j < 18; j++) {
-        const t = j / 17;
-        const y = -1.22 + t * 2.44;
-        const r = 0.16 + Math.abs(y / 1.22) * 0.58;
-        const a = a0 + t * Math.PI * 0.6;
-        rib.push([Math.cos(a) * r, y, Math.sin(a) * r]);
-        ribAcc.push(t > 0.85 ? 0.8 : 0.15);
-      }
-      pts.push(...rib);
-      acc.push(...ribAcc);
+    // 4 vertical flutes for Tower A
+    for (let c = 0; c < 4; c++) {
+      const a = (c / 4) * Math.PI * 2;
+      const px = cxA + Math.cos(a) * rA;
+      const pz = Math.sin(a) * rA;
+      const vLine = segment([px, -0.95, pz], [px, 0.95, pz], 14);
+      pts.push(...vLine);
+      acc.push(...vLine.map((_, idx) => (idx === vLine.length - 1 ? 0.95 : 0.2)));
     }
+    // Apex crown needle on Tower A
+    const apexA: Vec3 = [cxA, 1.25, 0];
+    for (let c = 0; c < 4; c++) {
+      const a = (c / 4) * Math.PI * 2;
+      const cap = segment([cxA + Math.cos(a) * rA, 0.95, Math.sin(a) * rA], apexA, 6);
+      pts.push(...cap);
+      acc.push(...cap.map(() => 0.95));
+    }
+
+    // --- Tower B (Competitor: Chilonzor, X = +0.55) ---
+    const cxB = 0.55;
+    const rB = 0.36;
+    // 4 horizontal rings along Tower B (shorter height, up to Y = 0.30)
+    const numRingsB = 4;
+    for (let i = 0; i < numRingsB; i++) {
+      const t = i / (numRingsB - 1);
+      const y = -0.95 + t * 1.25;
+      const ring = circleRing(rB, y, 20, cxB, 0);
+      pts.push(...ring);
+      acc.push(...ring.map(() => 0.12));
+    }
+    // 4 vertical flutes for Tower B
+    for (let c = 0; c < 4; c++) {
+      const a = (c / 4) * Math.PI * 2;
+      const px = cxB + Math.cos(a) * rB;
+      const pz = Math.sin(a) * rB;
+      const vLine = segment([px, -0.95, pz], [px, 0.30, pz], 10);
+      pts.push(...vLine);
+      acc.push(...vLine.map(() => 0.12));
+    }
+
+    // --- Dynamic Analytical Comparison Bridge connecting Tower A and Tower B ---
+    [-0.20, 0.15].forEach((yBridge) => {
+      const bridge = segment([cxA + rA, yBridge, 0], [cxB - rB, yBridge, 0], 12);
+      pts.push(...bridge);
+      acc.push(...bridge.map(() => 0.85));
+    });
+
     return fill(pts, acc);
   })();
 
-  // 5. HowItWorks: Tall Ascending Double Helix Pillar (Baland Dinamik Spiral Ustun)
-  // Slender vertical double helix climbing from Y = -1.22 to Y = +1.22, radius 0.60
+  // 5. HowItWorks: Ascending 3-Tier Spiral Helix Platform (3 Bosqichli Spiral Zinapoya)
+  // 3 distinct ascending circular landing pads arranged in a rising corkscrew (Step 1 -> Step 2 -> Step 3)
   const steps = (() => {
     const pts: Vec3[] = [];
     const acc: number[] = [];
-    const r = 0.60;
-    const count = 125;
-    for (let i = 0; i < count; i++) {
-      const t = i / (count - 1);
-      const theta = -Math.PI * 2.5 + t * Math.PI * 5.0;
-      const y = -1.22 + t * 2.44;
-      // Strand 1
-      pts.push([Math.cos(theta) * r, y, Math.sin(theta) * r]);
-      acc.push(t > 0.85 ? 0.9 : (i % 16 === 0 ? 0.6 : 0.1));
-      // Strand 2
-      pts.push([Math.cos(theta + Math.PI) * r, y, Math.sin(theta + Math.PI) * r]);
-      acc.push(t > 0.85 ? 0.8 : (i % 16 === 0 ? 0.4 : 0.1));
+
+    const padConfigs = [
+      { cx: -0.58, cy: -0.68, cz: -0.25, r: 0.44, accBase: 0.20 }, // Step 01
+      { cx: 0.48, cy: -0.05, cz: -0.15, r: 0.44, accBase: 0.50 },  // Step 02
+      { cx: -0.08, cy: 0.65, cz: 0.38, r: 0.44, accBase: 0.90 },   // Step 03 (Summit)
+    ];
+
+    padConfigs.forEach((cfg) => {
+      const outer = circleRing(cfg.r, cfg.cy, 26, cfg.cx, cfg.cz);
+      const inner = circleRing(cfg.r * 0.45, cfg.cy, 16, cfg.cx, cfg.cz);
+      pts.push(...outer, ...inner);
+      acc.push(
+        ...outer.map(() => cfg.accBase),
+        ...inner.map(() => Math.min(0.98, cfg.accBase + 0.2))
+      );
+      // Support pillar dropping down
+      const pillar = segment([cfg.cx, cfg.cy, cfg.cz], [cfg.cx, -1.05, cfg.cz], 10);
+      pts.push(...pillar);
+      acc.push(...pillar.map(() => 0.15));
+    });
+
+    // Sweeping ascending spiral helix ribbon running through the 3 pads
+    for (let i = 0; i < 70; i++) {
+      const t = i / 69;
+      const angle = -Math.PI * 1.2 + t * Math.PI * 2.8;
+      const radHelix = 0.78;
+      const y = -0.85 + t * 1.70;
+      pts.push([Math.cos(angle) * radHelix, y, Math.sin(angle) * radHelix]);
+      acc.push(t > 0.85 ? 0.95 : 0.30);
     }
-    // Cross connecting rungs between helical strands
-    for (let i = 0; i < 14; i++) {
-      const t = i / 13;
-      const theta = -Math.PI * 2.5 + t * Math.PI * 5.0;
-      const y = -1.22 + t * 2.44;
-      const p1: Vec3 = [Math.cos(theta) * r, y, Math.sin(theta) * r];
-      const p2: Vec3 = [Math.cos(theta + Math.PI) * r, y, Math.sin(theta + Math.PI) * r];
-      const cross = segment(p1, p2, 4);
-      pts.push(...cross);
-      acc.push(...cross.map(() => 0.25));
-    }
+
     return fill(pts, acc);
   })();
 
-  // 6. IndustrySolutions: Tall Diamond Needle Bipyramid (Baland Cho'ziq Olmos Shpil)
-  // Slender faceted diamond needle with top apex at Y = 1.34 and bottom apex at Y = -1.34
+  // 6. IndustrySolutions: Multi-Satellite Constellation Network (Markaziy Hub va 4 Ta Sputnik)
+  // Central urban intelligence hub with 4 satellite cluster pods at 90° intervals connected by orbital links
   const clusters = (() => {
     const pts: Vec3[] = [];
     const acc: number[] = [];
-    const top: Vec3 = [0, 1.34, 0];
-    const bot: Vec3 = [0, -1.34, 0];
-    const r = 0.66;
-    const midVerts: Vec3[] = [
-      [r, 0, 0],
-      [0, 0, r],
-      [-r, 0, 0],
-      [0, 0, -r],
+
+    // Central core hub
+    const centerPts = fibSphere(42, 0.40);
+    pts.push(...centerPts);
+    acc.push(...centerPts.map(() => 0.85));
+
+    // 4 Satellite cluster pods (HoReCa, Retail, Dorixona, Mulk)
+    const satellites = [
+      { pos: [0.95, 0.35, 0.0] as Vec3, r: 0.24, name: 'HoReCa' },
+      { pos: [0.0, -0.40, 0.95] as Vec3, r: 0.24, name: 'Retail' },
+      { pos: [-0.95, 0.28, 0.0] as Vec3, r: 0.24, name: 'Dorixona' },
+      { pos: [0.0, 0.42, -0.95] as Vec3, r: 0.24, name: 'Mulk' },
     ];
-    midVerts.forEach((v, i) => {
-      const next = midVerts[(i + 1) % 4];
-      const eTop = segment(top, v, 24);
-      const eBot = segment(bot, v, 24);
-      const eMid = segment(v, next, 16);
-      pts.push(...eTop, ...eBot, ...eMid);
-      acc.push(
-        ...eTop.map((p) => (p[1] > 0.8 ? 0.95 : 0.3)),
-        ...eBot.map(() => 0.15),
-        ...eMid.map(() => 0.5)
-      );
+
+    satellites.forEach((sat) => {
+      const satRing1 = circleRing(sat.r, sat.pos[1], 18, sat.pos[0], sat.pos[2]);
+      const satRing2: Vec3[] = [];
+      for (let i = 0; i < 16; i++) {
+        const a = (i / 16) * Math.PI * 2;
+        satRing2.push([sat.pos[0], sat.pos[1] + Math.sin(a) * sat.r, sat.pos[2] + Math.cos(a) * sat.r]);
+      }
+      pts.push(...satRing1, ...satRing2);
+      acc.push(...satRing1.map(() => 0.70), ...satRing2.map(() => 0.50));
+
+      // Laser connector ray from central hub to satellite
+      const beam = segment([0, 0, 0], sat.pos, 10);
+      pts.push(...beam);
+      acc.push(...beam.map(() => 0.35));
     });
-    // Equatorial inner ring
-    const midRing = circleRing(0.48, 0, 36);
-    pts.push(...midRing);
-    acc.push(...midRing.map((_, i) => (i % 6 === 0 ? 0.8 : 0.15)));
+
+    // 2 Large tilted orbital rings wrapping around the whole network
+    const orbit1: Vec3[] = [];
+    const orbit2: Vec3[] = [];
+    for (let i = 0; i < 40; i++) {
+      const a = (i / 40) * Math.PI * 2;
+      const ro = 1.10;
+      orbit1.push([Math.cos(a) * ro, Math.sin(a) * 0.35, Math.sin(a) * ro]);
+      orbit2.push([Math.sin(a) * ro, -Math.sin(a) * 0.35, Math.cos(a) * ro]);
+    }
+    pts.push(...orbit1, ...orbit2);
+    acc.push(...orbit1.map(() => 0.25), ...orbit2.map(() => 0.25));
+
     return fill(pts, acc);
   })();
 
-  // 7. RoiCalculator: Tall Hyperbolic Spindle (Baland Kavisli Giperbolik Minora)
-  // Slender hyperboloid: waist r = 0.22 at Y = 0, flaring to r = 0.72 at Y = +/-1.22
+  // 7. RoiCalculator: 3D Exponential Financial Bar Matrix (3D O'suvchi Moliyaviy Diagramma)
+  // 4 progressive 3D bar columns arranged left-to-right on an exponential curve with a glowing trendline
   const bars = (() => {
     const pts: Vec3[] = [];
     const acc: number[] = [];
-    const numRings = 10;
-    for (let i = 0; i < numRings; i++) {
-      const t = i / (numRings - 1);
-      const y = -1.22 + t * 2.44;
-      const r = Math.sqrt(0.24 * 0.24 + Math.pow(y * 0.54, 2));
-      const ring = circleRing(r, y, 28);
-      pts.push(...ring);
-      const isWaist = Math.abs(y) < 0.2;
-      const isTop = y > 0.9;
-      acc.push(...ring.map(() => (isTop ? 0.9 : isWaist ? 0.75 : 0.1)));
-    }
-    // 6 vertical hyperbolic generator lines
-    for (let gIdx = 0; gIdx < 6; gIdx++) {
-      const a0 = (gIdx / 6) * Math.PI * 2;
-      const vCurve: Vec3[] = [];
-      const vAcc: number[] = [];
-      for (let j = 0; j < 14; j++) {
-        const t = j / 13;
-        const y = -1.22 + t * 2.44;
-        const r = Math.sqrt(0.24 * 0.24 + Math.pow(y * 0.54, 2));
-        vCurve.push([Math.cos(a0) * r, y, Math.sin(a0) * r]);
-        vAcc.push(t > 0.85 ? 0.8 : 0.15);
+
+    const barConfigs = [
+      { x: -0.78, yTop: -0.42, accBar: 0.20 }, // Base capital
+      { x: -0.26, yTop: -0.10, accBar: 0.38 }, // Optimized
+      { x: 0.26, yTop: 0.36, accBar: 0.65 },  // Protected
+      { x: 0.78, yTop: 0.98, accBar: 0.95 },  // Max Return (Peak)
+    ];
+
+    const yBase = -0.95;
+    const w = 0.16; // half-width of each bar
+    const d = 0.16; // half-depth of each bar
+
+    barConfigs.forEach((cfg) => {
+      // 4 vertical edges for each 3D rectangular bar
+      const corners: [number, number][] = [
+        [cfg.x - w, -d], [cfg.x + w, -d], [cfg.x + w, d], [cfg.x - w, d]
+      ];
+      corners.forEach(([cx, cz]) => {
+        const edge = segment([cx, yBase, cz], [cx, cfg.yTop, cz], 12);
+        pts.push(...edge);
+        acc.push(...edge.map(() => cfg.accBar * 0.7));
+      });
+      // Top rectangular cap
+      for (let i = 0; i < 4; i++) {
+        const [x1, z1] = corners[i];
+        const [x2, z2] = corners[(i + 1) % 4];
+        const topEdge = segment([x1, cfg.yTop, z1], [x2, cfg.yTop, z2], 5);
+        pts.push(...topEdge);
+        acc.push(...topEdge.map(() => cfg.accBar));
       }
-      pts.push(...vCurve);
-      acc.push(...vAcc);
+    });
+
+    // Parabolic growth trendline curving gracefully over the bar tops
+    for (let i = 0; i < 40; i++) {
+      const t = i / 39;
+      const x = -0.92 + t * 1.84;
+      const y = -0.55 + Math.pow(t, 1.45) * 1.65;
+      const z = 0.20;
+      pts.push([x, y, z]);
+      acc.push(t > 0.75 ? 0.98 : 0.50);
     }
+
     return fill(pts, acc);
   })();
 
-  // 8. FaqSection: Tall Meridian Ellipses Nest (Baland Vertikal Meridian Halqalar)
-  // 3 tall vertical ellipses: height Y in [-1.22, 1.22], radius 0.62
+  // 8. FaqSection: Tri-Axial Precision Gyroscope / Armillary Sphere (3-O'qli Giroskopik Armillyar Sfera)
+  // Grand multi-gimbal scientific armillary sphere: 3 giant orthogonal rings + inner tilted gimbal + diamond center
   const ring = (() => {
     const pts: Vec3[] = [];
     const acc: number[] = [];
-    const rx = 0.62;
-    const ry = 1.22;
-    const steps = 64;
+    const R = 1.15;
+    const numRingPts = 56;
 
-    // Ellipse 1: Front vertical meridian (XY plane)
-    for (let i = 0; i < steps; i++) {
-      const a = (i / steps) * Math.PI * 2;
-      pts.push([Math.cos(a) * rx, Math.sin(a) * ry, 0]);
-      acc.push(i % 8 === 0 ? 0.75 : 0.1);
+    // Ring 1: Equator (XZ plane, y = 0)
+    for (let i = 0; i < numRingPts; i++) {
+      const a = (i / numRingPts) * Math.PI * 2;
+      pts.push([Math.cos(a) * R, 0, Math.sin(a) * R]);
+      acc.push(i % 7 === 0 ? 0.85 : 0.15);
     }
-    // Ellipse 2: Side vertical meridian (ZY plane)
-    for (let i = 0; i < steps; i++) {
-      const a = (i / steps) * Math.PI * 2;
-      pts.push([0, Math.sin(a) * ry, Math.cos(a) * rx]);
-      acc.push(i % 8 === 0 ? 0.75 : 0.1);
-    }
-    // Ellipse 3: Tilted 45° vertical meridian
-    for (let i = 0; i < steps; i++) {
-      const a = (i / steps) * Math.PI * 2;
-      const c = Math.cos(a) * rx;
-      pts.push([c * 0.707, Math.sin(a) * ry, c * 0.707]);
-      acc.push(i % 8 === 0 ? 0.75 : 0.1);
-    }
-    // Equator horizontal circle belt
-    const equator = circleRing(rx, 0, 48);
-    pts.push(...equator);
-    acc.push(...equator.map((_, i) => (i % 6 === 0 ? 0.8 : 0.1)));
 
-    // Center calm node
+    // Ring 2: Prime Meridian (XY plane, z = 0)
+    for (let i = 0; i < numRingPts; i++) {
+      const a = (i / numRingPts) * Math.PI * 2;
+      pts.push([Math.cos(a) * R, Math.sin(a) * R, 0]);
+      acc.push(i % 7 === 0 ? 0.85 : 0.15);
+    }
+
+    // Ring 3: Cross Meridian (ZY plane, x = 0)
+    for (let i = 0; i < numRingPts; i++) {
+      const a = (i / numRingPts) * Math.PI * 2;
+      pts.push([0, Math.sin(a) * R, Math.cos(a) * R]);
+      acc.push(i % 7 === 0 ? 0.85 : 0.15);
+    }
+
+    // Ring 4: Inner 45° tilted gimbal (r = 0.75)
+    for (let i = 0; i < 42; i++) {
+      const a = (i / 42) * Math.PI * 2;
+      const c = Math.cos(a) * 0.75;
+      const s = Math.sin(a) * 0.75;
+      pts.push([c * 0.707, s, c * 0.707]);
+      acc.push(i % 6 === 0 ? 0.90 : 0.30);
+    }
+
+    // Center pulsating diamond focal beacon
+    const topD: Vec3 = [0, 0.35, 0];
+    const botD: Vec3 = [0, -0.35, 0];
+    const midD: Vec3[] = [[0.22, 0, 0], [0, 0, 0.22], [-0.22, 0, 0], [0, 0, -0.22]];
+    midD.forEach((m) => {
+      const ray1 = segment(topD, m, 5);
+      const ray2 = segment(botD, m, 5);
+      pts.push(...ray1, ...ray2);
+      acc.push(...ray1.map(() => 0.95), ...ray2.map(() => 0.75));
+    });
     pts.push([0, 0, 0]);
-    acc.push(0.9);
+    acc.push(0.98);
 
     return fill(pts, acc);
   })();
 
   // 9. LandingFooter: Illuminated 10-Letter MakonSense Wordmark
-  // Exactly 300 dots forming M · a · k · o · n · S · e · n · s · e
-  // First 5 letters (Makon): crisp neutral starlight (acc = 0.15)
-  // Last 5 letters (Sense): signature emerald highlight (acc = 0.95)
   const wordmark: Formation = {
     pts: WORDMARK_PTS,
     accent: WORDMARK_ACCENT,
@@ -507,27 +646,22 @@ export const MorphObject: React.FC = () => {
         wordmarkSvg.style.opacity = `${(baseOp + absorb * 0.36).toFixed(3)}`;
       }
 
-      // Dynamic z-index: sits behind glass cards (z-2) in sections 1-8,
-      // steps forward (z-25) while landing into wordmark, and slips back (z-2) once fully absorbed
-      if (wordmarkWeight > 0.05 && absorb < 0.98) {
-        canvas.style.zIndex = '25';
-      } else {
-        canvas.style.zIndex = '2';
-      }
+      // Fixed at z-20: sits in front of section cards (z-10) to stay 100% crisp without backdrop-blur haze,
+      // and behind navbar (z-50). Pointer events pass through seamlessly.
+      canvas.style.zIndex = '20';
 
-      // Aspect-ratio aware scaling: wide letterform bounds for wordmark, square for columns
-      const aRx = A.shape === 'wordmark' ? A.width * 0.50 : A.size * 0.44;
-      const aRy = A.shape === 'wordmark' ? A.height * 0.50 : A.size * 0.44;
-      const bRx = B.shape === 'wordmark' ? B.width * 0.50 : B.size * 0.44;
-      const bRy = B.shape === 'wordmark' ? B.height * 0.50 : B.size * 0.44;
+      // Aspect-ratio aware scaling: wide letterform bounds for wordmark, enlarged 3D presence for archetypes
+      const aRx = A.shape === 'wordmark' ? A.width * 0.50 : A.size * 0.52;
+      const aRy = A.shape === 'wordmark' ? A.height * 0.50 : A.size * 0.52;
+      const bRx = B.shape === 'wordmark' ? B.width * 0.50 : B.size * 0.52;
+      const bRy = B.shape === 'wordmark' ? B.height * 0.50 : B.size * 0.52;
       const Rx = lerp(aRx, bRx, e);
       const Ry = lerp(aRy, bRy, e);
       const size = lerp(A.size, B.size, e);
 
-      // Calm, smooth flight arc (gentle direct glide when locking into wordmark)
+      // Smooth flight glide along the right-hand visual corridor
       const flight = Math.sin(e * Math.PI); // 0 when locked on anchor, 1 mid-flight
-      const curveX = (B.shape === 'wordmark' || A.shape === 'wordmark') ? 0 : -flight * Math.min(50, vw * 0.035);
-      const cx = lerp(A.cx, B.cx, e) + curveX;
+      const cx = lerp(A.cx, B.cx, e);
       const cy = lerp(A.cy, B.cy, e);
 
       /* -------- intro assembly -------- */
@@ -585,26 +719,27 @@ export const MorphObject: React.FC = () => {
       order.sort((i, j) => sz[i] - sz[j]);
 
       const dark = document.documentElement.classList.contains('dark');
-      const base = dark ? [253, 253, 253] : [17, 17, 17];
-      const scale = clamp(size / 380, 0.85, 1.45);
+      const base = dark ? [255, 255, 255] : [17, 17, 17];
+      const scale = clamp(size / 340, 1.0, 1.65);
 
-      /* -------- Render Pure Elegant Subtle 3D Dots & Ambient Halos -------- */
-      // Whisper-quiet ambient presence in sections; plunging into letters & vanishing at footer
+      /* -------- Render Crisp, High-Definition 3D Dots & Emerald Glow -------- */
       for (let n = 0; n < N; n++) {
         const k = order[n];
         const depth = clamp((sz[k] + 1.4) / 2.8);
         const acc = sa[k];
-        const alpha = (0.07 + wordmarkWeight * 0.15 + depth * 0.36 + acc * 0.18) * globalAlpha * dotVisibility;
-        const rad = (0.75 + depth * 0.85 + acc * 0.65) * scale * dotScale;
+        // Crisp, high-contrast alpha: front dots are vivid (0.75 - 0.95); back dots have tangible depth (0.30 - 0.45)
+        const alpha = (0.28 + wordmarkWeight * 0.12 + depth * 0.52 + acc * 0.20) * globalAlpha * dotVisibility;
+        // Distinct, sharp 3D spherical nodes (radius ~ 1.60px to 4.2px) with crisp geometry
+        const rad = (1.60 + depth * 1.65 + acc * 0.90) * scale * dotScale;
         const r = Math.round(lerp(base[0], ACCENT[0], acc));
         const g = Math.round(lerp(base[1], ACCENT[1], acc));
         const bl = Math.round(lerp(base[2], ACCENT[2], acc));
 
-        // Soft, refined emerald radial aura for accented nodes ("Sense" portion)
-        if (acc > 0.35 && dotVisibility > 0.08) {
-          ctx.fillStyle = `rgba(14,159,110,${0.09 * alpha * dotVisibility})`;
+        // Refined emerald aura for accented nodes
+        if (acc > 0.25 && dotVisibility > 0.08) {
+          ctx.fillStyle = `rgba(14,159,110,${0.28 * alpha * dotVisibility})`;
           ctx.beginPath();
-          ctx.arc(sx[k], sy[k], rad * 2.5, 0, Math.PI * 2);
+          ctx.arc(sx[k], sy[k], rad * 2.8, 0, Math.PI * 2);
           ctx.fill();
         }
 
@@ -628,7 +763,7 @@ export const MorphObject: React.FC = () => {
     <canvas
       ref={canvasRef}
       aria-hidden
-      className="hidden lg:block fixed inset-0 z-[2] pointer-events-none"
+      className="hidden lg:block fixed inset-0 z-[20] pointer-events-none"
     />
   );
 };

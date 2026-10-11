@@ -32,7 +32,7 @@ export const LandingPage: React.FC = () => {
       {/* Reusable Silky Emerald Atmospheric Background (fixed at z-0) */}
       <AmbientBackground />
 
-      {/* Scroll-driven 3D Morphing Object (fixed at z-[2] - sits directly behind content layer) */}
+      {/* Scroll-driven 3D Morphing Object (fixed at z-[20] - crisp and unblurred along the right side) */}
       <MorphObject />
 
       {/* Content Layer (relative z-10, safely above ambient background and 3D hologram) */}
