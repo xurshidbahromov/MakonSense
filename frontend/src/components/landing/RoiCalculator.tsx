@@ -46,7 +46,7 @@ export const RoiCalculator: React.FC = () => {
             <MorphAnchor shape="bars" className="w-[520px] h-[520px] lg:w-[580px] lg:h-[580px] xl:w-[640px] xl:h-[640px]" />
           </div>
 
-          <div className="relative z-10 p-8 sm:p-12 rounded-3xl bg-white/35 dark:bg-[#161616]/35 backdrop-blur-md backdrop-saturate-[150%] border-2 border-white/80 dark:border-white/[0.05] shadow-none dark:shadow-none grid grid-cols-1 lg:grid-cols-2 gap-0">
+          <div className="relative z-10 p-8 sm:p-12 rounded-3xl bg-white/35 dark:bg-[#161616]/35 backdrop-blur-[2px] backdrop-saturate-[150%] border-2 border-white/80 dark:border-white/[0.05] shadow-none dark:shadow-none grid grid-cols-1 lg:grid-cols-2 gap-0">
 
           {/* Left: Slider */}
           <div className="lg:pr-20 pb-12 lg:pb-0">

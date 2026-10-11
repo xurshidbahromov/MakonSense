@@ -74,7 +74,7 @@ export const HowItWorks: React.FC = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.5, delay: 0.12 + idx * 0.1 }}
-              className="p-8 rounded-3xl bg-white/35 dark:bg-[#161616]/35 backdrop-blur-md backdrop-saturate-[150%] border-2 border-white/80 dark:border-white/[0.05] shadow-none dark:shadow-none flex flex-col justify-between"
+              className="p-8 rounded-3xl bg-white/35 dark:bg-[#161616]/35 backdrop-blur-[2px] backdrop-saturate-[150%] border-2 border-white/80 dark:border-white/[0.05] shadow-none dark:shadow-none flex flex-col justify-between"
             >
               <div>
                 <div className="flex items-center justify-between mb-6">

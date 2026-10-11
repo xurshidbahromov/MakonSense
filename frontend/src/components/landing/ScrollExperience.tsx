@@ -73,7 +73,7 @@ export const ScrollExperience: React.FC = () => {
             <MorphAnchor shape="layers" className="w-[520px] h-[520px] lg:w-[580px] lg:h-[580px] xl:w-[640px] xl:h-[640px]" />
           </div>
 
-          <div className="relative z-10 rounded-3xl bg-white/35 dark:bg-[#161616]/35 backdrop-blur-md backdrop-saturate-[150%] border-2 border-white/80 dark:border-white/[0.05] p-6 sm:p-10 divide-y divide-black/[0.05] dark:divide-white/[0.07] shadow-none dark:shadow-none">
+          <div className="relative z-10 rounded-3xl bg-white/35 dark:bg-[#161616]/35 backdrop-blur-[2px] backdrop-saturate-[150%] border-2 border-white/80 dark:border-white/[0.05] p-6 sm:p-10 divide-y divide-black/[0.05] dark:divide-white/[0.07] shadow-none dark:shadow-none">
           {STAGES.map((stage, idx) => (
             <motion.div
               key={idx}

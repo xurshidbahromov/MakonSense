@@ -91,14 +91,14 @@ const fibSphere = (n: number, r: number, c: Vec3 = [0, 0, 0]): Vec3[] => {
 */
 
 const buildFormations = (): Record<MorphShape, Formation> => {
-  // 1. Hero: Grand Geodesic Fibonacci Spatial Sphere (Mukammal Dumaloq Shar)
+  // 1. Hero: Geodesic Fibonacci Spatial Sphere (Dumaloq Shar)
   const globe = (() => {
-    const pts = fibSphere(N, 1.08);
+    const pts = fibSphere(N, 1.0);
     const acc = pts.map((p) => {
       // Beacon at Tashkent coordinates (~41.31° N, ~69.28° E)
-      if (p[1] > 0.55 && p[0] > 0.25) return 0.95;
+      if (p[1] > 0.50 && p[0] > 0.22) return 0.95;
       // Glowing equatorial ring band
-      if (Math.abs(p[1]) < 0.08) return 0.60;
+      if (Math.abs(p[1]) < 0.075) return 0.60;
       return 0.10;
     });
     return fill(pts, acc);
@@ -646,9 +646,13 @@ export const MorphObject: React.FC = () => {
         wordmarkSvg.style.opacity = `${(baseOp + absorb * 0.36).toFixed(3)}`;
       }
 
-      // Fixed at z-20: sits in front of section cards (z-10) to stay 100% crisp without backdrop-blur haze,
-      // and behind navbar (z-50). Pointer events pass through seamlessly.
-      canvas.style.zIndex = '20';
+      // Background layer (z-1): sits cleanly behind all section cards and text.
+      // Elevates to z-25 only when assembling into the footer wordmark.
+      if (wordmarkWeight > 0.05 && absorb < 0.98) {
+        canvas.style.zIndex = '25';
+      } else {
+        canvas.style.zIndex = '1';
+      }
 
       // Aspect-ratio aware scaling: wide letterform bounds for wordmark, enlarged 3D presence for archetypes
       const aRx = A.shape === 'wordmark' ? A.width * 0.50 : A.size * 0.52;
@@ -719,27 +723,27 @@ export const MorphObject: React.FC = () => {
       order.sort((i, j) => sz[i] - sz[j]);
 
       const dark = document.documentElement.classList.contains('dark');
-      const base = dark ? [255, 255, 255] : [17, 17, 17];
-      const scale = clamp(size / 340, 1.0, 1.65);
+      const base = dark ? [253, 253, 253] : [17, 17, 17];
+      const scale = clamp(size / 380, 0.85, 1.35);
 
-      /* -------- Render Crisp, High-Definition 3D Dots & Emerald Glow -------- */
+      /* -------- Render Pure Elegant Fine 3D Dots & Subtle Halos -------- */
       for (let n = 0; n < N; n++) {
         const k = order[n];
         const depth = clamp((sz[k] + 1.4) / 2.8);
         const acc = sa[k];
-        // Crisp, high-contrast alpha: front dots are vivid (0.75 - 0.95); back dots have tangible depth (0.30 - 0.45)
-        const alpha = (0.28 + wordmarkWeight * 0.12 + depth * 0.52 + acc * 0.20) * globalAlpha * dotVisibility;
-        // Distinct, sharp 3D spherical nodes (radius ~ 1.60px to 4.2px) with crisp geometry
-        const rad = (1.60 + depth * 1.65 + acc * 0.90) * scale * dotScale;
+        // Crisp, clean visibility without being blurry or dim
+        const alpha = (0.22 + wordmarkWeight * 0.12 + depth * 0.52 + acc * 0.20) * globalAlpha * dotVisibility;
+        // Fine, elegant, delicate dot radius (exact previous delicate size)
+        const rad = (0.75 + depth * 0.85 + acc * 0.65) * scale * dotScale;
         const r = Math.round(lerp(base[0], ACCENT[0], acc));
         const g = Math.round(lerp(base[1], ACCENT[1], acc));
         const bl = Math.round(lerp(base[2], ACCENT[2], acc));
 
         // Refined emerald aura for accented nodes
-        if (acc > 0.25 && dotVisibility > 0.08) {
-          ctx.fillStyle = `rgba(14,159,110,${0.28 * alpha * dotVisibility})`;
+        if (acc > 0.30 && dotVisibility > 0.08) {
+          ctx.fillStyle = `rgba(14,159,110,${0.14 * alpha * dotVisibility})`;
           ctx.beginPath();
-          ctx.arc(sx[k], sy[k], rad * 2.8, 0, Math.PI * 2);
+          ctx.arc(sx[k], sy[k], rad * 2.2, 0, Math.PI * 2);
           ctx.fill();
         }
 
@@ -763,7 +767,7 @@ export const MorphObject: React.FC = () => {
     <canvas
       ref={canvasRef}
       aria-hidden
-      className="hidden lg:block fixed inset-0 z-[20] pointer-events-none"
+      className="hidden lg:block fixed inset-0 z-[1] pointer-events-none"
     />
   );
 };

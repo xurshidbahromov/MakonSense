@@ -198,7 +198,7 @@ export const IndustrySolutions: React.FC = () => {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.28 }}
-            className="relative z-10 rounded-3xl bg-white/35 dark:bg-[#161616]/35 backdrop-blur-md backdrop-saturate-[150%] border-2 border-white/80 dark:border-white/[0.05] p-6 sm:p-10 shadow-none dark:shadow-none"
+            className="relative z-10 rounded-3xl bg-white/35 dark:bg-[#161616]/35 backdrop-blur-[2px] backdrop-saturate-[150%] border-2 border-white/80 dark:border-white/[0.05] p-6 sm:p-10 shadow-none dark:shadow-none"
           >
           {/* Card Top Bar: Location metadata & MakonScore showcase */}
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 pb-8 border-b border-black/[0.05] dark:border-white/[0.06]">

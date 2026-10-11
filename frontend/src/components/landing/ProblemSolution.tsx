@@ -91,7 +91,7 @@ export const ProblemSolution: React.FC = () => {
             initial={{ opacity: 0, x: -16 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.55, delay: 0.1 }}
-            className="p-8 sm:p-10 rounded-3xl bg-white/35 dark:bg-[#161616]/35 backdrop-blur-md backdrop-saturate-[150%] border-2 border-white/80 dark:border-white/[0.05] shadow-none dark:shadow-none"
+            className="p-8 sm:p-10 rounded-3xl bg-white/35 dark:bg-[#161616]/35 backdrop-blur-[2px] backdrop-saturate-[150%] border-2 border-white/80 dark:border-white/[0.05] shadow-none dark:shadow-none"
           >
             <p className="font-mono text-[11px] tracking-[0.16em] uppercase text-neutral-500 dark:text-neutral-400 mb-8 font-semibold">
               Avvalgi usul
@@ -113,7 +113,7 @@ export const ProblemSolution: React.FC = () => {
             initial={{ opacity: 0, x: 16 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.55, delay: 0.18 }}
-            className="p-8 sm:p-10 rounded-3xl bg-white/35 dark:bg-[#161616]/35 backdrop-blur-md backdrop-saturate-[150%] border-2 border-white/80 dark:border-white/[0.05] shadow-none dark:shadow-none"
+            className="p-8 sm:p-10 rounded-3xl bg-white/35 dark:bg-[#161616]/35 backdrop-blur-[2px] backdrop-saturate-[150%] border-2 border-white/80 dark:border-white/[0.05] shadow-none dark:shadow-none"
           >
             <p className="font-mono text-[11px] tracking-[0.16em] uppercase text-[#0E9F6E] mb-8 font-semibold">
               MakonSense bilan
@@ -137,7 +137,7 @@ export const ProblemSolution: React.FC = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.55, delay: 0.35 }}
-          className="mt-12 rounded-3xl bg-white/35 dark:bg-[#161616]/35 backdrop-blur-md backdrop-saturate-[150%] border-2 border-white/80 dark:border-white/[0.05] overflow-hidden shadow-none dark:shadow-none"
+          className="mt-12 rounded-3xl bg-white/35 dark:bg-[#161616]/35 backdrop-blur-[2px] backdrop-saturate-[150%] border-2 border-white/80 dark:border-white/[0.05] overflow-hidden shadow-none dark:shadow-none"
         >
           <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-black/[0.07] dark:divide-white/10">
             {STATS.map((s, i) => {

@@ -76,7 +76,7 @@ export const FaqSection: React.FC = () => {
             <MorphAnchor shape="ring" className="w-[520px] h-[520px] lg:w-[580px] lg:h-[580px] xl:w-[640px] xl:h-[640px]" />
           </div>
 
-          <div className="relative z-10 p-6 sm:p-10 rounded-3xl bg-white/35 dark:bg-[#161616]/35 backdrop-blur-md backdrop-saturate-[150%] border-2 border-white/80 dark:border-white/[0.05] shadow-none dark:shadow-none divide-y divide-black/[0.05] dark:divide-white/[0.07]">
+          <div className="relative z-10 p-6 sm:p-10 rounded-3xl bg-white/35 dark:bg-[#161616]/35 backdrop-blur-[2px] backdrop-saturate-[150%] border-2 border-white/80 dark:border-white/[0.05] shadow-none dark:shadow-none divide-y divide-black/[0.05] dark:divide-white/[0.07]">
           {FAQS.map((faq) => {
             const isOpen = openId === faq.id;
             return (
