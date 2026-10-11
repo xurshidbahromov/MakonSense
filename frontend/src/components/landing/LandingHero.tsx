@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { ArrowRight, Building2, MapPin, Target, Activity } from 'lucide-react';
 import { useAnalyticsStore } from '../../store/useAnalyticsStore';
 import { Magnet } from '../ui/Magnet';
 import { UzbekistanDottedMap } from './UzbekistanDottedMap';
+import { MorphAnchor } from './MorphObject';
 
 const DEFAULT_COORDS = { lat: 41.3123, lng: 69.2797 };
 
@@ -16,6 +17,31 @@ const STATS = [
 
 export const LandingHero: React.FC = () => {
   const { setCurrentView, setSelectedCoords } = useAnalyticsStore();
+  const [mapOpacity, setMapOpacity] = useState(1);
+  const [mapTranslateY, setMapTranslateY] = useState(0);
+
+  useEffect(() => {
+    const onScroll = () => {
+      const y = window.scrollY || window.pageYOffset;
+      const vh = window.innerHeight;
+      const threshold = Math.min(380, vh * 0.45);
+      const fadeRange = Math.min(260, vh * 0.30);
+
+      if (y <= threshold) {
+        setMapOpacity(1);
+        setMapTranslateY(0);
+      } else if (y >= threshold + fadeRange) {
+        setMapOpacity(0);
+        setMapTranslateY(32);
+      } else {
+        const f = (y - threshold) / fadeRange;
+        setMapOpacity(1 - f);
+        setMapTranslateY(f * 32);
+      }
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   const handleLaunch = () => {
     setSelectedCoords({
@@ -103,9 +129,23 @@ export const LandingHero: React.FC = () => {
           initial={{ opacity: 0, scale: 0.96 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.7, delay: 0.35 }}
-          className="w-full -mt-2 sm:-mt-4 overflow-visible"
+          className="w-full -mt-2 sm:-mt-4 overflow-visible relative flex justify-center items-center"
         >
-          <UzbekistanDottedMap />
+          {/* MorphAnchor for Uzbekistan Map (Anchor 0) */}
+          <MorphAnchor
+            shape="map"
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-6xl xl:max-w-7xl h-[340px] pointer-events-none"
+          />
+          <div
+            className="w-full"
+            style={{
+              opacity: mapOpacity,
+              transform: `translateY(${mapTranslateY}px)`,
+              transition: 'opacity 0.06s linear, transform 0.06s linear',
+            }}
+          >
+            <UzbekistanDottedMap />
+          </div>
         </motion.div>
 
         {/* 6. Stats & Trust Band below the map (Centered) */}

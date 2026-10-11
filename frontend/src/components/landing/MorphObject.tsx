@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { WORDMARK_PTS, WORDMARK_ACCENT } from './wordmarkPoints';
+import { UZBEKISTAN_DOTS, UZBEKISTAN_HUBS } from './uzbekistanMapData';
 
 /* ------------------------------------------------------------------ */
 /* Scroll-driven morphing 3D spatial particle object                  */
@@ -19,6 +20,7 @@ interface Formation {
 }
 
 export type MorphShape =
+  | 'map'
   | 'globe'
   | 'layers'
   | 'cube'
@@ -156,103 +158,37 @@ const segGeo = (p1: [number, number], p2: [number, number], n: number, r = 1.0):
 */
 
 const buildFormations = (): Record<MorphShape, Formation> => {
-  // 1. Hero: 3D Global Earth Map with Highlighted & Selected Uzbekistan (Global Yer Xaritasi va O'zbekiston Tanlovi)
-  const globe = (() => {
+  // 1. Hero: Exact Low-Angle Dotted Uzbekistan Map matching UzbekistanDottedMap (14 Regional Hubs + 286 Baseline Dots)
+  const map = (() => {
     const pts: Vec3[] = [];
     const acc: number[] = [];
 
-    // --- A. UZBEKISTAN: Precise Geographic Contour & Selected Region Highlight ---
-    // True border vertices along Karakalpakstan, Kyzylkum, Tashkent Oasis, Fergana Valley, Surkhandarya
-    const uzContour: [number, number][] = [
-      [45.0, 56.0], [45.5, 58.5], [43.5, 59.0], [42.46, 59.6], [41.5, 60.5],
-      [40.8, 62.5], [39.77, 64.42], [38.5, 66.8], [37.22, 67.28], [38.2, 68.2],
-      [40.8, 68.7], [41.31, 69.28], [41.5, 70.0], [40.9, 71.5], [40.75, 72.35],
-      [40.38, 71.78], [40.2, 70.8], [41.2, 67.5], [43.0, 64.0], [44.5, 61.5], [45.0, 56.0],
-    ];
-    for (let i = 0; i < uzContour.length - 1; i++) {
-      const edge = segGeo(uzContour[i], uzContour[i + 1], 3, 1.006);
-      pts.push(...edge);
-      acc.push(...edge.map(() => 0.20));
-    }
+    // SVG viewBox bounds: VB_X = 15, VB_Y = 184, VB_W = 965, VB_H = 322
+    const midX = 15 + 965 / 2; // 497.5
+    const midY = 184 + 322 / 2; // 345.0
+    const halfW = 965 / 2;      // 482.5
 
-    // Major Regional Hub Nodes in Uzbekistan (Tashkent, Samarkand, Bukhara, Fergana, Nukus, Termez, etc.)
-    const uzHubs: [number, number][] = [
-      [41.31, 69.28], // Tashkent Capital
-      [39.65, 66.97], // Samarkand
-      [39.77, 64.42], // Bukhara
-      [40.38, 71.78], // Fergana
-      [42.46, 59.60], // Nukus
-      [37.22, 67.28], // Termez
-      [40.10, 65.37], // Navoiy
-      [40.78, 72.34], // Andijan
-      [40.99, 71.67], // Namangan
-      [41.55, 60.63], // Urgench
-    ];
-    uzHubs.forEach((coord) => {
-      pts.push(geoToSphere(coord[0], coord[1], 1.01));
-      acc.push(1.0);
+    // A. All 14 regional hubs as landmark emerald beacons (exact coords from UzbekistanDottedMap)
+    UZBEKISTAN_HUBS.forEach((hub) => {
+      const x = (hub.x - midX) / halfW;
+      const y = -(hub.y - midY) / halfW;
+      const z = 0.04;
+      pts.push([x, y, z]);
+      acc.push(1.0); // Signature Silky Emerald Hub Beacon
     });
 
-    // Tashkent Radial Pin Laser Beacon (rising out from Tashkent coords)
-    for (let step = 1; step <= 5; step++) {
-      pts.push(geoToSphere(41.31, 69.28, 1.0 + step * 0.04));
-      acc.push(step === 5 ? 1.0 : 0.20);
-    }
-
-    // High-Tech Selector Radar Ring around Uzbekistan
-    const centerUz: [number, number] = [41.0, 66.0];
-    for (let i = 0; i < 16; i++) {
-      const a = (i / 16) * Math.PI * 2;
-      const lat = centerUz[0] + Math.sin(a) * 4.5;
-      const lon = centerUz[1] + Math.cos(a) * 6.5;
-      pts.push(geoToSphere(lat, lon, 1.008));
-      acc.push(0.20);
-    }
-
-    // --- B. WORLD CONTINENTS: Fine Starlight Global Landmass Outline ---
-    const continents: [number, number][][] = [
-      // Europe & Mediterranean
-      [[36, -6], [43, -9], [48, -4], [55, 5], [60, 18], [69, 20], [60, 30], [55, 37], [45, 38], [41, 28], [38, 15], [36, -6]],
-      // British Isles
-      [[50, -5], [58, -3], [55, -1], [50, 1]],
-      // Africa
-      [[36, -5], [32, 25], [12, 51], [-4, 40], [-25, 33], [-34, 20], [-10, 14], [5, 1], [15, -16], [30, -10], [36, -5]],
-      // Middle East & Arabia
-      [[30, 34], [13, 48], [24, 57], [30, 48], [37, 45], [30, 34]],
-      // Asia Coastline & Eastern Archipelago
-      [[24, 68], [8, 77], [22, 88], [1, 104], [22, 115], [38, 120], [42, 130], [55, 140], [68, 140], [70, 80], [55, 60]],
-      // Japan
-      [[31, 131], [36, 138], [43, 143]],
-      // North America
-      [[15, -92], [30, -115], [48, -125], [65, -165], [70, -140], [60, -95], [50, -60], [25, -80], [18, -90]],
-      // South America
-      [[12, -72], [-5, -35], [-23, -43], [-55, -68], [-40, -73], [-10, -78], [12, -72]],
-      // Australia
-      [[-15, 128], [-35, 118], [-38, 144], [-24, 153], [-11, 142], [-15, 128]],
-    ];
-
-    continents.forEach((poly) => {
-      for (let i = 0; i < poly.length - 1; i++) {
-        const edge = segGeo(poly[i], poly[i + 1], 2, 1.0);
-        pts.push(...edge);
-        acc.push(...edge.map(() => 0.14));
-      }
-    });
-
-    // Equator Reference Grid Belt
-    for (let i = 0; i < 24; i++) {
-      const lon = (i / 24) * 360 - 180;
-      pts.push(geoToSphere(0, lon, 0.996));
-      acc.push(0.18);
-    }
-
-    // Latitude Tropic Reference Bands (23.5° N & -23.5° S)
-    for (let i = 0; i < 16; i++) {
-      const lon = (i / 16) * 360 - 180;
-      pts.push(geoToSphere(23.5, lon, 0.996));
-      acc.push(0.10);
-      pts.push(geoToSphere(-23.5, lon, 0.996));
-      acc.push(0.10);
+    // B. Sample 286 points evenly across UZBEKISTAN_DOTS (853 total dots)
+    const numSample = N - UZBEKISTAN_HUBS.length; // exactly 286 points
+    const totalDots = UZBEKISTAN_DOTS.length;
+    for (let i = 0; i < numSample; i++) {
+      const idx = Math.min(totalDots - 1, Math.floor((i / numSample) * totalDots));
+      const dot = UZBEKISTAN_DOTS[idx];
+      const x = (dot.x - midX) / halfW;
+      const y = -(dot.y - midY) / halfW;
+      // Gentle subtle starlight elevation
+      const z = (dot.s - 0.95) * 0.08;
+      pts.push([x, y, z]);
+      acc.push(0.15); // Baseline crisp white/slate dot
     }
 
     return fill(pts, acc);
@@ -691,7 +627,7 @@ const buildFormations = (): Record<MorphShape, Formation> => {
     accent: WORDMARK_ACCENT,
   };
 
-  return { globe, layers, cube, towers, steps, clusters, bars, ring, wordmark };
+  return { map, globe: map, layers, cube, towers, steps, clusters, bars, ring, wordmark };
 };
 
 /* ---------------------------- easing ------------------------------ */
@@ -847,10 +783,12 @@ export const MorphObject: React.FC = () => {
         absorb = 1 - clamp(e / 0.16);
       }
 
-      // On hero section (scrollY near 0), keep 3D particles transparent so FlatWorldMap shines cleanly.
-      // As user scrolls down towards Section 2, 3D particles fluidly assemble into the 3D formations.
-      const heroFade = clamp(scrollY / Math.min(320, vh * 0.4));
-      const dotVisibility = Math.max(0, 1 - easeInOutCubic(absorb)) * heroFade;
+      // On hero section at rest (scrollY <= threshold), keep canvas particles transparent so UzbekistanDottedMap shines cleanly with 100% SVG fidelity.
+      // As user scrolls down past Hero towards Section 2, canvas particles smoothly emerge from the map and morph down into the DNA double helix.
+      const heroThreshold = Math.min(380, vh * 0.45);
+      const heroRange = Math.min(260, vh * 0.30);
+      const heroFade = scrollY <= heroThreshold ? 0 : clamp((scrollY - heroThreshold) / heroRange);
+      const dotVisibility = Math.max(0, 1 - easeInOutCubic(absorb)) * (scrollY > heroThreshold + heroRange ? 1 : heroFade);
       const dotScale = Math.max(0, 1 - Math.pow(absorb, 1.4) * 0.90);
 
       // Wordmark color clarity reaction:
@@ -870,11 +808,13 @@ export const MorphObject: React.FC = () => {
         canvas.style.zIndex = '1';
       }
 
-      // Aspect-ratio aware scaling: wide letterform bounds for wordmark, enlarged 3D presence for archetypes
-      const aRx = A.shape === 'wordmark' ? A.width * 0.50 : A.size * 0.52;
-      const aRy = A.shape === 'wordmark' ? A.height * 0.50 : A.size * 0.52;
-      const bRx = B.shape === 'wordmark' ? B.width * 0.50 : B.size * 0.52;
-      const bRy = B.shape === 'wordmark' ? B.height * 0.50 : B.size * 0.52;
+      // Aspect-ratio aware scaling: wide letterform bounds for wordmark and map, enlarged 3D presence for archetypes
+      const aIsWide = A.shape === 'wordmark' || A.shape === 'map' || A.shape === 'globe';
+      const bIsWide = B.shape === 'wordmark' || B.shape === 'map' || B.shape === 'globe';
+      const aRx = aIsWide ? A.width * 0.50 : A.size * 0.52;
+      const aRy = aIsWide ? (A.shape === 'wordmark' ? A.height * 0.50 : A.width * 0.50) : A.size * 0.52;
+      const bRx = bIsWide ? B.width * 0.50 : B.size * 0.52;
+      const bRy = bIsWide ? (B.shape === 'wordmark' ? B.height * 0.50 : B.width * 0.50) : B.size * 0.52;
       const Rx = lerp(aRx, bRx, e);
       const Ry = lerp(aRy, bRy, e);
       const size = lerp(A.size, B.size, e);
@@ -894,15 +834,15 @@ export const MorphObject: React.FC = () => {
       mouseY += (targetMouseY - mouseY) * (1 - Math.exp(-dt * 2.8));
 
       /* -------- Stable Isometric View (Clear, Precise & Recognizable) -------- */
-      // Exactly like UzbekistanDottedMap: STABLE & IMMOBILE (NO chaotic spinning!)
-      // A clean, fixed 14° architectural isometric angle lets the user see the exact shape instantly,
-      // with subtle interactive mouse tilt.
+      // Uzbekistan map starts planar facing the camera (yaw = 0, pitch = 0),
+      // then smoothly tilts into the 3-loop DNA double helix as scroll progresses.
       const isWordmark = wordmarkWeight > 0.05;
+      const isMap = (A.shape === 'map' || A.shape === 'globe') && e < 0.6;
       const isLayers = A.shape === 'layers' || B.shape === 'layers';
-      const baseYaw = isWordmark ? 0 : (isLayers ? -0.04 : -0.22);
-      const basePitch = isWordmark ? 0 : (isLayers ? -0.05 : -0.18);
-      const yaw = baseYaw + mouseX * (isLayers ? 0.04 : 0.06);
-      const pitch = basePitch + mouseY * (isLayers ? 0.03 : 0.04);
+      const baseYaw = isWordmark || isMap ? 0 : (isLayers ? -0.04 : -0.22);
+      const basePitch = isWordmark || isMap ? 0 : (isLayers ? -0.05 : -0.18);
+      const yaw = baseYaw + mouseX * (isMap ? 0.02 : (isLayers ? 0.04 : 0.06));
+      const pitch = basePitch + mouseY * (isMap ? 0.02 : (isLayers ? 0.03 : 0.04));
 
       const cY = Math.cos(yaw), sY = Math.sin(yaw);
       const cP = Math.cos(pitch), sP = Math.sin(pitch);
