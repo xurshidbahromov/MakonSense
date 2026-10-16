@@ -145,18 +145,31 @@ const segGeo = (p1: [number, number], p2: [number, number], n: number, r = 1.0):
 };
 
 /* --------------------------- formations --------------------------- */
-/* 8 Completely Distinct, Signature 3D Archetypes Tailored to Each Section:
-   1. Hero (globe)           -> 3D Global Earth Map with Selected & Highlighted Uzbekistan
-   2. ScrollExperience (layers) -> 3 Floating Geospatial Strata / Disc Decks with Vertical Laser Links
-   3. ProblemSolution (cube)  -> 3D Isometric Tesseract / Hypercube with Inner Glowing Core
-   4. LocationCompare (towers)-> Dual Comparative Monolith Towers Side-by-Side with Analytical Bridge
-   5. HowItWorks (steps)      -> Ascending 3-Tier Spiral Helix Platform (Step 01 -> Step 02 -> Step 03)
-   6. IndustrySolutions (clusters)-> Multi-Satellite Constellation Network (Central Hub + 4 Orbital Pods)
-   7. RoiCalculator (bars)    -> 3D Exponential Financial Bar Matrix with Curved Parabolic Growth Arc
-   8. FaqSection (ring)       -> Tri-Axial Precision Gyroscope / Armillary Sphere with Diamond Center
-   9. Footer (wordmark)       -> Illuminated 10-Letter MakonSense Wordmark
-*/
+/* 9 Signature 3D Particle Archetypes Tailored to Each Section:
+   1. Hero (map / globe)        -> Low-Angle Dotted Uzbekistan Map (14 Regional Hubs + 286 Baseline Dots)
+   2. ScrollExperience (layers) -> 3-Loop 3D DNA Double Helix (10 Rungs, Open Horn Tips, 14 Beacons)
+   3. ProblemSolution (cube)    -> Precision Shield + Bold Checkmark Emblem (94.2% Protected Investment)
+   4. LocationCompare (towers)  -> Architectural A/B Comparison Monolith Towers (94.0 Winner vs 62.3 + Delta Vector)
+   5. HowItWorks (steps)        -> Iconic 3D Geospatial Map Pin (📍) + 3 Isochrone Radius Rings (300m · 500m · 1km)
+   6. IndustrySolutions (clusters) -> Central Hexagonal AI Core + 4 Quadrant Sector Hexagons (HoReCa, Retail, Dorixona, Mulk)
+   7. RoiCalculator (bars)      -> 4 Ascending Financial Columns + Rising Breakout Trend Arrow (📈)
+   8. FaqSection (ring)         -> Sculptural Question Mark (?) Emblem + 6-Node Knowledge Halo Ring
+   9. Footer (wordmark)         -> Illuminated 10-Letter MakonSense Wordmark
+/* ------------------------- camera angles -------------------------- */
+const SHAPE_ANGLES: Record<MorphShape, { yaw: number; pitch: number }> = {
+  map: { yaw: 0.0, pitch: 0.0 },
+  globe: { yaw: 0.0, pitch: 0.0 },
+  layers: { yaw: 0.0, pitch: 0.0 },
+  cube: { yaw: 0.0, pitch: 0.0 },
+  towers: { yaw: 0.0, pitch: 0.0 },
+  steps: { yaw: 0.0, pitch: 0.0 },
+  clusters: { yaw: 0.0, pitch: 0.0 },
+  bars: { yaw: 0.0, pitch: 0.0 },
+  ring: { yaw: 0.0, pitch: 0.0 },
+  wordmark: { yaw: 0.0, pitch: 0.0 },
+};
 
+/* --------------------------- formations --------------------------- */
 const buildFormations = (): Record<MorphShape, Formation> => {
   // 1. Hero: Exact Low-Angle Dotted Uzbekistan Map matching UzbekistanDottedMap (14 Regional Hubs + 286 Baseline Dots)
   const map = (() => {
@@ -200,423 +213,580 @@ const buildFormations = (): Record<MorphShape, Formation> => {
   // - Loop 2 (middle): 4 parallel rungs
   // - Crossover 2 (X)
   // - Loop 3 (top): 3 parallel rungs
-  // Calibrated dot distribution: 96% crisp white baseline dots + exactly 12 emerald beacon nodes matching Hero Map
-  // Total: 100 (Strand 1) + 100 (Strand 2) + 100 (10 rungs x 10 pts) = 300 points!
+  // Calibrated dot distribution: 286 crisp baseline dots + 14 emerald beacon nodes matching Hero Map
+  // Total: 95 (Strand 1) + 95 (Strand 2) + 110 (10 rungs x 11 pts) = 300 points!
   const layers = (() => {
     const pts: Vec3[] = [];
     const acc: number[] = [];
 
-    // Diagonal unit vectors in screen projection plane (~48° angle from bottom-left to top-right)
-    const angleDiag = Math.PI * 0.27; // ~48.6 degrees
+    // Diagonal unit vectors in screen projection plane (~52.2° angle matching reference image)
+    const angleDiag = Math.PI * 0.29;
     const uX = Math.cos(angleDiag);
     const uY = Math.sin(angleDiag);
     const vX = -Math.sin(angleDiag);
     const vY = Math.cos(angleDiag);
 
-    const span = 1.25; // spine half-length
-    const amp = 0.52;  // wide, clear loop amplitude
-    const totalRad = Math.PI * 3.0; // exactly 3 half-cycles = 3 LOOPS!
+    const s0 = 0.54; // distance from center to crossover
+    const sMax = 2.18 * s0; // total half-span along spine ~ 1.18
+    const A0 = 0.46; // base amplitude
 
-    const numStrand = 100;
+    // Amplitude envelope with subtle horn flare at the extreme tips
+    const getAmp = (s: number) => {
+      const absS = Math.abs(s);
+      if (absS > 1.8 * s0) {
+        const flare = (absS - 1.8 * s0) / (sMax - 1.8 * s0);
+        return A0 * (1.0 + flare * 0.22);
+      }
+      return A0;
+    };
 
-    // --- Strand 1 (100 points) ---
-    for (let i = 0; i < numStrand; i++) {
-      const t = i / (numStrand - 1); // 0 to 1
-      const s = -span + t * (span * 2);
-      const theta = t * totalRad; // 0 to 3*PI
-      const wave = Math.sin(theta) * amp;
-      const depth = Math.cos(theta) * 0.16;
+    // Wave function: cosine along s (peak at center s=0, zero at s = +/- s0)
+    const getWave = (s: number) => {
+      const phi = (Math.PI * s) / (2 * s0);
+      return getAmp(s) * Math.cos(phi);
+    };
 
-      const x = s * uX + wave * vX;
-      const y = s * uY + wave * vY;
-      const z = depth;
-      pts.push([x, y, z]);
-      // Emerald beacon nodes: apex crests of Loop 1, Loop 2, Loop 3 and top terminal node (4 points)
-      const isGreen = i === 17 || i === 50 || i === 83 || i === 99;
-      acc.push(isGreen ? 1.0 : 0.10);
-    }
+    // 3D depth wave: sine along s for gentle real-time mouse parallax
+    const depthAmp = 0.16;
+    const getDepth = (s: number) => {
+      const phi = (Math.PI * s) / (2 * s0);
+      return depthAmp * Math.sin(phi);
+    };
 
-    // --- Strand 2 (100 points, opposite phase) ---
+    const numStrand = 95;
+
+    // --- Strand 1 (95 points) ---
     for (let i = 0; i < numStrand; i++) {
       const t = i / (numStrand - 1);
-      const s = -span + t * (span * 2);
-      const theta = t * totalRad;
-      const wave = -Math.sin(theta) * amp;
-      const depth = -Math.cos(theta) * 0.16;
+      const s = -sMax + t * (2 * sMax);
+      const w = getWave(s);
+      const d = getDepth(s);
 
-      const x = s * uX + wave * vX;
-      const y = s * uY + wave * vY;
-      const z = depth;
+      const x = s * uX + w * vX;
+      const y = s * uY + w * vY;
+      const z = d;
       pts.push([x, y, z]);
-      // Emerald beacon nodes: complementary troughs of Loop 1, Loop 2, Loop 3 and bottom start node (4 points)
-      const isGreen = i === 0 || i === 17 || i === 50 || i === 83;
-      acc.push(isGreen ? 1.0 : 0.10);
+
+      // Exactly 6 landmark beacons on Strand 1:
+      // horn tip (i=0), Loop 1 apex (i=8), Crossover 1 (i=26), Loop 2 apex (i=47), Loop 3 apex (i=86), horn tip (i=94)
+      const isGreen = i === 0 || i === 8 || i === 26 || i === 47 || i === 86 || i === 94;
+      acc.push(isGreen ? 1.0 : 0.15);
     }
 
-    // --- Exactly 10 Crossbars (Rungs) matching reference image: 3 in Loop 1, 4 in Loop 2, 3 in Loop 3 ---
-    const rungThetas: number[] = [
-      // Loop 1 (bottom loop, theta in (0, PI)): exactly 3 parallel rungs
-      Math.PI * 0.28, Math.PI * 0.50, Math.PI * 0.72,
-      // Loop 2 (middle loop, theta in (PI, 2*PI)): exactly 4 parallel rungs
-      Math.PI * 1.22, Math.PI * 1.40, Math.PI * 1.60, Math.PI * 1.78,
-      // Loop 3 (top loop, theta in (2*PI, 3*PI)): exactly 3 parallel rungs
-      Math.PI * 2.28, Math.PI * 2.50, Math.PI * 2.72,
+    // --- Strand 2 (95 points) ---
+    for (let i = 0; i < numStrand; i++) {
+      const t = i / (numStrand - 1);
+      const s = -sMax + t * (2 * sMax);
+      const w = -getWave(s);
+      const d = -getDepth(s);
+
+      const x = s * uX + w * vX;
+      const y = s * uY + w * vY;
+      const z = d;
+      pts.push([x, y, z]);
+
+      // Exactly 6 landmark beacons on Strand 2:
+      // horn tip (i=0), Loop 1 trough (i=8), Loop 2 trough (i=47), Crossover 2 (i=68), Loop 3 trough (i=86), horn tip (i=94)
+      const isGreen = i === 0 || i === 8 || i === 47 || i === 68 || i === 86 || i === 94;
+      acc.push(isGreen ? 1.0 : 0.15);
+    }
+
+    // --- Exactly 10 Crossbars (Rungs): 3 in Loop 1, 4 in Loop 2, 3 in Loop 3 (110 points) ---
+    const rungS: number[] = [
+      // Loop 1 (bottom open arch): exactly 3 parallel rungs
+      -1.82 * s0, -1.55 * s0, -1.28 * s0,
+      // Loop 2 (middle closed loop): exactly 4 parallel rungs
+      -0.60 * s0, -0.20 * s0, 0.20 * s0, 0.60 * s0,
+      // Loop 3 (top open arch): exactly 3 parallel rungs
+      1.28 * s0, 1.55 * s0, 1.82 * s0,
     ];
 
-    const ptsPerRung = 10;
-    rungThetas.forEach((th, rIdx) => {
-      const t = th / totalRad;
-      const s = -span + t * (span * 2);
-      const wave = Math.sin(th) * amp;
-      const depth = Math.cos(th) * 0.16;
+    const ptsPerRung = 11;
+    rungS.forEach((s, rIdx) => {
+      const w = Math.abs(getWave(s)) * 0.84;
+      const d = getDepth(s);
 
-      const p1: Vec3 = [s * uX + wave * vX, s * uY + wave * vY, depth];
-      const p2: Vec3 = [s * uX - wave * vX, s * uY - wave * vY, -depth];
-      const bar = segment(p1, p2, ptsPerRung);
-      pts.push(...bar);
-      // Only the two central focal rungs in Loop 2 (rIdx === 4 and 5) have their center base pair as green beacons (4 points)
-      const isCenterRung = rIdx === 4 || rIdx === 5;
-      acc.push(
-        ...bar.map((_, idx) =>
-          isCenterRung && (idx === 4 || idx === 5) ? 1.0 : 0.10
-        )
-      );
+      const p1: Vec3 = [s * uX + w * vX, s * uY + w * vY, d * 0.5];
+      const p2: Vec3 = [s * uX - w * vX, s * uY - w * vY, -d * 0.5];
+
+      for (let j = 0; j < ptsPerRung; j++) {
+        const f = j / (ptsPerRung - 1);
+        const px = p1[0] + (p2[0] - p1[0]) * f;
+        const py = p1[1] + (p2[1] - p1[1]) * f;
+        const pz = p1[2] + (p2[2] - p1[2]) * f;
+        pts.push([px, py, pz]);
+
+        // In the central loop, the two middle rungs (rIdx 4 & 5) have glowing center beacons (2 beacons)
+        const isCenterCore = (rIdx === 4 || rIdx === 5) && j === 5;
+        acc.push(isCenterCore ? 1.0 : 0.15);
+      }
     });
 
     return fill(pts, acc);
   })();
 
-  // 3. ProblemSolution: 3D Urban Spatial Voxel / Smart Building Matrix (Hajmdor 3D Bino va Ichki AI Yadrosi)
-  // An authentic, solid 3D isometric city block representing 524,000+ indexed buildings
+  // 3. ProblemSolution (cube): Precision Crest Shield + Bold Checkmark Emblem (94.2% Protected Investment)
+  // Double-rimmed architectural shield + bold 3-layer verification checkmark (300 pts, 14 emerald beacons)
   const cube = (() => {
     const pts: Vec3[] = [];
     const acc: number[] = [];
 
-    const S = 0.75; // half-width of building
-    const yB = -0.75;
-    const yT = 0.75;
-
-    // Roof deck planar grid (5x5 = 25 pts)
-    for (let ix = -2; ix <= 2; ix++) {
-      for (let iz = -2; iz <= 2; iz++) {
-        pts.push([(ix / 2) * S, yT, (iz / 2) * S]);
-        // Only center beacon and 4 corner pins are green beacons (5 points)
-        const isCorner = Math.abs(ix) === 2 && Math.abs(iz) === 2;
-        const isCenter = ix === 0 && iz === 0;
-        acc.push(isCenter || isCorner ? 1.0 : 0.15);
+    const shieldPoint = (t: number, side: number, scale = 1.0, z = 0): Vec3 => {
+      if (t <= 0.24) {
+        const u = t / 0.24;
+        const x = side * (u * 0.80) * scale;
+        const y = (0.94 - Math.sin(u * Math.PI * 0.5) * 0.16) * scale;
+        return [x, y, z];
+      } else {
+        const u = (t - 0.24) / 0.76;
+        const x = side * 0.80 * Math.pow(1 - u, 0.76) * scale;
+        const y = (0.78 - u * 1.74) * scale;
+        return [x, y, z];
       }
+    };
+
+    // Outer shield perimeter: left (56 pts) + right (54 pts) = 110 pts
+    for (let i = 0; i < 56; i++) {
+      const t = i / 55;
+      pts.push(shieldPoint(t, -1, 1.0, 0.08));
+      const isBeacon = i === 0 || i === 13 || i === 32 || i === 55;
+      acc.push(isBeacon ? 1.0 : 0.15);
+    }
+    for (let i = 1; i < 55; i++) {
+      const t = i / 55;
+      pts.push(shieldPoint(t, 1, 1.0, 0.08));
+      const isBeacon = i === 13 || i === 32;
+      acc.push(isBeacon ? 1.0 : 0.15);
     }
 
-    // Foundation slab planar grid (5x5 = 25 pts)
-    for (let ix = -2; ix <= 2; ix++) {
-      for (let iz = -2; iz <= 2; iz++) {
-        pts.push([(ix / 2) * S, yB, (iz / 2) * S]);
-        acc.push(0.15);
-      }
+    // Inner shield frame (scale = 0.82): left (44 pts) + right (42 pts) = 86 pts
+    for (let i = 0; i < 44; i++) {
+      const t = i / 43;
+      pts.push(shieldPoint(t, -1, 0.82, -0.05));
+      const isBeacon = i === 0 || i === 43;
+      acc.push(isBeacon ? 1.0 : 0.15);
+    }
+    for (let i = 1; i < 43; i++) {
+      const t = i / 43;
+      pts.push(shieldPoint(t, 1, 0.82, -0.05));
+      acc.push(0.15);
     }
 
-    // 6 Solid Floor Perimeter Bands around the building
-    for (let f = 0; f < 6; f++) {
-      const yF = yB + ((f + 0.5) / 6) * (yT - yB);
-      const numPerSide = 6;
-      for (let i = 0; i < numPerSide; i++) {
-        const t = -S + (i / numPerSide) * (2 * S);
-        pts.push([t, yF, -S], [S, yF, t], [-t, yF, S], [-S, yF, -t]);
-        acc.push(0.15, 0.15, 0.15, 0.15);
-      }
-    }
+    // Bold 3-layer Checkmark (✓) in the center: 104 pts (196 + 104 = 300 pts)
+    const offsets = [-0.048, 0.0, 0.048];
+    offsets.forEach((off, oIdx) => {
+      const pStart: Vec3 = [-0.36, 0.02 + off, 0.14];
+      const pKnee: Vec3 = [-0.08, -0.28 + off, 0.16];
+      const pEnd: Vec3 = [0.44, 0.36 + off, 0.14];
 
-    // 4 Vertical Steel Corner Pillars
-    const corners = [[-S, -S], [S, -S], [S, S], [-S, S]];
-    corners.forEach(([cx, cz]) => {
-      const col = segment([cx, yB, cz], [cx, yT, cz], 12);
-      pts.push(...col);
-      acc.push(...col.map(() => 0.15));
+      const leg1Count = oIdx === 1 ? 14 : 13;
+      const leg2Count = oIdx === 1 ? 22 : 21;
+      const leg1 = segment(pStart, pKnee, leg1Count);
+      const leg2 = segment(pKnee, pEnd, leg2Count);
+
+      leg1.forEach((p, idx) => {
+        pts.push(p);
+        const isB = oIdx === 1 && (idx === 0 || idx === 7 || idx === leg1Count - 1);
+        acc.push(isB ? 1.0 : 0.15);
+      });
+      leg2.forEach((p, idx) => {
+        pts.push(p);
+        const isB = oIdx === 1 && (idx === 7 || idx === 14 || idx === leg2Count - 1);
+        acc.push(isB ? 1.0 : 0.15);
+      });
     });
-
-    // Inner Glowing AI Kernel Core (spatial intelligence brain)
-    const core = fibSphere(32, 0.32);
-    pts.push(...core);
-    // 6 cardinal focal nodes are green beacons (6 points)
-    acc.push(...core.map((_, idx) => (idx < 6 ? 1.0 : 0.15)));
 
     return fill(pts, acc);
   })();
 
-  // 4. LocationCompareSection: Dual Comparative Skyscraper Monoliths (Yonma-Yon Taqqoslash Minoralari)
-  // Two solid architectural skyscraper towers comparing Amir Temur (Winner, 94.0) vs Chilonzor (62.3)
+  // 4. LocationCompareSection (towers): Architectural A/B Comparison Monolith Towers
+  // Tall Winner Tower A (Amir Temur 94.0 with stepped crown & spire) vs Shorter Tower B (Chilonzor 62.3) + Rising Delta Vector
   const towers = (() => {
     const pts: Vec3[] = [];
     const acc: number[] = [];
 
-    // Base ground slab under both towers (y = -0.88)
-    for (let i = 0; i < 36; i++) {
-      const a = (i / 36) * Math.PI * 2;
-      pts.push([Math.cos(a) * 0.95, -0.88, Math.sin(a) * 0.42]);
+    // Ground foundation baseline: 28 pts
+    const baseLine = segment([-0.94, -0.84, 0], [0.94, -0.84, 0], 28);
+    baseLine.forEach((p, i) => {
+      pts.push(p);
+      acc.push(i === 0 || i === 27 ? 1.0 : 0.15);
+    });
+
+    // --- LEFT TOWER A (Winner: Amir Temur 94.0, x in [-0.74, -0.16], y in [-0.84, +0.68]) ---
+    const xA1 = -0.74, xA2 = -0.16, yB = -0.84, yA = 0.68;
+    const wallAL = segment([xA1, yB, 0.06], [xA1, yA, 0.06], 24);
+    const wallAR = segment([xA2, yB, 0.06], [xA2, yA, 0.06], 24);
+    wallAL.forEach((p, i) => {
+      pts.push(p);
+      acc.push(i === 23 ? 1.0 : 0.15);
+    });
+    wallAR.forEach((p, i) => {
+      pts.push(p);
+      acc.push(i === 23 ? 1.0 : 0.15);
+    });
+
+    // 9 Horizontal architectural floor bands inside Tower A (9 * 7 = 63 pts)
+    for (let f = 1; f <= 9; f++) {
+      const yf = yB + (f / 9) * (yA - yB);
+      const row = segment([xA1 + 0.06, yf, 0.04], [xA2 - 0.06, yf, 0.04], 7);
+      row.forEach((p, idx) => {
+        pts.push(p);
+        const isB = (f === 9 || f === 5) && idx === 3;
+        acc.push(isB ? 1.0 : 0.15);
+      });
+    }
+
+    // Stepped Crown & Spire on Tower A (19 pts)
+    const crownTop = segment([-0.62, 0.80, 0.08], [-0.28, 0.80, 0.08], 7);
+    const crownL = segment([-0.62, 0.68, 0.08], [-0.62, 0.80, 0.08], 3);
+    const crownR = segment([-0.28, 0.68, 0.08], [-0.28, 0.80, 0.08], 3);
+    const spire = segment([-0.45, 0.80, 0.10], [-0.45, 1.04, 0.12], 6);
+    [...crownTop, ...crownL, ...crownR].forEach((p) => {
+      pts.push(p);
       acc.push(0.15);
-    }
+    });
+    spire.forEach((p, i) => {
+      pts.push(p);
+      acc.push(i === 5 || i === 0 ? 1.0 : 0.15);
+    });
 
-    // --- Tower A (Winner: Amir Temur, x = -0.44, r = 0.32) ---
-    const cxA = -0.44;
-    const rA = 0.32;
-    for (let f = 0; f < 12; f++) {
-      const yF = -0.85 + (f / 11) * 1.70;
-      const numPts = 10;
-      for (let i = 0; i < numPts; i++) {
-        const a = (i / numPts) * Math.PI * 2;
-        pts.push([cxA + Math.cos(a) * rA, yF, Math.sin(a) * rA]);
-        // 4 cardinal observation beacons on top crown floor
-        const isCrownBeacon = f === 11 && i % 3 === 0;
-        acc.push(isCrownBeacon ? 1.0 : 0.15);
-      }
-    }
-    // Crown Pinnacle on Tower A (MakonScore 94.0 pinnacle needle)
-    const apexA = segment([cxA, 0.85, 0], [cxA, 1.25, 0], 8);
-    pts.push(...apexA);
-    // 4 tip points of the spire are green beacons
-    acc.push(...apexA.map((_, idx) => (idx >= 4 ? 1.0 : 0.15)));
-
-    // --- Tower B (Competitor: Chilonzor, x = +0.48, r = 0.28) ---
-    const cxB = 0.48;
-    const rB = 0.28;
-    for (let f = 0; f < 6; f++) {
-      const yF = -0.85 + (f / 5) * 0.95;
-      const numPts = 10;
-      for (let i = 0; i < numPts; i++) {
-        const a = (i / numPts) * Math.PI * 2;
-        pts.push([cxB + Math.cos(a) * rB, yF, Math.sin(a) * rB]);
-        acc.push(0.15);
-      }
-    }
-    // Flat roof cap on Tower B
-    for (let i = 0; i < 6; i++) {
-      const a = (i / 6) * Math.PI * 2;
-      pts.push([cxB + Math.cos(a) * (rB * 0.5), 0.10, Math.sin(a) * (rB * 0.5)]);
+    // --- RIGHT TOWER B (Chilonzor 62.3, x in [0.16, 0.74], y in [-0.84, +0.02]) ---
+    const xB1 = 0.16, xB2 = 0.74, yTopB = 0.02;
+    const wallBL = segment([xB1, yB, -0.04], [xB1, yTopB, -0.04], 16);
+    const wallBR = segment([xB2, yB, -0.04], [xB2, yTopB, -0.04], 16);
+    [...wallBL, ...wallBR].forEach((p) => {
+      pts.push(p);
       acc.push(0.15);
+    });
+
+    // 6 Horizontal floor bands inside Tower B (6 * 7 = 42 pts)
+    for (let f = 1; f <= 6; f++) {
+      const yf = yB + (f / 6) * (yTopB - yB);
+      const row = segment([xB1 + 0.06, yf, -0.04], [xB2 - 0.06, yf, -0.04], 7);
+      row.forEach((p, idx) => {
+        pts.push(p);
+        acc.push(f === 6 && idx === 3 ? 1.0 : 0.15);
+      });
     }
 
-    // --- Skywalk Bridge connecting the two towers at y = -0.10 and +0.05 ---
-    [-0.10, 0.05].forEach((yBridge) => {
-      const bridge = segment([cxA + rA, yBridge, 0], [cxB - rB, yBridge, 0], 12);
-      pts.push(...bridge);
-      // 1 midpoint gateway beacon per bridge level
-      acc.push(...bridge.map((_, idx) => (idx === 6 ? 1.0 : 0.15)));
+    // --- COMPARISON BRIDGE & DELTA VECTOR (+31.7 Advantage Trajectory) (68 pts -> Total 300 pts) ---
+    const bridge1 = segment([-0.16, -0.26, 0.02], [0.16, -0.26, 0.02], 10);
+    const bridge2 = segment([-0.16, -0.48, 0.02], [0.16, -0.48, 0.02], 10);
+    [...bridge1, ...bridge2].forEach((p, i) => {
+      pts.push(p);
+      acc.push(i === 5 || i === 15 ? 1.0 : 0.15);
+    });
+
+    const arrowShaft1 = segment([0.45, 0.18, 0.10], [-0.14, 0.84, 0.10], 20);
+    const arrowShaft2 = segment([0.45, 0.22, 0.10], [-0.10, 0.84, 0.10], 14);
+    const arrowHeadL = segment([-0.14, 0.84, 0.12], [-0.14, 0.62, 0.12], 7);
+    const arrowHeadR = segment([-0.14, 0.84, 0.12], [0.08, 0.84, 0.12], 7);
+    arrowShaft1.forEach((p, i) => {
+      pts.push(p);
+      acc.push(i === 0 || i === 10 || i === 19 ? 1.0 : 0.15);
+    });
+    [...arrowShaft2, ...arrowHeadL, ...arrowHeadR].forEach((p) => {
+      pts.push(p);
+      acc.push(0.15);
     });
 
     return fill(pts, acc);
   })();
 
-  // 5. HowItWorks: 3 Solid Terraced Plazas (3 Bosqichli Mustahkam Pog'onalar)
-  // 3 distinct solid circular platforms (01 Pinpoint -> 02 Filter -> 03 MakonScore)
+  // 5. HowItWorks (steps): Iconic 3D Geospatial Map Pin (📍) + 3 Concentric Isochrone Radius Rings
+  // Directly visualizes: 01 Xaritadan nuqta belgilang -> 02 Toifa va radiusni tanlang (300m-1km) -> 03 MakonScore
   const steps = (() => {
     const pts: Vec3[] = [];
     const acc: number[] = [];
 
-    const terraces = [
-      { cx: -0.62, cy: -0.58, cz: 0.18, r: 0.44 }, // Step 01
-      { cx: 0.0, cy: 0.0, cz: -0.16, r: 0.44 },   // Step 02
-      { cx: 0.62, cy: 0.58, cz: 0.18, r: 0.44 },    // Step 03
-    ];
+    const cyPin = 0.36;
+    const rPin = 0.42;
 
-    terraces.forEach((t, idx) => {
-      // Solid filled terrace plate (center + 3 rings = 37 pts)
-      const d = planarDisc(t.r, t.cy, t.cx, t.cz, 3, 0.15);
-      pts.push(...d.pts);
-      // Center pin marker of each terrace (3 points total)
-      acc.push(...d.acc.map((_, i) => (i === 0 ? 1.0 : 0.15)));
-
-      // Vertical skirt rim around each terrace
-      const skirt = circleRing(t.r, t.cy - 0.08, 16, t.cx, t.cz);
-      pts.push(...skirt);
-      acc.push(...skirt.map(() => 0.15));
-
-      if (idx === 2) {
-        // Summit beacon for Step 03 (5 green beacon nodes)
-        const beacon = segment([t.cx, t.cy, t.cz], [t.cx, t.cy + 0.35, t.cz], 7);
-        pts.push(...beacon);
-        acc.push(...beacon.map((_, i) => (i >= 2 ? 1.0 : 0.15)));
+    const buildPinContour = (scale: number, nArc: number, nLeg: number, z: number): Vec3[] => {
+      const out: Vec3[] = [];
+      const r = rPin * scale;
+      const tipY = cyPin - 0.80 * scale;
+      const aStart = (-25 * Math.PI) / 180;
+      const aEnd = (205 * Math.PI) / 180;
+      for (let i = 0; i < nArc; i++) {
+        const t = i / (nArc - 1);
+        const a = aStart + t * (aEnd - aStart);
+        out.push([Math.cos(a) * r, cyPin + Math.sin(a) * r, z]);
       }
+      const pLeft: Vec3 = [Math.cos(aEnd) * r, cyPin + Math.sin(aEnd) * r, z];
+      const pRight: Vec3 = [Math.cos(aStart) * r, cyPin + Math.sin(aStart) * r, z];
+      const pTip: Vec3 = [0, tipY, z];
+      const leftLeg = segment(pLeft, pTip, nLeg).slice(1);
+      const rightLeg = segment(pTip, pRight, nLeg).slice(1, -1);
+      return [...out, ...leftLeg, ...rightLeg];
+    };
+
+    // Outer Pin Contour: 83 pts (4 beacons)
+    const outerPin = buildPinContour(1.0, 42, 22, 0.10);
+    outerPin.forEach((p, i) => {
+      pts.push(p);
+      const isB = i === 0 || i === 21 || i === 41 || i === 62;
+      acc.push(isB ? 1.0 : 0.15);
     });
 
-    // Connecting stair ramps between Terrace 1 -> 2 and Terrace 2 -> 3
-    const ramp1 = segment([-0.42, -0.50, 0.10], [-0.18, -0.08, -0.10], 14);
-    const ramp2 = segment([0.18, 0.08, -0.10], [0.42, 0.50, 0.10], 14);
-    pts.push(...ramp1, ...ramp2);
-    // 1 waypoint beacon per ramp (2 points)
-    acc.push(
-      ...ramp1.map((_, i) => (i === 7 ? 1.0 : 0.15)),
-      ...ramp2.map((_, i) => (i === 7 ? 1.0 : 0.15))
-    );
+    // Inner Pin Contour: 61 pts
+    const innerPin = buildPinContour(0.86, 32, 16, 0.06);
+    innerPin.forEach((p) => {
+      pts.push(p);
+      acc.push(0.15);
+    });
 
-    // Ground contour baseline
-    for (let i = 0; i < 30; i++) {
-      const a = (i / 30) * Math.PI * 2;
-      pts.push([Math.cos(a) * 1.05, -0.92, Math.sin(a) * 0.75]);
-      acc.push(0.12);
+    // Inner Donut Circle inside the Map Pin head + center bullseye beacon: 29 pts (5 beacons)
+    pts.push([0, cyPin, 0.16]);
+    acc.push(1.0);
+    for (let i = 0; i < 28; i++) {
+      const a = (i / 28) * Math.PI * 2;
+      pts.push([Math.cos(a) * 0.18, cyPin + Math.sin(a) * 0.18, 0.14]);
+      acc.push(i % 7 === 0 ? 1.0 : 0.15);
     }
+
+    // 3 Concentric Perspective Isochrone Radius Rings (300m, 500m, 1km) around the pinpoint target (127 pts -> Total 300 pts)
+    const targetY = -0.52;
+    const rings = [
+      { rx: 0.38, ry: 0.14, n: 29, z: 0.02, beacons: [0, 14] },
+      { rx: 0.68, ry: 0.24, n: 42, z: -0.04, beacons: [0, 21] },
+      { rx: 0.98, ry: 0.34, n: 56, z: -0.10, beacons: [0] },
+    ];
+    rings.forEach((rg) => {
+      for (let i = 0; i < rg.n; i++) {
+        const a = (i / rg.n) * Math.PI * 2;
+        const x = Math.cos(a) * rg.rx;
+        const y = targetY + Math.sin(a) * rg.ry;
+        const z = rg.z + Math.sin(a) * 0.08;
+        pts.push([x, y, z]);
+        acc.push(rg.beacons.includes(i) ? 1.0 : 0.15);
+      }
+    });
 
     return fill(pts, acc);
   })();
 
-  // 6. IndustrySolutions: Central Command Hub + 4 Solid Sector Islands (Markaziy Hub va 4 Ta Soha Oroli)
-  // Central solid urban intelligence hub connected to 4 solid sector platforms
+  // 6. IndustrySolutions (clusters): Central Hexagonal AI Core + 4 Quadrant Sector Hexagons
+  // Directly visualizes: Central AI Hub + 4 Distinct Business Sectors (HoReCa, Retail, Dorixona, Ko'chmas Mulk)
   const clusters = (() => {
     const pts: Vec3[] = [];
     const acc: number[] = [];
 
-    // Central Command Hub: dense core with 50 points
-    const core = fibSphere(50, 0.38);
-    pts.push(...core);
-    // 4 cardinal apex beacons on central core (4 points)
-    acc.push(...core.map((_, idx) => (idx < 4 ? 1.0 : 0.15)));
+    const addHexHub = (
+      cx: number,
+      cy: number,
+      cz: number,
+      rOuter: number,
+      nSideOuter: number,
+      nSideInner: number
+    ) => {
+      pts.push([cx, cy, cz + 0.06]);
+      acc.push(1.0);
 
-    // Equatorial and polar rings on central hub
-    const hubRing1 = circleRing(0.42, 0, 20);
-    pts.push(...hubRing1);
-    acc.push(...hubRing1.map(() => 0.15));
+      const vertsO: Vec3[] = [];
+      const vertsI: Vec3[] = [];
+      for (let k = 0; k < 6; k++) {
+        const a = (k * Math.PI) / 3 + Math.PI / 6;
+        vertsO.push([cx + Math.cos(a) * rOuter, cy + Math.sin(a) * rOuter, cz]);
+        vertsI.push([
+          cx + Math.cos(a) * (rOuter * 0.55),
+          cy + Math.sin(a) * (rOuter * 0.55),
+          cz + 0.03,
+        ]);
+      }
+      for (let k = 0; k < 6; k++) {
+        const edge = segment(vertsO[k], vertsO[(k + 1) % 6], nSideOuter).slice(0, -1);
+        edge.forEach((p) => {
+          pts.push(p);
+          acc.push(0.15);
+        });
+      }
+      for (let k = 0; k < 6; k++) {
+        const edge = segment(vertsI[k], vertsI[(k + 1) % 6], nSideInner).slice(0, -1);
+        edge.forEach((p) => {
+          pts.push(p);
+          acc.push(0.15);
+        });
+      }
+    };
 
-    // 4 Solid Sector Islands: HoReCa, Retail, Pharmacy, Real Estate
-    const islands: { pos: Vec3; name: string }[] = [
-      { pos: [0.90, 0.30, 0.0], name: 'HoReCa' },
-      { pos: [0.0, -0.35, 0.90], name: 'Retail' },
-      { pos: [-0.90, 0.25, 0.0], name: 'Dorixona' },
-      { pos: [0.0, 0.35, -0.90], name: 'Mulk' },
+    // 1. Central Command Hexagon at (0, 0): 49 pts (1 beacon)
+    addHexHub(0, 0, 0.10, 0.32, 6, 4);
+
+    // 2. 4 Sector Satellite Hexagons in the 4 quadrants: 148 pts (4 beacons)
+    const sectors: Vec3[] = [
+      [-0.64, 0.56, 0.02],  // HoReCa
+      [0.64, 0.56, 0.02],   // Retail
+      [-0.64, -0.56, 0.02], // Dorixona
+      [0.64, -0.56, 0.02],  // Ko'chmas Mulk
     ];
-
-    islands.forEach((isl) => {
-      // Solid filled island disc
-      const d = planarDisc(0.24, isl.pos[1], isl.pos[0], isl.pos[2], 2, 0.15);
-      pts.push(...d.pts);
-      // Center beacon of each island (1 per island = 4 points)
-      acc.push(...d.acc.map((_, i) => (i === 0 ? 1.0 : 0.15)));
-
-      // Highway laser connection corridor from central hub to island
-      const bridge = segment([0, 0, 0], isl.pos, 12);
-      pts.push(...bridge);
-      // 1 gateway beacon on bridge (4 points)
-      acc.push(...bridge.map((_, i) => (i === 11 ? 1.0 : 0.15)));
+    sectors.forEach(([sx, sy, sz]) => {
+      addHexHub(sx, sy, sz, 0.25, 5, 3);
     });
 
-    // Outer orbital highway ring
-    for (let i = 0; i < 32; i++) {
-      const a = (i / 32) * Math.PI * 2;
-      pts.push([Math.cos(a) * 1.08, Math.sin(a) * 0.22, Math.sin(a) * 1.08]);
-      acc.push(0.12);
-    }
+    // 3. 4 Radial Laser Bridges from Central Hub to the 4 Sector Hubs: 36 pts (4 beacons)
+    sectors.forEach(([sx, sy]) => {
+      const p1: Vec3 = [sx * 0.36, sy * 0.36, 0.08];
+      const p2: Vec3 = [sx * 0.72, sy * 0.72, 0.04];
+      const bridge = segment(p1, p2, 9);
+      bridge.forEach((p, idx) => {
+        pts.push(p);
+        acc.push(idx === 4 ? 1.0 : 0.15);
+      });
+    });
+
+    // 4. Outer Inter-Sector Perimeter Frame connecting the 4 quadrants: 67 pts -> Total 300 pts (5 beacons)
+    const frameLinks: { a: Vec3; b: Vec3; n: number; bIdx: number }[] = [
+      { a: [-0.36, 0.68, -0.04], b: [0.36, 0.68, -0.04], n: 17, bIdx: 8 },
+      { a: [-0.36, -0.68, -0.04], b: [0.36, -0.68, -0.04], n: 17, bIdx: 8 },
+      { a: [-0.74, 0.28, -0.04], b: [-0.74, -0.28, -0.04], n: 17, bIdx: 8 },
+      { a: [0.74, 0.28, -0.04], b: [0.74, -0.28, -0.04], n: 16, bIdx: 8 },
+    ];
+    frameLinks.forEach((lk, lIdx) => {
+      const seg = segment(lk.a, lk.b, lk.n);
+      seg.forEach((p, idx) => {
+        pts.push(p);
+        acc.push(idx === lk.bIdx || (lIdx === 0 && idx === 0) ? 1.0 : 0.15);
+      });
+    });
 
     return fill(pts, acc);
   })();
 
-  // 7. RoiCalculator: 4 Solid 3D Financial Bar Columns (4 Ta Mustahkam 3D Moliyaviy Ustun)
-  // 4 solid 3D volumetric bar columns showing exponential capital growth
+  // 7. RoiCalculator (bars): 4 Crisp Ascending Financial Columns + Rising Breakout Trend Arrow (📈)
+  // Directly visualizes: Sarmoyangizni hisoblang — ROI Kalkulyatori & Capital Protection Growth
   const bars = (() => {
     const pts: Vec3[] = [];
     const acc: number[] = [];
 
-    // Solid baseline platform under all 4 bars at y = -0.92
-    for (let i = 0; i < 36; i++) {
-      const a = (i / 36) * Math.PI * 2;
-      pts.push([Math.cos(a) * 1.05, -0.92, Math.sin(a) * 0.35]);
-      acc.push(0.15);
-    }
-
-    const barConfigs = [
-      { x: -0.72, yTop: -0.42, w: 0.16, d: 0.14 }, // Base
-      { x: -0.24, yTop: -0.10, w: 0.16, d: 0.14 }, // Optimized
-      { x: 0.24, yTop: 0.38, w: 0.16, d: 0.14 },  // Protected
-      { x: 0.72, yTop: 0.96, w: 0.16, d: 0.14 },  // Peak Return
-    ];
-
-    barConfigs.forEach((cfg, bIdx) => {
-      // 4 vertical corner columns
-      const corners = [
-        [cfg.x - cfg.w, -cfg.d],
-        [cfg.x + cfg.w, -cfg.d],
-        [cfg.x + cfg.w, cfg.d],
-        [cfg.x - cfg.w, cfg.d],
-      ];
-      corners.forEach(([cx, cz]) => {
-        const edge = segment([cx, -0.92, cz], [cx, cfg.yTop, cz], 8);
-        pts.push(...edge);
-        acc.push(...edge.map(() => 0.15));
-      });
-
-      // Solid filled top cap (3x3 grid = 9 pts)
-      for (let ix = -1; ix <= 1; ix++) {
-        for (let iz = -1; iz <= 1; iz++) {
-          pts.push([cfg.x + (ix * cfg.w) / 1.2, cfg.yTop, (iz * cfg.d) / 1.2]);
-          // Peak return bar (bIdx === 3) top cap center beacons (4 points)
-          const isTopBeacon = bIdx === 3 && (ix === 0 || iz === 0);
-          acc.push(isTopBeacon ? 1.0 : 0.15);
-        }
-      }
-
-      // Mid-level horizontal band
-      const yMid = -0.92 + (cfg.yTop - -0.92) * 0.5;
-      corners.forEach(([cx, cz]) => {
-        pts.push([cx, yMid, cz]);
-        acc.push(0.15);
-      });
+    // Horizontal X-Axis baseline at y = -0.84: 32 pts (2 beacons)
+    const baseAxis = segment([-0.92, -0.84, 0], [0.92, -0.84, 0], 32);
+    baseAxis.forEach((p, i) => {
+      pts.push(p);
+      acc.push(i === 0 || i === 31 ? 1.0 : 0.15);
     });
 
-    // Exponential growth trend arc curving over the tops of all 4 bars (38 pts)
-    for (let i = 0; i < 38; i++) {
-      const t = i / 37;
-      const x = -0.92 + t * 1.84;
-      const y = -0.55 + Math.pow(t, 1.45) * 1.62;
-      pts.push([x, y, 0.20]);
-      // Apex arrow tip: top 6 points are green beacons (6 points)
-      acc.push(i >= 32 ? 1.0 : 0.15);
+    // 4 Ascending Rectangular Columns: 224 pts (6 beacons)
+    const barsCfg = [
+      { x1: -0.78, x2: -0.50, yTop: -0.36, nSide: 10, nFillRows: 3 },
+      { x1: -0.34, x2: -0.06, yTop: -0.04, nSide: 14, nFillRows: 5 },
+      { x1: 0.10, x2: 0.38, yTop: 0.30, nSide: 18, nFillRows: 7 },
+      { x1: 0.54, x2: 0.82, yTop: 0.66, nSide: 22, nFillRows: 9 },
+    ];
+    barsCfg.forEach((b, bIdx) => {
+      const leftW = segment([b.x1, -0.84, 0.04], [b.x1, b.yTop, 0.04], b.nSide);
+      const rightW = segment([b.x2, -0.84, 0.04], [b.x2, b.yTop, 0.04], b.nSide);
+      const topCap = segment([b.x1, b.yTop, 0.06], [b.x2, b.yTop, 0.06], 6);
+
+      leftW.forEach((p, i) => {
+        pts.push(p);
+        acc.push(bIdx === 3 && i === b.nSide - 1 ? 1.0 : 0.15);
+      });
+      rightW.forEach((p, i) => {
+        pts.push(p);
+        acc.push(bIdx === 3 && i === b.nSide - 1 ? 1.0 : 0.15);
+      });
+      topCap.forEach((p, i) => {
+        pts.push(p);
+        acc.push(i === 2 ? 1.0 : 0.15);
+      });
+
+      for (let r = 1; r <= b.nFillRows; r++) {
+        const yr = -0.84 + (r / (b.nFillRows + 1)) * (b.yTop - -0.84);
+        const row = segment([b.x1 + 0.06, yr, 0.02], [b.x2 - 0.06, yr, 0.02], 3);
+        row.forEach((p) => {
+          pts.push(p);
+          acc.push(0.15);
+        });
+      }
+    });
+
+    // Rising Exponential Breakout Arrow above the bars: 44 pts -> Total 300 pts (6 beacons)
+    for (let i = 0; i < 28; i++) {
+      const t = i / 27;
+      const x = -0.76 + t * 1.50;
+      const y = -0.10 + Math.pow(t, 1.15) * 1.06;
+      pts.push([x, y, 0.14]);
+      const isB = i === 0 || i === 9 || i === 18 || i === 27;
+      acc.push(isB ? 1.0 : 0.15);
     }
+
+    const wingL = segment([0.74, 0.96, 0.16], [0.46, 0.94, 0.16], 8);
+    const wingR = segment([0.74, 0.96, 0.16], [0.72, 0.68, 0.16], 8);
+    wingL.forEach((p, i) => {
+      pts.push(p);
+      acc.push(i === 7 ? 1.0 : 0.15);
+    });
+    wingR.forEach((p, i) => {
+      pts.push(p);
+      acc.push(i === 7 ? 1.0 : 0.15);
+    });
 
     return fill(pts, acc);
   })();
 
-  // 8. FaqSection: Tri-Axial Precision Gyroscope & Prismatic Core (Mustahkam Giroskop va Prizma)
+  // 8. FaqSection (ring): Sculptural Question Mark (?) Emblem + 6-Node Knowledge Halo Ring
+  // Directly visualizes: Ko'p so'raladigan savollar (6 FAQs)
   const ring = (() => {
     const pts: Vec3[] = [];
     const acc: number[] = [];
-    const R = 1.10;
 
-    // 3 Solid multi-point orthogonal gimbal rings (Equator, Prime Meridian, Cross)
-    const numRingPts = 48;
-    for (let i = 0; i < numRingPts; i++) {
-      const a = (i / numRingPts) * Math.PI * 2;
-      // Cardinal alignment beacons at 90 degree intervals (i === 0, 12, 24, 36)
-      const isCardinal = i % 12 === 0;
-
-      pts.push([Math.cos(a) * R, 0, Math.sin(a) * R]);
-      acc.push(isCardinal ? 1.0 : 0.15);
-
-      pts.push([Math.cos(a) * R, Math.sin(a) * R, 0]);
-      acc.push(isCardinal ? 1.0 : 0.15);
-
-      pts.push([0, Math.sin(a) * R, Math.cos(a) * R]);
-      acc.push(0.15);
+    // 1. Outer Knowledge Halo Ring (r = 1.04) with 6 emerald beacons for the 6 FAQs: 84 pts (6 beacons)
+    for (let i = 0; i < 84; i++) {
+      const a = (i / 84) * Math.PI * 2;
+      pts.push([Math.cos(a) * 1.04, Math.sin(a) * 1.04, -0.06]);
+      acc.push(i % 14 === 0 ? 1.0 : 0.15);
     }
 
-    // Dense solid faceted core prism (diamond octahedral beacon)
-    const topD: Vec3 = [0, 0.45, 0];
-    const botD: Vec3 = [0, -0.45, 0];
-    const midD: Vec3[] = [
-      [0.32, 0, 0],
-      [0, 0, 0.32],
-      [-0.32, 0, 0],
-      [0, 0, -0.32],
-    ];
-    // Top apex and bottom nadir are green beacons (2 points)
-    pts.push(topD, botD);
-    acc.push(1.0, 1.0);
+    // 2. Sculptural 3-Ribbon Question Mark (?) in the center: 186 pts (6 beacons)
+    const questionCurve = (t: number, offset: number): Vec3 => {
+      if (t <= 0.62) {
+        const u = t / 0.62;
+        const a = (165 - u * 210) * (Math.PI / 180);
+        const r = 0.38 + offset;
+        const cx = 0.0, cy = 0.34;
+        return [cx + Math.cos(a) * r, cy + Math.sin(a) * r, 0.10];
+      } else if (t <= 0.82) {
+        const u = (t - 0.62) / 0.20;
+        const aStart = (-45 * Math.PI) / 180;
+        const r = 0.38 + offset;
+        const x0 = Math.cos(aStart) * r;
+        const y0 = 0.34 + Math.sin(aStart) * r;
+        const x1 = offset;
+        const y1 = -0.06;
+        const ease = u * u * (3 - 2 * u);
+        return [x0 + (x1 - x0) * ease, y0 + (y1 - y0) * ease, 0.12];
+      } else {
+        const u = (t - 0.82) / 0.18;
+        return [offset, -0.06 - u * 0.26, 0.12];
+      }
+    };
 
-    midD.forEach((m) => {
-      const ray1 = segment(topD, m, 6);
-      const ray2 = segment(botD, m, 6);
-      pts.push(...ray1, ...ray2);
-      acc.push(...ray1.map(() => 0.15), ...ray2.map(() => 0.15));
+    const qOffsets = [-0.065, 0.0, 0.065];
+    qOffsets.forEach((off, oIdx) => {
+      for (let i = 0; i < 62; i++) {
+        const t = i / 61;
+        pts.push(questionCurve(t, off));
+        const isB =
+          oIdx === 1 && (i === 0 || i === 15 || i === 30 || i === 44 || i === 53 || i === 61);
+        acc.push(isB ? 1.0 : 0.15);
+      }
     });
-    // Core center node
-    pts.push([0, 0, 0]);
-    acc.push(0.15);
+
+    // 3. The Question Mark Bottom Dot at (0, -0.60): 30 pts -> Total 300 pts (2 beacons)
+    const dotY = -0.60;
+    pts.push([0, dotY, 0.16]);
+    acc.push(1.0);
+    for (let i = 0; i < 11; i++) {
+      const a = (i / 11) * Math.PI * 2;
+      pts.push([Math.cos(a) * 0.055, dotY + Math.sin(a) * 0.055, 0.15]);
+      acc.push(i === 0 ? 1.0 : 0.15);
+    }
+    for (let i = 0; i < 18; i++) {
+      const a = (i / 18) * Math.PI * 2;
+      pts.push([Math.cos(a) * 0.105, dotY + Math.sin(a) * 0.105, 0.14]);
+      acc.push(0.15);
+    }
 
     return fill(pts, acc);
   })();
@@ -834,15 +1004,16 @@ export const MorphObject: React.FC = () => {
       mouseY += (targetMouseY - mouseY) * (1 - Math.exp(-dt * 2.8));
 
       /* -------- Stable Isometric View (Clear, Precise & Recognizable) -------- */
-      // Uzbekistan map starts planar facing the camera (yaw = 0, pitch = 0),
-      // then smoothly tilts into the 3-loop DNA double helix as scroll progresses.
-      const isWordmark = wordmarkWeight > 0.05;
+      // Each archetype sits at its custom architectural angle from SHAPE_ANGLES:
+      // completely solid and clear at rest, smoothly interpolating during scroll flight.
+      const aAng = SHAPE_ANGLES[A.shape] || { yaw: 0, pitch: 0 };
+      const bAng = SHAPE_ANGLES[B.shape] || { yaw: 0, pitch: 0 };
+      const baseYaw = lerp(aAng.yaw, bAng.yaw, e);
+      const basePitch = lerp(aAng.pitch, bAng.pitch, e);
+
       const isMap = (A.shape === 'map' || A.shape === 'globe') && e < 0.6;
-      const isLayers = A.shape === 'layers' || B.shape === 'layers';
-      const baseYaw = isWordmark || isMap ? 0 : (isLayers ? -0.04 : -0.22);
-      const basePitch = isWordmark || isMap ? 0 : (isLayers ? -0.05 : -0.18);
-      const yaw = baseYaw + mouseX * (isMap ? 0.02 : (isLayers ? 0.04 : 0.06));
-      const pitch = basePitch + mouseY * (isMap ? 0.02 : (isLayers ? 0.03 : 0.04));
+      const yaw = baseYaw + mouseX * (isMap ? 0.02 : 0.04);
+      const pitch = basePitch + mouseY * (isMap ? 0.02 : 0.03);
 
       const cY = Math.cos(yaw), sY = Math.sin(yaw);
       const cP = Math.cos(pitch), sP = Math.sin(pitch);
