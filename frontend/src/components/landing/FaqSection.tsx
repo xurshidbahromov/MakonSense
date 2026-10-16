@@ -55,7 +55,7 @@ export const FaqSection: React.FC = () => {
       id="faq"
       className="py-24 sm:py-36 border-t border-black/[0.05] dark:border-white/[0.05] select-none scroll-mt-24"
     >
-      <div className="max-w-4xl mx-auto px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8">
 
         {/* Label + Headline */}
         <div className="max-w-2xl">
@@ -69,9 +69,9 @@ export const FaqSection: React.FC = () => {
           </h2>
         </div>
 
-        {/* FAQ List with Grand 3D Gyroscope Ring Hologram Backdrop */}
+        {/* FAQ List with Grand 3D Question Mark Emblem Backdrop */}
         <div className="relative mt-14">
-          {/* Right Quadrant 3D Backdrop Anchor (Calibrated Precision Gyroscope Ring) */}
+          {/* Right Quadrant 3D Backdrop Anchor (Question Mark Emblem + 6-Node Halo) */}
           <div className="absolute top-1/2 -translate-y-1/2 -right-16 lg:-right-6 xl:right-0 pointer-events-none hidden lg:flex items-center justify-center">
             <MorphAnchor shape="ring" className="w-[520px] h-[520px] lg:w-[580px] lg:h-[580px] xl:w-[640px] xl:h-[640px]" />
           </div>
