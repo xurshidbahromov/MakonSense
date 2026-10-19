@@ -68,6 +68,12 @@ export interface AnalysisContext {
   location_label?: string;
   district_name?: string;
   region_name?: string;
+  street_address?: string;
+  mahalla_name?: string;
+  bus_stops_count?: number;
+  scanned_objects_count?: number;
+  is_live_osm?: boolean;
+  live_pois_geojson?: any[];
   financials?: FinancialForecast;
   hourly_traffic?: HourlyTrafficSlot[];
 }

@@ -98,6 +98,7 @@ export const MapView: React.FC = () => {
   const {
     selectedCoords,
     setSelectedCoords,
+    inspection,
     recentHistory,
     goBackLocation,
     activeLayers,
@@ -141,6 +142,11 @@ export const MapView: React.FC = () => {
     type: 'hex' | 'poi' | 'transit';
     distanceMeters?: number;
   } | null>(null);
+
+  const combinedPois = useMemo(() => {
+    const livePois = inspection?.context?.live_pois_geojson || [];
+    return [...pois, ...livePois];
+  }, [pois, inspection?.context?.live_pois_geojson]);
 
   const hexagons = useMemo<HexFeature[]>(
     () => generateLocalHexagons(selectedCoords, category, radiusMeters),
@@ -431,11 +437,11 @@ export const MapView: React.FC = () => {
       );
     }
 
-    if (activeLayers.pois && pois.length > 0) {
+    if (activeLayers.pois && combinedPois.length > 0) {
       layers.push(
         new ScatterplotLayer({
           id: 'poi-layer',
-          data: pois,
+          data: combinedPois,
           getPosition: (d: any) => d.geometry.coordinates,
           radiusUnits: 'pixels',
           getRadius: (d: any) => {
@@ -569,7 +575,7 @@ export const MapView: React.FC = () => {
     deckOverlayRef.current.setProps({ layers });
   }, [
     hexagons,
-    pois,
+    combinedPois,
     transit,
     selectedCoords,
     compareCoords,

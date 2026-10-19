@@ -7,6 +7,7 @@ import {
   SavedLocation,
 } from '../types';
 import { calculateLocalSpatialScore } from '../utils/clientSpatialEngine';
+import { fetchLiveOsmSpatialIntelligence } from '../utils/liveOsmSpatialService';
 
 export interface LayerVisibility {
   hexagons: boolean;
@@ -74,6 +75,7 @@ interface AnalyticsState {
   radiusMeters: number;
   inspection: InspectResult;
   loading: boolean;
+  osmScanning: boolean;
   error: string | null;
   activeLayers: LayerVisibility;
   reportModalOpen: boolean;
@@ -125,6 +127,7 @@ export const useAnalyticsStore = create<AnalyticsState>((set, get) => ({
   radiusMeters: 500,
   inspection: calculateLocalSpatialScore(DEFAULT_COORDS, 'cafe', 500),
   loading: false,
+  osmScanning: false,
   error: null,
   activeLayers: {
     hexagons: true,
@@ -197,6 +200,11 @@ export const useAnalyticsStore = create<AnalyticsState>((set, get) => ({
       compareInspection: calculateLocalSpatialScore(compareCoords, cat, radiusMeters),
     });
     get().inspectPoint();
+    fetchLiveOsmSpatialIntelligence(compareCoords, cat, radiusMeters).then((liveComp) => {
+      if (get().category === cat) {
+        set({ compareInspection: liveComp });
+      }
+    });
   },
 
   setRadiusMeters: (r: number) => {
@@ -206,6 +214,11 @@ export const useAnalyticsStore = create<AnalyticsState>((set, get) => ({
       compareInspection: calculateLocalSpatialScore(compareCoords, category, r),
     });
     get().inspectPoint();
+    fetchLiveOsmSpatialIntelligence(compareCoords, category, r).then((liveComp) => {
+      if (get().radiusMeters === r) {
+        set({ compareInspection: liveComp });
+      }
+    });
   },
 
   toggleLayer: (key: keyof LayerVisibility) => {
@@ -230,6 +243,15 @@ export const useAnalyticsStore = create<AnalyticsState>((set, get) => ({
       isPickingCompareOnMap: false,
       showComparePinOnMap: true,
     });
+    fetchLiveOsmSpatialIntelligence(coords, category, radiusMeters).then((liveComp) => {
+      const currentComp = get().compareCoords;
+      if (
+        Math.abs(currentComp.latitude - coords.latitude) < 0.0001 &&
+        Math.abs(currentComp.longitude - coords.longitude) < 0.0001
+      ) {
+        set({ compareInspection: liveComp });
+      }
+    });
   },
 
   setIsPickingCompareOnMap: (picking: boolean) => {
@@ -244,14 +266,12 @@ export const useAnalyticsStore = create<AnalyticsState>((set, get) => ({
   },
 
   swapCompareLocations: () => {
-    const { selectedCoords, compareCoords, category, radiusMeters } = get();
-    const newPrimary = compareCoords;
-    const newSecondary = selectedCoords;
+    const { selectedCoords, compareCoords, inspection, compareInspection } = get();
     set({
-      selectedCoords: newPrimary,
-      compareCoords: newSecondary,
-      inspection: calculateLocalSpatialScore(newPrimary, category, radiusMeters),
-      compareInspection: calculateLocalSpatialScore(newSecondary, category, radiusMeters),
+      selectedCoords: compareCoords,
+      compareCoords: selectedCoords,
+      inspection: compareInspection,
+      compareInspection: inspection,
     });
   },
 
@@ -330,47 +350,23 @@ export const useAnalyticsStore = create<AnalyticsState>((set, get) => ({
 
     // 1. Instant local spatial calculation (0 ms response, ultra-smooth)
     const localData = calculateLocalSpatialScore(coords, category, radius);
-    set({ inspection: localData, loading: false });
+    set({ inspection: localData, loading: false, osmScanning: true });
 
-    // 2. Asynchronously sync with FastAPI backend if running, preserving enriched local context
+    // 2. Real-Time OpenStreetMap (Nominatim Reverse Geocoding + Overpass Live Spatial Scan)
     try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 1800);
+      const liveOsmData = await fetchLiveOsmSpatialIntelligence(coords, category, radius);
+      const currentCoords = get().selectedCoords;
+      const isStillActive =
+        Math.abs(currentCoords.latitude - coords.latitude) < 0.0001 &&
+        Math.abs(currentCoords.longitude - coords.longitude) < 0.0001 &&
+        get().category === category &&
+        get().radiusMeters === radius;
 
-      const response = await fetch('/api/v1/analytics/inspect', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          latitude: coords.latitude,
-          longitude: coords.longitude,
-          radius_meters: radius,
-          business_category: category,
-        }),
-        signal: controller.signal,
-      });
-
-      clearTimeout(timeoutId);
-
-      if (response.ok) {
-        const data: InspectResult = await response.json();
-        set({
-          inspection: {
-            ...data,
-            context: {
-              ...localData.context,
-              ...data.context,
-              location_label: localData.context.location_label,
-              district_name: localData.context.district_name,
-              region_name: localData.context.region_name,
-              financials: localData.context.financials,
-              hourly_traffic: localData.context.hourly_traffic,
-            },
-          },
-          loading: false,
-        });
+      if (isStillActive) {
+        set({ inspection: liveOsmData, loading: false, osmScanning: false });
       }
     } catch {
-      // Local calculation is already active and accurate
+      set({ osmScanning: false });
     }
   },
 

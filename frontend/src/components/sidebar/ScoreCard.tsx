@@ -31,6 +31,7 @@ export const ScoreCard: React.FC = () => {
   const {
     inspection,
     loading,
+    osmScanning,
     category,
     setCategory,
     radiusMeters,
@@ -90,6 +91,22 @@ export const ScoreCard: React.FC = () => {
             <span className="truncate">
               {inspection?.context?.district_name || 'Toshkent sh.'}
             </span>
+            {osmScanning ? (
+              <span className="px-1.5 py-0.2 rounded bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/25 text-[8px] font-mono font-bold shrink-0 animate-pulse">
+                OSM SKAN...
+              </span>
+            ) : inspection?.context?.is_live_osm ? (
+              <span
+                title={
+                  inspection?.context?.scanned_objects_count
+                    ? `OpenStreetMap orqali ${inspection.context.scanned_objects_count} ta real obyekt tahlil qilindi`
+                    : 'Real-Time OpenStreetMap ma’lumotlari'
+                }
+                className="px-1.5 py-0.2 rounded bg-[#0E9F6E]/15 text-[#0E9F6E] border border-[#0E9F6E]/25 text-[8px] font-mono font-bold shrink-0"
+              >
+                LIVE OSM{inspection?.context?.scanned_objects_count ? ` · ${inspection.context.scanned_objects_count}` : ''}
+              </span>
+            ) : null}
           </div>
           <div className="flex items-center gap-1.5 mt-0.5">
             <h2 className="text-sm font-bold text-[#111111] dark:text-[#FDFDFD] truncate tracking-tight select-text">

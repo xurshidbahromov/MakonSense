@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Search, MapPin, Train, ShoppingBag, Globe2, X, Compass, GitCompare } from 'lucide-react';
+import { Search, MapPin, Train, ShoppingBag, Globe2, X, Compass, GitCompare, Loader2 } from 'lucide-react';
 import { useAnalyticsStore } from '../../store/useAnalyticsStore';
+import { searchOsmPlacesUzbekistan, LiveOsmSearchPlace } from '../../utils/liveOsmSpatialService';
 
 interface SearchItem {
   id: string;
@@ -9,6 +10,7 @@ interface SearchItem {
   lat: number;
   lon: number;
   description: string;
+  isLiveOsm?: boolean;
 }
 
 const UZBEKISTAN_LOCATIONS: SearchItem[] = [
@@ -69,25 +71,66 @@ export const SearchBar: React.FC = () => {
   const [activeFilter, setActiveFilter] = useState<'all' | 'metro' | 'hub' | 'district' | 'region'>('all');
   const [isOpen, setIsOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [liveOsmResults, setLiveOsmResults] = useState<LiveOsmSearchPlace[]>([]);
+  const [isSearchingOsm, setIsSearchingOsm] = useState(false);
   const { setSelectedCoords, setCompareCoords, setActiveSidebarTab } = useAnalyticsStore();
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const parsedCoord = parseCoordinateQuery(query);
 
-  const filtered = UZBEKISTAN_LOCATIONS.filter((item) => {
+  // Debounced live OpenStreetMap Nominatim search across Uzbekistan
+  useEffect(() => {
+    const trimmed = query.trim();
+    if (trimmed.length < 2 || parsedCoord) {
+      setLiveOsmResults([]);
+      setIsSearchingOsm(false);
+      return;
+    }
+
+    let cancelled = false;
+    setIsSearchingOsm(true);
+    const timer = setTimeout(async () => {
+      const results = await searchOsmPlacesUzbekistan(trimmed);
+      if (!cancelled) {
+        setLiveOsmResults(results);
+        setIsSearchingOsm(false);
+      }
+    }, 260);
+
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
+  }, [query]);
+
+  const localFiltered = UZBEKISTAN_LOCATIONS.filter((item) => {
     const matchesCategory = activeFilter === 'all' || item.category === activeFilter;
     const matchesQuery =
       query.trim() === '' ||
       item.name.toLowerCase().includes(query.toLowerCase()) ||
       item.description.toLowerCase().includes(query.toLowerCase());
     return matchesCategory && matchesQuery;
-  }).slice(0, 9);
+  });
+
+  // Combine curated locations + live OpenStreetMap locations (deduplicated)
+  const filtered: SearchItem[] = [
+    ...localFiltered,
+    ...liveOsmResults.filter(
+      (osm) =>
+        (activeFilter === 'all' || osm.category === activeFilter) &&
+        !localFiltered.some(
+          (loc) =>
+            loc.name.toLowerCase() === osm.name.toLowerCase() ||
+            (Math.abs(loc.lat - osm.lat) < 0.002 && Math.abs(loc.lon - osm.lon) < 0.002)
+        )
+    ),
+  ].slice(0, 10);
 
   // Reset highlighted index when results change
   useEffect(() => {
     setActiveIndex(0);
-  }, [query, activeFilter]);
+  }, [query, activeFilter, liveOsmResults.length]);
 
   // Global Cmd+K / Ctrl+K or '/' shortcut to focus SearchBar instantly (no animation delay)
   useEffect(() => {
@@ -213,27 +256,35 @@ export const SearchBar: React.FC = () => {
           className="popover-origin-tc apple-glass-dropdown backdrop-blur-[44px] backdrop-saturate-[210%] absolute top-full mt-2.5 left-0 w-full sm:w-[430px] rounded-[24px] overflow-hidden z-50"
         >
           {/* Category Filter Pills — Translucent header strip */}
-          <div className="px-3 py-2.5 border-b border-black/[0.06] dark:border-white/[0.08] bg-white/25 dark:bg-white/[0.02] flex items-center gap-1 overflow-x-auto no-scrollbar select-none">
-            {[
-              { id: 'all', label: 'Barchasi' },
-              { id: 'metro', label: 'Metro' },
-              { id: 'hub', label: 'Savdo Hab' },
-              { id: 'district', label: 'Tumanlar' },
-              { id: 'region', label: 'Viloyatlar' },
-            ].map((tab) => (
-              <button
-                key={tab.id}
-                type="button"
-                onClick={() => setActiveFilter(tab.id as any)}
-                className={`press-scale px-2.5 py-1 rounded-full text-[10px] font-semibold whitespace-nowrap cursor-pointer ${
-                  activeFilter === tab.id
-                    ? 'bg-[#111111] text-white dark:bg-white dark:text-[#111111] shadow-sm'
-                    : 'bg-white/50 dark:bg-white/[0.06] border border-black/[0.05] dark:border-white/[0.08] text-[#525854] dark:text-[#9CA3AF] hover:text-[#111111] dark:hover:text-white'
-                }`}
-              >
-                {tab.label}
-              </button>
-            ))}
+          <div className="px-3 py-2.5 border-b border-black/[0.06] dark:border-white/[0.08] bg-white/25 dark:bg-white/[0.02] flex items-center justify-between gap-2 overflow-x-auto no-scrollbar select-none">
+            <div className="flex items-center gap-1">
+              {[
+                { id: 'all', label: 'Barchasi' },
+                { id: 'metro', label: 'Metro' },
+                { id: 'hub', label: 'Savdo Hab' },
+                { id: 'district', label: 'Tumanlar' },
+                { id: 'region', label: 'Viloyatlar' },
+              ].map((tab) => (
+                <button
+                  key={tab.id}
+                  type="button"
+                  onClick={() => setActiveFilter(tab.id as any)}
+                  className={`press-scale px-2.5 py-1 rounded-full text-[10px] font-semibold whitespace-nowrap cursor-pointer ${
+                    activeFilter === tab.id
+                      ? 'bg-[#111111] text-white dark:bg-white dark:text-[#111111] shadow-sm'
+                      : 'bg-white/50 dark:bg-white/[0.06] border border-black/[0.05] dark:border-white/[0.08] text-[#525854] dark:text-[#9CA3AF] hover:text-[#111111] dark:hover:text-white'
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+            {isSearchingOsm && (
+              <span className="flex items-center gap-1 text-[9px] font-mono text-[#0E9F6E] shrink-0">
+                <Loader2 className="w-3 h-3 animate-spin" />
+                <span>OSM</span>
+              </span>
+            )}
           </div>
 
           <div className="max-h-72 overflow-y-auto divide-y divide-black/[0.04] dark:divide-white/[0.05] bg-transparent">
@@ -265,7 +316,9 @@ export const SearchBar: React.FC = () => {
 
             {filtered.length === 0 && !parsedCoord ? (
               <div className="px-4 py-6 text-center text-xs text-[#7A807C]">
-                Manzil topilmadi. Koordinata kiriting (masalan: 41.312, 69.280) yoki xaritadan bosing.
+                {isSearchingOsm
+                  ? "OpenStreetMap bazasidan qidirilmoqda..."
+                  : "Manzil topilmadi. Koordinata kiriting (masalan: 41.312, 69.280) yoki xaritadan bosing."}
               </div>
             ) : (
               filtered.map((item, idx) => {
@@ -296,8 +349,15 @@ export const SearchBar: React.FC = () => {
                         )}
                       </div>
                       <div className="min-w-0 flex-1">
-                        <div className="text-xs font-semibold text-[#111111] dark:text-[#FDFDFD] group-hover:text-[#0E9F6E] transition-colors duration-150 truncate">
-                          {item.name}
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-xs font-semibold text-[#111111] dark:text-[#FDFDFD] group-hover:text-[#0E9F6E] transition-colors duration-150 truncate">
+                            {item.name}
+                          </span>
+                          {item.isLiveOsm && (
+                            <span className="px-1.5 py-0.2 rounded text-[8px] font-mono font-bold uppercase bg-[#0E9F6E]/15 text-[#0E9F6E] border border-[#0E9F6E]/25 shrink-0">
+                              OSM LIVE
+                            </span>
+                          )}
                         </div>
                         <div className="text-[10px] text-[#7A807C] dark:text-[#9CA3AF] truncate">
                           {item.description}
