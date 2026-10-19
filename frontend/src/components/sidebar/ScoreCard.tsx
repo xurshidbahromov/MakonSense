@@ -81,7 +81,7 @@ export const ScoreCard: React.FC = () => {
   };
 
   return (
-    <div className="relative space-y-3 select-none">
+    <div className="relative space-y-3">
       {/* Top Row: Location Identity + Bookmark + Status Pill */}
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0 flex-1">
@@ -92,13 +92,15 @@ export const ScoreCard: React.FC = () => {
             </span>
           </div>
           <div className="flex items-center gap-1.5 mt-0.5">
-            <h2 className="text-sm font-bold text-[#111111] dark:text-[#FDFDFD] truncate tracking-tight">
+            <h2 className="text-sm font-bold text-[#111111] dark:text-[#FDFDFD] truncate tracking-tight select-text">
               {inspection?.context?.location_label || 'Markaziy Nuqta'}
             </h2>
             <button
+              type="button"
               onClick={handleSave}
+              aria-label={isAlreadySaved ? 'Manzil saqlangan' : 'Manzilni saqlash'}
               title={isAlreadySaved ? 'Manzil saqlangan' : 'Manzilni saqlash'}
-              className={`p-1 rounded-md border transition-all cursor-pointer shrink-0 ${
+              className={`press-scale p-1 rounded-md border cursor-pointer shrink-0 select-none ${
                 isAlreadySaved || justSaved
                   ? 'bg-[#0E9F6E]/15 border-[#0E9F6E]/40 text-[#0E9F6E]'
                   : 'bg-black/[0.03] dark:bg-white/[0.05] border-black/[0.06] dark:border-white/[0.08] text-[#7A807C] hover:text-[#111111] dark:hover:text-white'
@@ -114,7 +116,7 @@ export const ScoreCard: React.FC = () => {
         </div>
 
         <div
-          className={`px-2.5 py-1 rounded-full text-[10px] font-mono font-bold border ${badgeClass} flex items-center gap-1.5 whitespace-nowrap shrink-0`}
+          className={`px-2.5 py-1 rounded-full text-[10px] font-mono font-bold border ${badgeClass} flex items-center gap-1.5 whitespace-nowrap shrink-0 select-none`}
         >
           <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ backgroundColor: color }} />
           <span>{status}</span>
@@ -124,8 +126,8 @@ export const ScoreCard: React.FC = () => {
       {/* Middle Row: Circular Score Gauge + Verdict & Live Financial Strip */}
       <div className="flex items-center gap-3.5 pb-3 border-b border-black/[0.06] dark:border-white/[0.07]">
         {/* Circular Activity Ring */}
-        <div className="relative w-20 h-20 flex-shrink-0 flex items-center justify-center">
-          <svg className="w-full h-full transform -rotate-90" viewBox="0 0 108 108">
+        <div className="relative w-20 h-20 flex-shrink-0 flex items-center justify-center select-none">
+          <svg className="w-full h-full transform -rotate-90" viewBox="0 0 108 108" aria-hidden="true">
             <circle
               cx="54"
               cy="54"
@@ -144,11 +146,11 @@ export const ScoreCard: React.FC = () => {
               strokeDashoffset={strokeDashoffset}
               strokeLinecap="round"
               fill="transparent"
-              className="transition-all duration-700 ease-out"
+              style={{ transition: 'stroke-dashoffset 500ms cubic-bezier(0.22, 1, 0.36, 1), stroke 300ms ease' }}
             />
           </svg>
           <div className="absolute flex flex-col items-center justify-center text-center">
-            <span className="text-2xl font-bold tracking-tight text-[#111111] dark:text-[#FDFDFD] font-mono leading-none">
+            <span className="text-2xl font-bold tracking-tight text-[#111111] dark:text-[#FDFDFD] font-mono tabular-nums leading-none">
               {loading ? (
                 <span className="animate-pulse">--</span>
               ) : (
@@ -183,22 +185,22 @@ export const ScoreCard: React.FC = () => {
           </div>
 
           {/* 3-Column Financial KPI Mini-Grid */}
-          <div className="grid grid-cols-3 gap-1.5 pt-0.5">
+          <div className="grid grid-cols-3 gap-1.5 pt-0.5 select-text">
             <div className="bg-black/[0.03] dark:bg-white/[0.04] border border-black/[0.05] dark:border-white/[0.06] rounded-lg px-2 py-1.5">
-              <div className="text-[9px] text-[#7A807C] dark:text-[#9CA3AF] truncate">Kunlik oqim</div>
-              <div className="text-[11px] font-mono font-bold text-[#111111] dark:text-[#FDFDFD]">
+              <div className="text-[9px] text-[#7A807C] dark:text-[#9CA3AF] truncate select-none">Kunlik oqim</div>
+              <div className="text-[11px] font-mono tabular-nums font-bold text-[#111111] dark:text-[#FDFDFD]">
                 {(fin?.daily_foot_traffic || 12400).toLocaleString()}
               </div>
             </div>
             <div className="bg-black/[0.03] dark:bg-white/[0.04] border border-black/[0.05] dark:border-white/[0.06] rounded-lg px-2 py-1.5">
-              <div className="text-[9px] text-[#7A807C] dark:text-[#9CA3AF] truncate">Oylik tushum</div>
-              <div className="text-[11px] font-mono font-bold text-[#0E9F6E]">
+              <div className="text-[9px] text-[#7A807C] dark:text-[#9CA3AF] truncate select-none">Oylik tushum</div>
+              <div className="text-[11px] font-mono tabular-nums font-bold text-[#0E9F6E]">
                 ${revMinK}k–${revMaxK}k
               </div>
             </div>
             <div className="bg-black/[0.03] dark:bg-white/[0.04] border border-black/[0.05] dark:border-white/[0.06] rounded-lg px-2 py-1.5">
-              <div className="text-[9px] text-[#7A807C] dark:text-[#9CA3AF] truncate">Qoplash (ROI)</div>
-              <div className="text-[11px] font-mono font-bold text-[#111111] dark:text-[#FDFDFD]">
+              <div className="text-[9px] text-[#7A807C] dark:text-[#9CA3AF] truncate select-none">Qoplash (ROI)</div>
+              <div className="text-[11px] font-mono tabular-nums font-bold text-[#111111] dark:text-[#FDFDFD]">
                 ~{fin?.payback_months || 11.2} oy
               </div>
             </div>
@@ -207,15 +209,17 @@ export const ScoreCard: React.FC = () => {
       </div>
 
       {/* Bottom Row: Category Pills & Radius Segmented Controls */}
-      <div className="space-y-2">
-        <div className="flex items-center gap-1 overflow-x-auto no-scrollbar">
+      <div className="space-y-2 select-none">
+        <div className="flex items-center gap-1 overflow-x-auto no-scrollbar" role="group" aria-label="Biznes toifasi">
           {CATEGORIES.map((cat) => {
             const isSelected = category === cat.id;
             return (
               <button
                 key={cat.id}
+                type="button"
+                aria-pressed={isSelected}
                 onClick={() => setCategory(cat.id)}
-                className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-[11px] font-semibold whitespace-nowrap transition-all duration-150 cursor-pointer ${
+                className={`press-scale flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-[11px] font-semibold whitespace-nowrap cursor-pointer ${
                   isSelected
                     ? 'bg-[#111111] text-white dark:bg-[#FDFDFD] dark:text-[#111111] shadow-sm'
                     : 'bg-black/[0.03] dark:bg-white/[0.04] text-[#525854] dark:text-[#9CA3AF] border border-black/[0.06] dark:border-white/[0.07] hover:text-[#111111] dark:hover:text-white'
@@ -233,14 +237,20 @@ export const ScoreCard: React.FC = () => {
             <Sparkles className="w-3 h-3 text-[#0E9F6E]" />
             <span>Izoxrona Radiusi:</span>
           </span>
-          <div className="flex items-center gap-1 bg-black/[0.04] dark:bg-white/[0.05] p-0.5 rounded-full border border-black/[0.06] dark:border-white/[0.07]">
+          <div
+            className="flex items-center gap-1 bg-black/[0.04] dark:bg-white/[0.05] p-0.5 rounded-full border border-black/[0.06] dark:border-white/[0.07]"
+            role="group"
+            aria-label="Izoxrona radiusi"
+          >
             {RADII.map((r) => {
               const isSelected = radiusMeters === r;
               return (
                 <button
                   key={r}
+                  type="button"
+                  aria-pressed={isSelected}
                   onClick={() => setRadiusMeters(r)}
-                  className={`px-2.5 py-0.5 rounded-full text-[11px] font-mono font-bold transition-all cursor-pointer ${
+                  className={`press-scale px-2.5 py-0.5 rounded-full text-[11px] font-mono tabular-nums font-bold cursor-pointer ${
                     isSelected
                       ? 'bg-[#111111] text-white dark:bg-white dark:text-[#111111] shadow-sm'
                       : 'text-[#6E7470] dark:text-[#9CA3AF] hover:text-[#111111] dark:hover:text-white'
