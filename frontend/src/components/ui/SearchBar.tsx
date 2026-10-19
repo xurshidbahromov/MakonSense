@@ -210,10 +210,10 @@ export const SearchBar: React.FC = () => {
         <div
           id="makon-search-listbox"
           role="listbox"
-          className="popover-origin-tc apple-glass-dropdown absolute top-full mt-2.5 left-0 w-full sm:w-[430px] rounded-[24px] overflow-hidden z-50"
+          className="popover-origin-tc apple-glass-dropdown backdrop-blur-[44px] backdrop-saturate-[210%] absolute top-full mt-2.5 left-0 w-full sm:w-[430px] rounded-[24px] overflow-hidden z-50"
         >
-          {/* Category Filter Pills */}
-          <div className="px-3 py-2 border-b border-black/[0.06] dark:border-white/[0.06] flex items-center gap-1 overflow-x-auto no-scrollbar select-none">
+          {/* Category Filter Pills — Translucent header strip */}
+          <div className="px-3 py-2.5 border-b border-black/[0.06] dark:border-white/[0.08] bg-white/25 dark:bg-white/[0.02] flex items-center gap-1 overflow-x-auto no-scrollbar select-none">
             {[
               { id: 'all', label: 'Barchasi' },
               { id: 'metro', label: 'Metro' },
@@ -227,8 +227,8 @@ export const SearchBar: React.FC = () => {
                 onClick={() => setActiveFilter(tab.id as any)}
                 className={`press-scale px-2.5 py-1 rounded-full text-[10px] font-semibold whitespace-nowrap cursor-pointer ${
                   activeFilter === tab.id
-                    ? 'bg-[#111111] text-white dark:bg-white dark:text-[#111111]'
-                    : 'bg-black/[0.04] dark:bg-white/[0.05] text-[#6E7470] dark:text-[#9CA3AF] hover:text-[#111111] dark:hover:text-white'
+                    ? 'bg-[#111111] text-white dark:bg-white dark:text-[#111111] shadow-sm'
+                    : 'bg-white/50 dark:bg-white/[0.06] border border-black/[0.05] dark:border-white/[0.08] text-[#525854] dark:text-[#9CA3AF] hover:text-[#111111] dark:hover:text-white'
                 }`}
               >
                 {tab.label}
@@ -236,7 +236,7 @@ export const SearchBar: React.FC = () => {
             ))}
           </div>
 
-          <div className="max-h-72 overflow-y-auto divide-y divide-black/[0.04] dark:divide-white/[0.04]">
+          <div className="max-h-72 overflow-y-auto divide-y divide-black/[0.04] dark:divide-white/[0.05] bg-transparent">
             {parsedCoord && (
               <button
                 type="button"
@@ -247,7 +247,7 @@ export const SearchBar: React.FC = () => {
                     `${parsedCoord.lat.toFixed(4)}, ${parsedCoord.lon.toFixed(4)}`
                   )
                 }
-                className="w-full px-3.5 py-2.5 text-left bg-[#0E9F6E]/[0.08] hover:bg-[#0E9F6E]/[0.14] flex items-center gap-2.5 transition-colors duration-150 cursor-pointer"
+                className="w-full px-3.5 py-2.5 text-left bg-[#0E9F6E]/[0.1] hover:bg-[#0E9F6E]/[0.16] flex items-center gap-2.5 transition-colors duration-150 cursor-pointer"
               >
                 <div className="p-1.5 rounded-lg bg-[#0E9F6E] text-white">
                   <Compass className="w-3.5 h-3.5" />
@@ -279,12 +279,12 @@ export const SearchBar: React.FC = () => {
                     onClick={() => handleSelectPrimary(item.lat, item.lon, item.name)}
                     className={`w-full px-3.5 py-2.5 text-left transition-colors duration-150 flex items-center justify-between gap-2 group cursor-pointer ${
                       isHighlighted
-                        ? 'bg-black/[0.04] dark:bg-white/[0.06]'
-                        : 'hover:bg-black/[0.03] dark:hover:bg-white/[0.04]'
+                        ? 'bg-white/55 dark:bg-white/[0.08]'
+                        : 'hover:bg-white/40 dark:hover:bg-white/[0.05]'
                     }`}
                   >
                     <div className="flex items-start gap-2.5 min-w-0 flex-1">
-                      <div className="p-1.5 rounded-lg bg-black/[0.04] dark:bg-white/[0.06] text-[#111111] dark:text-white mt-0.5 shrink-0">
+                      <div className="p-1.5 rounded-lg bg-white/60 dark:bg-white/[0.07] border border-black/[0.05] dark:border-white/[0.08] text-[#111111] dark:text-white mt-0.5 shrink-0">
                         {item.category === 'metro' ? (
                           <Train className="w-3.5 h-3.5 text-[#0E9F6E]" />
                         ) : item.category === 'hub' ? (

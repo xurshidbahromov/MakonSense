@@ -83,7 +83,7 @@ export const Header: React.FC = () => {
         {/* ========================================================= */}
         {/* ISLAND 1 (LEFT): BRAND & BACK DYNAMIC ISLAND              */}
         {/* ========================================================= */}
-        <div className="pointer-events-auto h-[50px] pl-2 pr-3.5 sm:px-3.5 rounded-full spatial-glass-island flex items-center gap-2 sm:gap-2.5 shrink-0 select-none">
+        <div className="pointer-events-auto h-[50px] pl-2 pr-3.5 sm:px-3.5 rounded-full spatial-glass-pill flex items-center gap-2 sm:gap-2.5 shrink-0 select-none">
           <button
             type="button"
             onClick={() => setCurrentView('landing')}
@@ -120,7 +120,7 @@ export const Header: React.FC = () => {
         {/* ========================================================= */}
         {/* ISLAND 2 (CENTER): SEARCH & LIVE COORDINATE DYNAMIC ISLAND */}
         {/* ========================================================= */}
-        <div className="pointer-events-auto hidden sm:flex items-center h-[50px] px-2 rounded-full spatial-glass-island flex-1 max-w-xl lg:max-w-2xl gap-2">
+        <div className="pointer-events-auto hidden sm:flex items-center h-[50px] px-2 rounded-full spatial-glass-pill flex-1 max-w-xl lg:max-w-2xl gap-2">
           <div className="flex-1 min-w-0">
             <SearchBar />
           </div>
@@ -144,7 +144,7 @@ export const Header: React.FC = () => {
         {/* ========================================================= */}
         {/* ISLAND 3 (RIGHT): ACTIONS, SAVED, THEME, PDF & PROFILE    */}
         {/* ========================================================= */}
-        <div className="pointer-events-auto h-[50px] px-2 sm:px-2.5 rounded-full spatial-glass-island flex items-center gap-1.5 sm:gap-2 shrink-0">
+        <div className="pointer-events-auto h-[50px] px-2 sm:px-2.5 rounded-full spatial-glass-pill flex items-center gap-1.5 sm:gap-2 shrink-0">
           {/* AI Top Hotspots Quick Button */}
           <button
             type="button"
@@ -374,7 +374,7 @@ export const Header: React.FC = () => {
       </div>
 
       {/* Mobile Floating Search Dynamic Island (visible on small screens) */}
-      <div className="sm:hidden mt-2 pointer-events-auto spatial-glass-island rounded-full p-1">
+      <div className="sm:hidden mt-2 pointer-events-auto spatial-glass-pill rounded-full p-1">
         <SearchBar />
       </div>
     </header>
