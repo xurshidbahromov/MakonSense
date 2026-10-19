@@ -1,204 +1,324 @@
-import React from 'react';
-import { X, Printer, CheckCircle2, AlertTriangle, ShieldCheck, Download, Share2 } from 'lucide-react';
+import React, { useState } from 'react';
+import {
+  X,
+  Printer,
+  CheckCircle2,
+  AlertTriangle,
+  ShieldCheck,
+  Download,
+  Share2,
+  Check,
+  DollarSign,
+} from 'lucide-react';
 import { useAnalyticsStore } from '../../store/useAnalyticsStore';
 
 export const AuditReportModal: React.FC = () => {
   const { reportModalOpen, setReportModalOpen, auditReport, auditLoading } = useAnalyticsStore();
+  const [copied, setCopied] = useState(false);
 
   if (!reportModalOpen) return null;
 
+  const fin = auditReport?.context?.financials;
+
+  const handleDownloadJson = () => {
+    if (!auditReport) return;
+    const blob = new Blob([JSON.stringify(auditReport, null, 2)], {
+      type: 'application/json',
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${auditReport.report_id.toLowerCase()}-spatial-audit.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const handleCopySummary = () => {
+    if (!auditReport) return;
+    const summaryText = `MakonSense Audit [${auditReport.report_id}]\nManzil: ${auditReport.business_name}\nKoordinata: ${auditReport.target_location.latitude.toFixed(4)}, ${auditReport.target_location.longitude.toFixed(4)}\nMakonScore: ${auditReport.makon_score}/100 (${auditReport.status})\nTavsiya: ${auditReport.recommendation}`;
+    navigator.clipboard?.writeText(summaryText);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/40 backdrop-blur-md overflow-y-auto select-text">
-      <div className="bg-white border border-[#0C4137]/[0.12] rounded-3xl w-full max-w-4xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden relative text-[#0C4137]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/50 backdrop-blur-md overflow-y-auto select-text">
+      <div className="bg-white dark:bg-[#141416] border border-black/[0.08] dark:border-white/[0.1] rounded-3xl w-full max-w-4xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden relative text-[#111111] dark:text-[#FDFDFD]">
         {/* Modal Header */}
-        <div className="px-6 py-4 border-b border-[#0C4137]/[0.08] flex items-center justify-between bg-[#F8FAF9] no-print">
+        <div className="px-5 sm:px-6 py-4 border-b border-black/[0.07] dark:border-white/[0.08] flex items-center justify-between bg-[#F8F9F8] dark:bg-[#18181B] no-print">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-xl bg-[#E6FBF6] border border-[#06D6A0]/30 flex items-center justify-center text-[#0C4137] font-bold text-xs">
+            <div className="w-8 h-8 rounded-xl bg-[#0E9F6E]/15 border border-[#0E9F6E]/30 flex items-center justify-center text-[#0E9F6E] font-mono font-bold text-xs">
               MKN
             </div>
             <div>
-              <h2 className="text-sm font-bold text-[#0C4137] flex items-center gap-2">
-                Fazoviy Audit Hisoboti
-                <span className="text-[11px] font-mono px-2 py-0.5 rounded-full bg-[#E6FBF6] text-[#0C4137] border border-[#06D6A0]/30 font-semibold">
+              <h2 className="text-sm font-bold text-[#111111] dark:text-[#FDFDFD] flex items-center gap-2">
+                <span>Fazoviy va Moliyaviy Audit Hisoboti</span>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#0E9F6E]/10 text-[#0E9F6E] border border-[#0E9F6E]/25 font-semibold">
                   {auditReport?.report_id || 'YUKLANMOQDA...'}
                 </span>
               </h2>
-              <p className="text-[11px] text-neutral-500 font-medium">
-                MakonSense Tijoriy Joylashuv Auditi (Toshkent Shahri)
+              <p className="text-[11px] text-[#7A807C] dark:text-[#9CA3AF]">
+                MakonSense B2B Tijoriy Joylashuv Ekspertizasi
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-2">
+
+          <div className="flex items-center gap-1.5 sm:gap-2">
+            <button
+              onClick={handleCopySummary}
+              title="Xulosani nusxalash"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/[0.04] dark:bg-white/[0.06] hover:bg-black/[0.08] dark:hover:bg-white/[0.1] text-xs font-medium transition-all cursor-pointer"
+            >
+              {copied ? (
+                <>
+                  <Check className="w-3.5 h-3.5 text-[#0E9F6E]" />
+                  <span className="hidden sm:inline text-[#0E9F6E]">Nusxalandi</span>
+                </>
+              ) : (
+                <>
+                  <Share2 className="w-3.5 h-3.5 text-[#7A807C]" />
+                  <span className="hidden sm:inline">Ulashish</span>
+                </>
+              )}
+            </button>
+
+            <button
+              onClick={handleDownloadJson}
+              title="JSON formatda yuklab olish"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/[0.04] dark:bg-white/[0.06] hover:bg-black/[0.08] dark:hover:bg-white/[0.1] text-xs font-medium transition-all cursor-pointer"
+            >
+              <Download className="w-3.5 h-3.5 text-[#0E9F6E]" />
+              <span className="hidden sm:inline">JSON</span>
+            </button>
+
             <button
               onClick={() => window.print()}
-              className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#0C4137] text-white font-semibold text-xs hover:bg-[#072822] transition-all shadow-sm active:scale-95"
+              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#111111] dark:bg-white text-white dark:text-[#111111] font-semibold text-xs hover:opacity-90 transition-all shadow-sm cursor-pointer"
             >
-              <Printer className="w-3.5 h-3.5 text-[#06D6A0]" />
+              <Printer className="w-3.5 h-3.5 text-[#0E9F6E]" />
               <span>Chop etish / PDF</span>
             </button>
+
             <button
               onClick={() => setReportModalOpen(false)}
-              className="p-1.5 rounded-full bg-neutral-100 text-neutral-500 hover:text-[#0C4137] hover:bg-neutral-200 transition-all"
+              className="p-1.5 rounded-full bg-black/[0.05] dark:bg-white/[0.07] text-[#7A807C] hover:text-[#111111] dark:hover:text-white transition-all cursor-pointer"
             >
               <X className="w-4 h-4" />
             </button>
           </div>
         </div>
 
-        {/* Modal Content / Printable Area */}
-        <div className="p-6 overflow-y-auto space-y-6 text-[#0C4137]">
+        {/* Printable Audit Content */}
+        <div className="p-5 sm:p-6 overflow-y-auto space-y-5">
           {auditLoading ? (
             <div className="py-20 flex flex-col items-center justify-center gap-3 text-center">
-              <div className="w-10 h-10 border-2 border-[#06D6A0] border-t-transparent rounded-full animate-spin" />
-              <p className="text-sm text-neutral-500">PostGIS va H3 fazoviy ko'rsatkichlari qayta ishlanmoqda...</p>
+              <div className="w-9 h-9 border-2 border-[#0E9F6E] border-t-transparent rounded-full animate-spin" />
+              <p className="text-sm text-[#7A807C] dark:text-[#9CA3AF]">
+                Fazoviy qatlamlar va ROI ko‘rsatkichlari hisoblanmoqda...
+              </p>
             </div>
           ) : auditReport ? (
             <>
-              {/* Report Title & Metadata Banner */}
-              <div className="bg-[#F8FAF9] border border-[#0C4137]/[0.08] rounded-2xl p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              {/* Report Title & Score Hero Banner */}
+              <div className="bg-black/[0.025] dark:bg-white/[0.03] border border-black/[0.07] dark:border-white/[0.08] rounded-2xl p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <div>
-                  <div className="text-xs text-neutral-400 uppercase tracking-wider font-bold">Tahlil Obyekti</div>
-                  <h1 className="text-xl font-extrabold text-[#0C4137] mt-0.5">{auditReport.business_name}</h1>
-                  <div className="flex items-center gap-3 text-xs text-neutral-600 mt-2 font-medium">
-                    <span>Koordinata: <strong className="font-mono text-[#0C4137]">{auditReport.target_location.latitude.toFixed(5)}°N, {auditReport.target_location.longitude.toFixed(5)}°E</strong></span>
-                    <span>Toifa: <strong className="capitalize text-[#0C4137]">{auditReport.business_category}</strong></span>
+                  <div className="text-[10px] font-mono text-[#7A807C] dark:text-[#9CA3AF] uppercase tracking-wider font-bold">
+                    Tahlil Obyekti · {auditReport.context.district_name || 'Toshkent sh.'}
+                  </div>
+                  <h1 className="text-lg sm:text-xl font-bold text-[#111111] dark:text-[#FDFDFD] mt-0.5">
+                    {auditReport.business_name}
+                  </h1>
+                  <div className="flex flex-wrap items-center gap-3 text-xs text-[#525854] dark:text-[#9CA3AF] mt-2">
+                    <span>
+                      GPS:{' '}
+                      <strong className="font-mono text-[#111111] dark:text-[#FDFDFD]">
+                        {auditReport.target_location.latitude.toFixed(5)}°N,{' '}
+                        {auditReport.target_location.longitude.toFixed(5)}°E
+                      </strong>
+                    </span>
+                    <span>•</span>
+                    <span>
+                      Biznes toifasi:{' '}
+                      <strong className="uppercase font-mono text-[#0E9F6E]">
+                        {auditReport.business_category}
+                      </strong>
+                    </span>
                   </div>
                 </div>
-                <div className="flex flex-col items-end">
-                  <div className="text-3xl font-extrabold font-mono text-[#0C4137]">
-                    {auditReport.makon_score.toFixed(1)} <span className="text-sm text-neutral-400 font-normal">/ 100</span>
+                <div className="flex flex-col sm:items-end">
+                  <div className="text-3xl font-bold font-mono text-[#111111] dark:text-[#FDFDFD]">
+                    {auditReport.makon_score.toFixed(1)}{' '}
+                    <span className="text-sm text-[#7A807C] font-normal">/ 100</span>
                   </div>
-                  <div className="text-xs font-bold px-2.5 py-1 rounded-full bg-[#E6FBF6] text-[#0C4137] border border-[#06D6A0]/40 mt-1">
+                  <div className="text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-[#0E9F6E]/15 text-[#0E9F6E] border border-[#0E9F6E]/30 mt-1">
                     {auditReport.status}
                   </div>
                 </div>
               </div>
 
-              {/* 1. Executive Summary & Verdict */}
+              {/* 1. Executive Summary */}
               <div className="space-y-2">
-                <h3 className="text-xs font-bold text-neutral-400 uppercase tracking-wider">1. Xulosa va Ekspert Bahosi</h3>
-                <div className="bg-white border border-[#0C4137]/[0.08] rounded-2xl p-4 text-xs leading-relaxed space-y-2 shadow-sm">
-                  <p className="text-neutral-700">{auditReport.executive_summary}</p>
-                  <div className="pt-2 border-t border-[#0C4137]/[0.06] flex items-center justify-between text-[11px]">
-                    <span className="text-neutral-500">Xavf darajasi: <strong className="text-[#0C4137]">{auditReport.risk_level}</strong></span>
-                    <span className="text-neutral-500">Generatsiya vaqti: <strong className="font-mono text-[#0C4137]">{auditReport.generated_at}</strong></span>
+                <h3 className="text-[11px] font-mono font-bold text-[#7A807C] dark:text-[#9CA3AF] uppercase tracking-wider">
+                  01 · Xulosa va Ekspert Bahosi
+                </h3>
+                <div className="bg-white dark:bg-[#18181B] border border-black/[0.07] dark:border-white/[0.08] rounded-2xl p-4 text-xs leading-relaxed space-y-2">
+                  <p className="text-[#27272A] dark:text-[#E5E7EB]">{auditReport.executive_summary}</p>
+                  <div className="pt-2 border-t border-black/[0.05] dark:border-white/[0.06] flex flex-wrap items-center justify-between gap-2 text-[11px]">
+                    <span className="text-[#7A807C]">
+                      Investitsion risk:{' '}
+                      <strong className="text-[#111111] dark:text-white">{auditReport.risk_level}</strong>
+                    </span>
+                    <span className="text-[#7A807C]">
+                      Sana:{' '}
+                      <strong className="font-mono text-[#111111] dark:text-white">
+                        {auditReport.generated_at}
+                      </strong>
+                    </span>
                   </div>
                 </div>
               </div>
 
-              {/* 2. Factor Matrix */}
+              {/* 2. Financial & ROI Forecast Matrix */}
+              {fin && (
+                <div className="space-y-2">
+                  <h3 className="text-[11px] font-mono font-bold text-[#7A807C] dark:text-[#9CA3AF] uppercase tracking-wider flex items-center gap-1.5">
+                    <DollarSign className="w-3.5 h-3.5 text-[#0E9F6E]" />
+                    <span>02 · Moliyaviy va ROI Prognoz Modeli</span>
+                  </h3>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                    <div className="bg-black/[0.025] dark:bg-white/[0.03] border border-black/[0.06] dark:border-white/[0.07] rounded-2xl p-3.5">
+                      <span className="text-[10px] text-[#7A807C] dark:text-[#9CA3AF] uppercase font-mono">
+                        Kunlik Piyoda Oqimi
+                      </span>
+                      <div className="text-lg font-bold font-mono text-[#111111] dark:text-white mt-1">
+                        ~{fin.daily_foot_traffic.toLocaleString()}
+                      </div>
+                      <span className="text-[10px] text-[#7A807C]">
+                        ~{fin.estimated_customers_daily} xarid/kun
+                      </span>
+                    </div>
+
+                    <div className="bg-black/[0.025] dark:bg-white/[0.03] border border-black/[0.06] dark:border-white/[0.07] rounded-2xl p-3.5">
+                      <span className="text-[10px] text-[#7A807C] dark:text-[#9CA3AF] uppercase font-mono">
+                        Oylik Aylanma (Gross)
+                      </span>
+                      <div className="text-lg font-bold font-mono text-[#0E9F6E] mt-1">
+                        ${Math.round(fin.monthly_revenue_min_usd / 1000)}k – $
+                        {Math.round(fin.monthly_revenue_max_usd / 1000)}k
+                      </div>
+                      <span className="text-[10px] text-[#7A807C]">
+                        O‘rtacha chek: ${fin.avg_check_usd}
+                      </span>
+                    </div>
+
+                    <div className="bg-black/[0.025] dark:bg-white/[0.03] border border-black/[0.06] dark:border-white/[0.07] rounded-2xl p-3.5">
+                      <span className="text-[10px] text-[#7A807C] dark:text-[#9CA3AF] uppercase font-mono">
+                        Bozor Ijara Stavkasi
+                      </span>
+                      <div className="text-lg font-bold font-mono text-[#111111] dark:text-white mt-1">
+                        ~${fin.estimated_rent_sqm_usd} / m²
+                      </div>
+                      <span className="text-[10px] text-[#7A807C]">
+                        Oylik ~${fin.estimated_monthly_rent_usd.toLocaleString()}
+                      </span>
+                    </div>
+
+                    <div className="bg-black/[0.025] dark:bg-white/[0.03] border border-black/[0.06] dark:border-white/[0.07] rounded-2xl p-3.5">
+                      <span className="text-[10px] text-[#7A807C] dark:text-[#9CA3AF] uppercase font-mono">
+                        O‘zini Oqlash (Payback)
+                      </span>
+                      <div className="text-lg font-bold font-mono text-[#0E9F6E] mt-1">
+                        ~{fin.payback_months} oy
+                      </div>
+                      <span className="text-[10px] text-[#7A807C]">
+                        Yillik ROI: ~{fin.roi_annual_percent}%
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* 3. Spatial Factor Matrix */}
               <div className="space-y-2">
-                <h3 className="text-xs font-bold text-neutral-400 uppercase tracking-wider">2. Fazoviy Baholash Matritsasi</h3>
-                <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
-                  <div className="bg-[#F8FAF9] border border-[#0C4137]/[0.08] rounded-2xl p-3.5 text-center">
-                    <span className="text-[10px] text-neutral-400 uppercase font-bold">Tranzit (30%)</span>
-                    <div className="text-xl font-extrabold font-mono text-[#0C4137] mt-1">
+                <h3 className="text-[11px] font-mono font-bold text-[#7A807C] dark:text-[#9CA3AF] uppercase tracking-wider">
+                  03 · Fazoviy Baholash Matritsasi
+                </h3>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                  <div className="bg-white dark:bg-[#18181B] border border-black/[0.07] dark:border-white/[0.08] rounded-2xl p-3.5 text-center">
+                    <span className="text-[10px] text-[#7A807C] uppercase font-mono">Tranzit (T)</span>
+                    <div className="text-xl font-bold font-mono text-[#0E9F6E] mt-1">
                       {auditReport.factors.transit_score.toFixed(1)}
                     </div>
-                    <span className="text-[10px] text-neutral-500">Metro va bekatlar</span>
+                    <span className="text-[10px] text-[#7A807C]">Metro va yo‘laklar</span>
                   </div>
-                  <div className="bg-[#F8FAF9] border border-[#0C4137]/[0.08] rounded-2xl p-3.5 text-center">
-                    <span className="text-[10px] text-neutral-400 uppercase font-bold">Tortish Markazlari (25%)</span>
-                    <div className="text-xl font-extrabold font-mono text-[#06D6A0] mt-1">
+                  <div className="bg-white dark:bg-[#18181B] border border-black/[0.07] dark:border-white/[0.08] rounded-2xl p-3.5 text-center">
+                    <span className="text-[10px] text-[#7A807C] uppercase font-mono">Magnitlar (A)</span>
+                    <div className="text-xl font-bold font-mono text-indigo-500 mt-1">
                       {auditReport.factors.anchor_score.toFixed(1)}
                     </div>
-                    <span className="text-[10px] text-neutral-500">Mall va bozorlar</span>
+                    <span className="text-[10px] text-[#7A807C]">Mall va oliygohlar</span>
                   </div>
-                  <div className="bg-[#F8FAF9] border border-[#0C4137]/[0.08] rounded-2xl p-3.5 text-center">
-                    <span className="text-[10px] text-neutral-400 uppercase font-bold">Raqobat Bosimi (-25%)</span>
-                    <div className="text-xl font-extrabold font-mono text-amber-600 mt-1">
+                  <div className="bg-white dark:bg-[#18181B] border border-black/[0.07] dark:border-white/[0.08] rounded-2xl p-3.5 text-center">
+                    <span className="text-[10px] text-[#7A807C] uppercase font-mono">Raqobat (C)</span>
+                    <div className="text-xl font-bold font-mono text-amber-500 mt-1">
                       {auditReport.factors.competition_score.toFixed(1)}
                     </div>
-                    <span className="text-[10px] text-neutral-500">Toifadosh nuqtalar</span>
+                    <span className="text-[10px] text-[#7A807C]">Toifadosh bosimi</span>
                   </div>
-                  <div className="bg-[#F8FAF9] border border-[#0C4137]/[0.08] rounded-2xl p-3.5 text-center">
-                    <span className="text-[10px] text-neutral-400 uppercase font-bold">Aholi Qamrovi (20%)</span>
-                    <div className="text-xl font-extrabold font-mono text-[#0C4137] mt-1">
+                  <div className="bg-white dark:bg-[#18181B] border border-black/[0.07] dark:border-white/[0.08] rounded-2xl p-3.5 text-center">
+                    <span className="text-[10px] text-[#7A807C] uppercase font-mono">Rezidentlar (R)</span>
+                    <div className="text-xl font-bold font-mono text-[#111111] dark:text-white mt-1">
                       {auditReport.factors.residential_density_score.toFixed(1)}
                     </div>
-                    <span className="text-[10px] text-neutral-500">Turar-joy massivlari</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* 3. Surroundings & Competitors */}
-              <div className="space-y-2">
-                <h3 className="text-xs font-bold text-neutral-400 uppercase tracking-wider">3. Joylashuv Infratuzilmasi</h3>
-                <div className="bg-white border border-[#0C4137]/[0.08] rounded-2xl p-4 text-xs space-y-3 shadow-sm">
-                  <div className="flex flex-col sm:flex-row justify-between gap-3">
-                    <div>
-                      <span className="text-neutral-500">Eng yaqin metro bekati:</span>
-                      <div className="font-bold text-[#0C4137] mt-0.5">
-                        {auditReport.context.nearest_metro?.name || '500m radiusda metro yo\'q'}
-                        {auditReport.context.nearest_metro && (
-                          <span className="text-[#06D6A0] font-mono ml-2 font-bold">
-                            ({auditReport.context.nearest_metro.distance_meters.toFixed(0)} metr)
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                    <div>
-                      <span className="text-neutral-500">Xonadonlar potensiali:</span>
-                      <div className="font-bold text-[#0C4137] mt-0.5">
-                        ~{auditReport.context.estimated_households.toLocaleString()} ta xonadon
-                      </div>
-                    </div>
-                    <div>
-                      <span className="text-neutral-500">Raqobatchilar soni (400m):</span>
-                      <div className="font-bold text-amber-600 mt-0.5">
-                        {auditReport.context.direct_competitors_count} ta nuqta
-                      </div>
-                    </div>
+                    <span className="text-[10px] text-[#7A807C]">Turar-joy zichligi</span>
                   </div>
                 </div>
               </div>
 
               {/* 4. SWOT Analysis */}
               <div className="space-y-2">
-                <h3 className="text-xs font-bold text-neutral-400 uppercase tracking-wider">4. SWOT Strategik Tahlil</h3>
+                <h3 className="text-[11px] font-mono font-bold text-[#7A807C] dark:text-[#9CA3AF] uppercase tracking-wider">
+                  04 · SWOT Strategik Tahlil
+                </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                  {/* Strengths */}
-                  <div className="bg-[#E6FBF6] border border-[#06D6A0]/30 rounded-2xl p-4 space-y-2">
-                    <span className="font-bold text-[#0C4137] flex items-center gap-1.5">
-                      <CheckCircle2 className="w-4 h-4 text-[#06D6A0]" /> Kuchli Tomonlar (Strengths)
+                  <div className="bg-[#0E9F6E]/[0.07] border border-[#0E9F6E]/25 rounded-2xl p-4 space-y-2">
+                    <span className="font-bold text-[#111111] dark:text-white flex items-center gap-1.5">
+                      <CheckCircle2 className="w-4 h-4 text-[#0E9F6E]" /> Kuchli Tomonlar (Strengths)
                     </span>
-                    <ul className="list-disc list-inside space-y-1 text-neutral-700 text-[11px]">
+                    <ul className="list-disc list-inside space-y-1 text-[#27272A] dark:text-[#D1D5DB] text-[11px]">
                       {auditReport.swot_analysis.strengths.map((s, i) => (
                         <li key={i}>{s}</li>
                       ))}
                     </ul>
                   </div>
 
-                  {/* Weaknesses */}
-                  <div className="bg-amber-50/70 border border-amber-200 rounded-2xl p-4 space-y-2">
-                    <span className="font-bold text-amber-800 flex items-center gap-1.5">
-                      <AlertTriangle className="w-4 h-4 text-amber-600" /> Zaif Tomonlar (Weaknesses)
+                  <div className="bg-amber-500/[0.07] border border-amber-500/25 rounded-2xl p-4 space-y-2">
+                    <span className="font-bold text-[#111111] dark:text-white flex items-center gap-1.5">
+                      <AlertTriangle className="w-4 h-4 text-amber-500" /> Zaif Tomonlar (Weaknesses)
                     </span>
-                    <ul className="list-disc list-inside space-y-1 text-neutral-700 text-[11px]">
+                    <ul className="list-disc list-inside space-y-1 text-[#27272A] dark:text-[#D1D5DB] text-[11px]">
                       {auditReport.swot_analysis.weaknesses.map((w, i) => (
                         <li key={i}>{w}</li>
                       ))}
                     </ul>
                   </div>
 
-                  {/* Opportunities */}
-                  <div className="bg-sky-50/70 border border-sky-200 rounded-2xl p-4 space-y-2">
-                    <span className="font-bold text-sky-800 flex items-center gap-1.5">
-                      <ShieldCheck className="w-4 h-4 text-sky-600" /> Imkoniyatlar (Opportunities)
+                  <div className="bg-indigo-500/[0.07] border border-indigo-500/25 rounded-2xl p-4 space-y-2">
+                    <span className="font-bold text-[#111111] dark:text-white flex items-center gap-1.5">
+                      <ShieldCheck className="w-4 h-4 text-indigo-500" /> Imkoniyatlar (Opportunities)
                     </span>
-                    <ul className="list-disc list-inside space-y-1 text-neutral-700 text-[11px]">
+                    <ul className="list-disc list-inside space-y-1 text-[#27272A] dark:text-[#D1D5DB] text-[11px]">
                       {auditReport.swot_analysis.opportunities.map((o, i) => (
                         <li key={i}>{o}</li>
                       ))}
                     </ul>
                   </div>
 
-                  {/* Threats */}
-                  <div className="bg-rose-50/70 border border-rose-200 rounded-2xl p-4 space-y-2">
-                    <span className="font-bold text-rose-800 flex items-center gap-1.5">
-                      <AlertTriangle className="w-4 h-4 text-rose-600" /> Xatarlar (Threats)
+                  <div className="bg-rose-500/[0.07] border border-rose-500/25 rounded-2xl p-4 space-y-2">
+                    <span className="font-bold text-[#111111] dark:text-white flex items-center gap-1.5">
+                      <AlertTriangle className="w-4 h-4 text-rose-500" /> Xatarlar (Threats)
                     </span>
-                    <ul className="list-disc list-inside space-y-1 text-neutral-700 text-[11px]">
+                    <ul className="list-disc list-inside space-y-1 text-[#27272A] dark:text-[#D1D5DB] text-[11px]">
                       {auditReport.swot_analysis.threats.map((t, i) => (
                         <li key={i}>{t}</li>
                       ))}
@@ -207,14 +327,20 @@ export const AuditReportModal: React.FC = () => {
                 </div>
               </div>
 
-              {/* 5. Strategic Recommendation Footer */}
-              <div className="bg-[#E6FBF6] border border-[#06D6A0]/40 rounded-2xl p-4 flex items-center justify-between text-xs">
+              {/* 5. Final Recommendation */}
+              <div className="bg-[#0E9F6E]/10 border border-[#0E9F6E]/30 rounded-2xl p-4 flex items-center justify-between gap-4 text-xs">
                 <div>
-                  <span className="text-neutral-500 font-bold uppercase text-[10px]">Yakuniy Strategik Tavsiya:</span>
-                  <p className="text-[#0C4137] font-bold mt-0.5">{auditReport.recommendation}</p>
+                  <span className="text-[#0E9F6E] font-mono font-bold uppercase text-[10px]">
+                    05 · Yakuniy Investitsion Qaror:
+                  </span>
+                  <p className="text-[#111111] dark:text-[#FDFDFD] font-semibold mt-0.5">
+                    {auditReport.recommendation}
+                  </p>
                 </div>
-                <div className="text-right text-[10px] text-neutral-400 font-mono hidden sm:block">
-                  MakonSense Engine<br/>v1.0.0-MVP Tashkent
+                <div className="text-right text-[10px] text-[#7A807C] font-mono hidden sm:block shrink-0">
+                  MakonSense Spatial Engine
+                  <br />
+                  v2.4 Enterprise Audit
                 </div>
               </div>
             </>

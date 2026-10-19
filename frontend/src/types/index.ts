@@ -15,12 +15,16 @@ export interface NearestMetro {
   distance_meters: number;
   line_name?: string;
   passenger_flow_score: number;
+  lat?: number;
+  lon?: number;
 }
 
 export interface AnchorItem {
   name: string;
   category: string;
   distance_meters: number;
+  lat?: number;
+  lon?: number;
 }
 
 export interface CompetitorItem {
@@ -28,6 +32,29 @@ export interface CompetitorItem {
   brand?: string;
   category: string;
   distance_meters: number;
+  lat?: number;
+  lon?: number;
+}
+
+export interface FinancialForecast {
+  daily_foot_traffic: number;
+  monthly_visitors: number;
+  estimated_customers_daily: number;
+  avg_check_usd: number;
+  monthly_revenue_min_usd: number;
+  monthly_revenue_max_usd: number;
+  estimated_rent_sqm_usd: number;
+  estimated_monthly_rent_usd: number;
+  payback_months: number;
+  roi_annual_percent: number;
+}
+
+export interface HourlyTrafficSlot {
+  hour: string;
+  weekday_flow: number;
+  weekend_flow: number;
+  conversion_rate: number;
+  label: string;
 }
 
 export interface AnalysisContext {
@@ -38,6 +65,11 @@ export interface AnalysisContext {
   major_anchors: AnchorItem[];
   estimated_households: number;
   commercial_density_label: string;
+  location_label?: string;
+  district_name?: string;
+  region_name?: string;
+  financials?: FinancialForecast;
+  hourly_traffic?: HourlyTrafficSlot[];
 }
 
 export interface InspectResult {
@@ -77,6 +109,34 @@ export interface HexFeature {
   center: [number, number];
   score: number;
   tier: 'high' | 'medium' | 'low';
+  label?: string;
 }
 
 export type BusinessCategory = 'cafe' | 'pharmacy' | 'supermarket' | 'school' | 'retail';
+
+export interface SavedLocation {
+  id: string;
+  name: string;
+  district: string;
+  coordinates: Coordinates;
+  category: BusinessCategory;
+  radiusMeters: number;
+  score: number;
+  status: string;
+  savedAt: string;
+}
+
+export interface HotspotCandidate {
+  id: string;
+  name: string;
+  district: string;
+  region: string;
+  coordinates: Coordinates;
+  score: number;
+  status: string;
+  dailyTraffic: number;
+  monthlyRevenueRange: string;
+  competitorsCount: number;
+  nearestMetroName: string | null;
+  highlightReason: string;
+}

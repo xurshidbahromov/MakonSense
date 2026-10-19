@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Sparkles,
   TrendingUp,
@@ -9,6 +9,9 @@ import {
   ShoppingCart,
   GraduationCap,
   ShoppingBag,
+  MapPin,
+  Bookmark,
+  Check,
 } from 'lucide-react';
 import { useAnalyticsStore } from '../../store/useAnalyticsStore';
 import { AnimatedCounter } from '../ui/AnimatedCounter';
@@ -25,67 +28,118 @@ const CATEGORIES: { id: BusinessCategory; label: string; icon: React.ReactNode }
 const RADII = [300, 500, 800, 1000];
 
 export const ScoreCard: React.FC = () => {
-  const { inspection, loading, category, setCategory, radiusMeters, setRadiusMeters } = useAnalyticsStore();
+  const {
+    inspection,
+    loading,
+    category,
+    setCategory,
+    radiusMeters,
+    setRadiusMeters,
+    selectedCoords,
+    savedLocations,
+    saveCurrentLocation,
+  } = useAnalyticsStore();
+
+  const [justSaved, setJustSaved] = useState(false);
 
   const score = inspection?.makon_score ?? 0;
   const status = inspection?.status ?? 'TAHLIL QILINMOQDA';
+  const fin = inspection?.context?.financials;
 
-  let color = '#06D6A0'; // Radiant Emerald
-  let badgeBg = 'bg-[#E6FBF6] text-[#0C4137] border-[#06D6A0]/40';
+  const isAlreadySaved = savedLocations.some(
+    (item) =>
+      Math.abs(item.coordinates.latitude - selectedCoords.latitude) < 0.0004 &&
+      Math.abs(item.coordinates.longitude - selectedCoords.longitude) < 0.0004 &&
+      item.category === category
+  );
 
-  if (score < 50) {
-    color = '#E11D48'; // Rose Red
-    badgeBg = 'bg-rose-50 text-rose-700 border-rose-200';
+  let color = '#0E9F6E'; // Silky Emerald
+  let badgeClass =
+    'bg-[#0E9F6E]/10 text-[#0E9F6E] border-[#0E9F6E]/30 dark:bg-[#0E9F6E]/15 dark:text-[#10B981]';
+
+  if (score < 55) {
+    color = '#E11D48';
+    badgeClass =
+      'bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/25';
   } else if (score < 80) {
-    color = '#05B385'; // Deep Mint
-    badgeBg = 'bg-[#E6FBF6] text-[#0C4137] border-[#06D6A0]/30';
+    color = '#F59E0B';
+    badgeClass =
+      'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/25';
   }
 
-  // Circular gauge calculations
-  const radius = 46;
+  const radius = 42;
   const circumference = 2 * Math.PI * radius;
   const strokeDashoffset = circumference - (score / 100) * circumference;
 
+  const revMinK = fin ? Math.round(fin.monthly_revenue_min_usd / 1000) : 16;
+  const revMaxK = fin ? Math.round(fin.monthly_revenue_max_usd / 1000) : 23;
+
+  const handleSave = () => {
+    saveCurrentLocation();
+    setJustSaved(true);
+    setTimeout(() => setJustSaved(false), 1600);
+  };
+
   return (
-    <div className="relative space-y-3.5 select-none">
-      {/* Header: Title and Status Pill */}
-      <div className="flex items-center justify-between relative z-10">
-        <div>
-          <span className="text-[10px] font-bold tracking-widest text-neutral-400 uppercase font-mono">
-            Spatial Intelligence Rating
-          </span>
-          <h2 className="text-sm font-bold text-[#0C4137] flex items-center gap-1.5 mt-0.5 tracking-tight">
-            MakonScore™ Ko‘rsatkichi
-            <Sparkles className="w-3.5 h-3.5 text-[#06D6A0]" />
-          </h2>
+    <div className="relative space-y-3 select-none">
+      {/* Top Row: Location Identity + Bookmark + Status Pill */}
+      <div className="flex items-start justify-between gap-2">
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-wider text-[#7A807C] dark:text-[#9CA3AF]">
+            <MapPin className="w-3 h-3 text-[#0E9F6E] shrink-0" />
+            <span className="truncate">
+              {inspection?.context?.district_name || 'Toshkent sh.'}
+            </span>
+          </div>
+          <div className="flex items-center gap-1.5 mt-0.5">
+            <h2 className="text-sm font-bold text-[#111111] dark:text-[#FDFDFD] truncate tracking-tight">
+              {inspection?.context?.location_label || 'Markaziy Nuqta'}
+            </h2>
+            <button
+              onClick={handleSave}
+              title={isAlreadySaved ? 'Manzil saqlangan' : 'Manzilni saqlash'}
+              className={`p-1 rounded-md border transition-all cursor-pointer shrink-0 ${
+                isAlreadySaved || justSaved
+                  ? 'bg-[#0E9F6E]/15 border-[#0E9F6E]/40 text-[#0E9F6E]'
+                  : 'bg-black/[0.03] dark:bg-white/[0.05] border-black/[0.06] dark:border-white/[0.08] text-[#7A807C] hover:text-[#111111] dark:hover:text-white'
+              }`}
+            >
+              {justSaved ? (
+                <Check className="w-3 h-3" />
+              ) : (
+                <Bookmark className="w-3 h-3" fill={isAlreadySaved ? 'currentColor' : 'none'} />
+              )}
+            </button>
+          </div>
         </div>
+
         <div
-          className={`px-3 py-1 rounded-full text-[11px] font-bold border ${badgeBg} flex items-center gap-1.5 shadow-sm whitespace-nowrap flex-shrink-0`}
+          className={`px-2.5 py-1 rounded-full text-[10px] font-mono font-bold border ${badgeClass} flex items-center gap-1.5 whitespace-nowrap shrink-0`}
         >
           <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ backgroundColor: color }} />
           <span>{status}</span>
         </div>
       </div>
 
-      {/* Score Hero: Animated Circular Activity Ring + Summary */}
-      <div className="flex items-center gap-4 relative z-10 pb-3 border-b border-[#0C4137]/[0.08]">
-        {/* Animated Circular Activity Ring */}
-        <div className="relative w-22 h-22 sm:w-24 sm:h-24 flex-shrink-0 flex items-center justify-center">
-          <svg className="w-full h-full transform -rotate-90" viewBox="0 0 120 120">
+      {/* Middle Row: Circular Score Gauge + Verdict & Live Financial Strip */}
+      <div className="flex items-center gap-3.5 pb-3 border-b border-black/[0.06] dark:border-white/[0.07]">
+        {/* Circular Activity Ring */}
+        <div className="relative w-20 h-20 flex-shrink-0 flex items-center justify-center">
+          <svg className="w-full h-full transform -rotate-90" viewBox="0 0 108 108">
             <circle
-              cx="60"
-              cy="60"
+              cx="54"
+              cy="54"
               r={radius}
-              className="stroke-neutral-200"
-              strokeWidth="8"
+              className="stroke-black/[0.07] dark:stroke-white/[0.08]"
+              strokeWidth="7"
               fill="transparent"
             />
             <circle
-              cx="60"
-              cy="60"
+              cx="54"
+              cy="54"
               r={radius}
               stroke={color}
-              strokeWidth="8"
+              strokeWidth="7"
               strokeDasharray={circumference}
               strokeDashoffset={strokeDashoffset}
               strokeLinecap="round"
@@ -93,83 +147,103 @@ export const ScoreCard: React.FC = () => {
               className="transition-all duration-700 ease-out"
             />
           </svg>
-          <div className="absolute flex flex-col items-center justify-center text-center select-none">
-            <span className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[#0C4137] font-mono leading-none">
+          <div className="absolute flex flex-col items-center justify-center text-center">
+            <span className="text-2xl font-bold tracking-tight text-[#111111] dark:text-[#FDFDFD] font-mono leading-none">
               {loading ? (
                 <span className="animate-pulse">--</span>
               ) : (
                 <AnimatedCounter value={score} decimals={1} />
               )}
             </span>
-            <span className="text-[9px] text-neutral-400 font-bold tracking-wider uppercase mt-1">/ 100</span>
+            <span className="text-[8px] text-[#7A807C] dark:text-[#9CA3AF] font-mono font-semibold uppercase mt-0.5">
+              MakonScore
+            </span>
           </div>
         </div>
 
-        {/* Verdict & Catchment Metadata */}
-        <div className="flex-1 space-y-1.5 min-w-0">
-          <div className="text-xs leading-relaxed">
+        {/* Verdict + 3-Metric Financial Strip */}
+        <div className="flex-1 min-w-0 space-y-2">
+          <div className="text-[11px] leading-snug">
             {score >= 80 ? (
-              <div className="flex items-start gap-1.5 text-[#0C4137] font-semibold">
-                <ShieldCheck className="w-4 h-4 flex-shrink-0 mt-0.5 text-[#06D6A0]" />
-                <span>Tanlangan toifada biznes ochish uchun optimal nuqta. Yuqori oqim.</span>
+              <div className="flex items-start gap-1.5 text-[#111111] dark:text-[#E5E7EB] font-medium">
+                <ShieldCheck className="w-3.5 h-3.5 flex-shrink-0 mt-0.5 text-[#0E9F6E]" />
+                <span>Yuqori rentabelli nuqta — kuchli tranzit va faol talab.</span>
               </div>
-            ) : score >= 50 ? (
-              <div className="flex items-start gap-1.5 text-[#0C4137] font-semibold">
-                <TrendingUp className="w-4 h-4 flex-shrink-0 mt-0.5 text-[#05B385]" />
-                <span>O‘rtacha barqaror talab. Raqobat bosimiga e’tibor qarating.</span>
+            ) : score >= 55 ? (
+              <div className="flex items-start gap-1.5 text-[#111111] dark:text-[#E5E7EB] font-medium">
+                <TrendingUp className="w-3.5 h-3.5 flex-shrink-0 mt-0.5 text-amber-500" />
+                <span>Barqaror salohiyat — assortiment va narx ustunligi muhim.</span>
               </div>
             ) : (
-              <div className="flex items-start gap-1.5 text-rose-700 font-semibold">
-                <AlertTriangle className="w-4 h-4 flex-shrink-0 mt-0.5 text-rose-500" />
-                <span>Yuqori riskli zona. Piyodalar oqimi sust yoki raqobat zich.</span>
+              <div className="flex items-start gap-1.5 text-rose-600 dark:text-rose-400 font-medium">
+                <AlertTriangle className="w-3.5 h-3.5 flex-shrink-0 mt-0.5 text-rose-500" />
+                <span>Ehtiyotkorlik talab etiladi — oqim past yoki raqobat zich.</span>
               </div>
             )}
           </div>
 
-          <div className="flex items-center justify-between text-[11px] text-neutral-500 pt-1">
-            <span>Aholi qamrovi: <strong className="text-[#0C4137] font-semibold">~{(inspection?.context?.estimated_households || 1820).toLocaleString()} ta</strong></span>
-            <span>Raqobatchi: <strong className="text-amber-600 font-mono font-bold">{inspection?.context?.direct_competitors_count || 0} ta</strong></span>
+          {/* 3-Column Financial KPI Mini-Grid */}
+          <div className="grid grid-cols-3 gap-1.5 pt-0.5">
+            <div className="bg-black/[0.03] dark:bg-white/[0.04] border border-black/[0.05] dark:border-white/[0.06] rounded-lg px-2 py-1.5">
+              <div className="text-[9px] text-[#7A807C] dark:text-[#9CA3AF] truncate">Kunlik oqim</div>
+              <div className="text-[11px] font-mono font-bold text-[#111111] dark:text-[#FDFDFD]">
+                {(fin?.daily_foot_traffic || 12400).toLocaleString()}
+              </div>
+            </div>
+            <div className="bg-black/[0.03] dark:bg-white/[0.04] border border-black/[0.05] dark:border-white/[0.06] rounded-lg px-2 py-1.5">
+              <div className="text-[9px] text-[#7A807C] dark:text-[#9CA3AF] truncate">Oylik tushum</div>
+              <div className="text-[11px] font-mono font-bold text-[#0E9F6E]">
+                ${revMinK}k–${revMaxK}k
+              </div>
+            </div>
+            <div className="bg-black/[0.03] dark:bg-white/[0.04] border border-black/[0.05] dark:border-white/[0.06] rounded-lg px-2 py-1.5">
+              <div className="text-[9px] text-[#7A807C] dark:text-[#9CA3AF] truncate">Qoplash (ROI)</div>
+              <div className="text-[11px] font-mono font-bold text-[#111111] dark:text-[#FDFDFD]">
+                ~{fin?.payback_months || 11.2} oy
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Interactive Controls: Category Pills & Radius Segmented Controls */}
-      <div className="space-y-2.5 relative z-10">
-        {/* Category Pills */}
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-0.5 scrollbar-none">
+      {/* Bottom Row: Category Pills & Radius Segmented Controls */}
+      <div className="space-y-2">
+        <div className="flex items-center gap-1 overflow-x-auto no-scrollbar">
           {CATEGORIES.map((cat) => {
             const isSelected = category === cat.id;
             return (
               <button
                 key={cat.id}
                 onClick={() => setCategory(cat.id)}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all duration-150 ease-out active:scale-[0.96] ${
+                className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-[11px] font-semibold whitespace-nowrap transition-all duration-150 cursor-pointer ${
                   isSelected
-                    ? 'bg-[#0C4137] text-white shadow-sm'
-                    : 'bg-white text-neutral-600 border border-[#0C4137]/[0.08] hover:text-[#0C4137] hover:border-[#06D6A0]/40'
+                    ? 'bg-[#111111] text-white dark:bg-[#FDFDFD] dark:text-[#111111] shadow-sm'
+                    : 'bg-black/[0.03] dark:bg-white/[0.04] text-[#525854] dark:text-[#9CA3AF] border border-black/[0.06] dark:border-white/[0.07] hover:text-[#111111] dark:hover:text-white'
                 }`}
               >
-                <span className={isSelected ? 'text-[#06D6A0]' : 'text-neutral-500'}>{cat.icon}</span>
+                <span className={isSelected ? 'text-[#0E9F6E]' : 'text-[#7A807C]'}>{cat.icon}</span>
                 <span>{cat.label}</span>
               </button>
             );
           })}
         </div>
 
-        {/* Radius Segmented Buttons */}
-        <div className="flex items-center justify-between gap-2 pt-0.5">
-          <span className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider font-mono">Tahlil Radiusi:</span>
-          <div className="flex items-center gap-1 bg-[#F4F7F6] p-0.5 rounded-full border border-[#0C4137]/[0.08]">
+        <div className="flex items-center justify-between gap-2">
+          <span className="text-[10px] font-mono font-semibold text-[#7A807C] dark:text-[#9CA3AF] uppercase tracking-wider flex items-center gap-1">
+            <Sparkles className="w-3 h-3 text-[#0E9F6E]" />
+            <span>Izoxrona Radiusi:</span>
+          </span>
+          <div className="flex items-center gap-1 bg-black/[0.04] dark:bg-white/[0.05] p-0.5 rounded-full border border-black/[0.06] dark:border-white/[0.07]">
             {RADII.map((r) => {
               const isSelected = radiusMeters === r;
               return (
                 <button
                   key={r}
                   onClick={() => setRadiusMeters(r)}
-                  className={`px-3 py-1 rounded-full text-xs font-mono font-bold transition-all duration-150 ease-out active:scale-[0.96] ${
+                  className={`px-2.5 py-0.5 rounded-full text-[11px] font-mono font-bold transition-all cursor-pointer ${
                     isSelected
-                      ? 'bg-[#0C4137] text-white shadow-sm'
-                      : 'text-neutral-500 hover:text-[#0C4137]'
+                      ? 'bg-[#111111] text-white dark:bg-white dark:text-[#111111] shadow-sm'
+                      : 'text-[#6E7470] dark:text-[#9CA3AF] hover:text-[#111111] dark:hover:text-white'
                   }`}
                 >
                   {r}m

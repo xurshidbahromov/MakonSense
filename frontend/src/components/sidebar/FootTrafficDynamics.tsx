@@ -1,117 +1,173 @@
 import React, { useState } from 'react';
-import { Activity, Clock, Flame, Calendar, TrendingUp } from 'lucide-react';
+import { Activity, Clock, Flame, Users, DollarSign } from 'lucide-react';
 import { useAnalyticsStore } from '../../store/useAnalyticsStore';
 
-const HOURLY_FLOW = [
-  { hour: '07:00', flow: 25 },
-  { hour: '08:00', flow: 68 },
-  { hour: '09:00', flow: 84 },
-  { hour: '10:00', flow: 60 },
-  { hour: '11:00', flow: 55 },
-  { hour: '12:00', flow: 92 },
-  { hour: '13:00', flow: 96 },
-  { hour: '14:00', flow: 78 },
-  { hour: '15:00', flow: 62 },
-  { hour: '16:00', flow: 68 },
-  { hour: '17:00', flow: 82 },
-  { hour: '18:00', flow: 98 },
-  { hour: '19:00', flow: 95 },
-  { hour: '20:00', flow: 88 },
-  { hour: '21:00', flow: 65 },
-  { hour: '22:00', flow: 42 },
-];
-
 export const FootTrafficDynamics: React.FC = () => {
-  const { inspection } = useAnalyticsStore();
-  const [selectedHour, setSelectedHour] = useState<string>('18:00');
-  const transitScore = inspection?.factors?.transit_score || 70;
+  const { inspection, category } = useAnalyticsStore();
+  const [dayMode, setDayMode] = useState<'weekday' | 'weekend'>('weekday');
+  const [selectedSlotIdx, setSelectedSlotIdx] = useState<number>(4); // default 19:00 peak
 
-  // Scale flow slightly according to transit score
-  const scale = transitScore / 80;
+  const slots = inspection?.context?.hourly_traffic || [];
+  const fin = inspection?.context?.financials;
+
+  const maxFlow = Math.max(
+    1,
+    ...slots.map((s) => (dayMode === 'weekday' ? s.weekday_flow : s.weekend_flow))
+  );
+
+  const activeSlot = slots[selectedSlotIdx] || slots[0];
+  const activeFlow = activeSlot
+    ? dayMode === 'weekday'
+      ? activeSlot.weekday_flow
+      : activeSlot.weekend_flow
+    : 2400;
 
   return (
-    <div className="space-y-4 select-none">
-      {/* Header Metric */}
-      <div className="bg-[#F8FAF9] border border-[#0C4137]/[0.08] rounded-xl p-3.5 flex items-center justify-between">
+    <div className="space-y-3.5 select-none">
+      {/* Header Banner + Weekday/Weekend Switcher */}
+      <div className="bg-black/[0.025] dark:bg-white/[0.03] border border-black/[0.06] dark:border-white/[0.07] rounded-xl p-3 flex items-center justify-between gap-2">
         <div className="flex items-center gap-2.5">
-          <div className="p-2 rounded-lg bg-[#E6FBF6] text-[#0C4137] border border-[#06D6A0]/30">
-            <Activity className="w-4 h-4 text-[#06D6A0]" />
+          <div className="p-2 rounded-lg bg-[#0E9F6E]/10 text-[#0E9F6E] border border-[#0E9F6E]/25">
+            <Activity className="w-4 h-4" />
           </div>
           <div>
-            <span className="text-[10px] uppercase font-bold text-neutral-400 tracking-wider">Kunlik Piyodalar Grafigi</span>
-            <div className="text-xs font-bold text-[#0C4137] flex items-center gap-1.5">
-              <span>Hafta davomida barqaror oqim</span>
-              <TrendingUp className="w-3 h-3 text-[#06D6A0]" />
+            <span className="text-[10px] uppercase font-mono font-bold text-[#7A807C] dark:text-[#9CA3AF] tracking-wider">
+              Piyodalar Dinamikasi ({category.toUpperCase()})
+            </span>
+            <div className="text-xs font-bold text-[#111111] dark:text-[#FDFDFD]">
+              Kunlik ~{(fin?.daily_foot_traffic || 14200).toLocaleString()} piyoda
             </div>
           </div>
         </div>
-        <div className="text-right">
-          <span className="text-[10px] text-neutral-400 block font-medium">Kechki pik oqim:</span>
-          <span className="text-sm font-mono font-bold text-[#0C4137]">18:00 - 20:30</span>
+
+        {/* Day Type Toggle */}
+        <div className="flex items-center bg-black/[0.05] dark:bg-white/[0.06] p-0.5 rounded-lg border border-black/[0.05] dark:border-white/[0.06] text-[10px] font-semibold">
+          <button
+            onClick={() => setDayMode('weekday')}
+            className={`px-2 py-1 rounded-md transition-all cursor-pointer ${
+              dayMode === 'weekday'
+                ? 'bg-white dark:bg-[#27272A] text-[#111111] dark:text-white shadow-sm'
+                : 'text-[#6E7470] dark:text-[#9CA3AF]'
+            }`}
+          >
+            Ish kuni
+          </button>
+          <button
+            onClick={() => setDayMode('weekend')}
+            className={`px-2 py-1 rounded-md transition-all cursor-pointer ${
+              dayMode === 'weekend'
+                ? 'bg-white dark:bg-[#27272A] text-[#111111] dark:text-white shadow-sm'
+                : 'text-[#6E7470] dark:text-[#9CA3AF]'
+            }`}
+          >
+            Dam olish
+          </button>
         </div>
       </div>
 
-      {/* Hourly Flow Bar Chart */}
-      <div className="bg-white border border-[#0C4137]/[0.08] rounded-xl p-4 space-y-3 shadow-sm">
+      {/* Interactive Hourly Bar Chart */}
+      <div className="bg-white dark:bg-[#161618] border border-black/[0.07] dark:border-white/[0.08] rounded-xl p-3.5 space-y-3">
         <div className="flex items-center justify-between text-xs">
-          <span className="font-bold text-[#0C4137] flex items-center gap-1.5">
-            <Clock className="w-3.5 h-3.5 text-[#06D6A0]" />
-            Soatlik Oqim Kuchayishi (24h)
+          <span className="font-semibold text-[#111111] dark:text-[#FDFDFD] flex items-center gap-1.5">
+            <Clock className="w-3.5 h-3.5 text-[#0E9F6E]" />
+            <span>Soatlik Oqim va Konversiya</span>
           </span>
-          <span className="text-[10px] font-mono text-[#06D6A0] font-bold">
-            {selectedHour}da {Math.min(100, Math.round((HOURLY_FLOW.find(h => h.hour === selectedHour)?.flow || 80) * scale))}% quvvat
-          </span>
+          {activeSlot && (
+            <span className="text-[11px] font-mono text-[#0E9F6E] font-bold">
+              {activeSlot.hour} · ~{activeFlow.toLocaleString()} kishi
+            </span>
+          )}
         </div>
 
-        {/* Bar chart container */}
-        <div className="h-28 flex items-end justify-between gap-1 pt-4 pb-1">
-          {HOURLY_FLOW.map((item) => {
-            const adjustedFlow = Math.min(100, Math.round(item.flow * scale));
-            const isSelected = selectedHour === item.hour;
-            const isPeak = adjustedFlow >= 85;
+        {/* Bars */}
+        <div className="h-28 flex items-end justify-between gap-2 pt-3 pb-1 px-1">
+          {slots.map((slot, idx) => {
+            const val = dayMode === 'weekday' ? slot.weekday_flow : slot.weekend_flow;
+            const heightPct = Math.max(14, Math.round((val / maxFlow) * 100));
+            const isSelected = idx === selectedSlotIdx;
+            const isPeak = heightPct >= 85;
 
             return (
               <div
-                key={item.hour}
-                onClick={() => setSelectedHour(item.hour)}
-                className="flex-1 flex flex-col items-center gap-1 group cursor-pointer h-full justify-end"
+                key={slot.hour}
+                onClick={() => setSelectedSlotIdx(idx)}
+                className="flex-1 flex flex-col items-center gap-1.5 group cursor-pointer h-full justify-end"
               >
+                <span className="text-[9px] font-mono text-[#7A807C] dark:text-[#9CA3AF] opacity-0 group-hover:opacity-100 transition-opacity">
+                  {(val / 1000).toFixed(1)}k
+                </span>
                 <div
-                  className={`w-full rounded-t transition-all duration-300 ${
+                  className={`w-full rounded-t-md transition-all duration-300 ${
                     isSelected
-                      ? 'bg-[#0C4137] shadow-sm'
+                      ? 'bg-[#111111] dark:bg-white shadow-sm'
                       : isPeak
-                      ? 'bg-[#06D6A0]'
-                      : 'bg-neutral-200 group-hover:bg-neutral-300'
+                      ? 'bg-[#0E9F6E]'
+                      : 'bg-black/[0.12] dark:bg-white/[0.14] group-hover:bg-[#0E9F6E]/60'
                   }`}
-                  style={{ height: `${adjustedFlow}%` }}
+                  style={{ height: `${heightPct}%` }}
                 />
-                <span className="text-[8px] font-mono text-neutral-400 group-hover:text-[#0C4137] transform -rotate-45 origin-left hidden sm:block">
-                  {item.hour.substring(0, 2)}
+                <span
+                  className={`text-[10px] font-mono ${
+                    isSelected
+                      ? 'font-bold text-[#111111] dark:text-white'
+                      : 'text-[#7A807C] dark:text-[#9CA3AF]'
+                  }`}
+                >
+                  {slot.hour}
                 </span>
               </div>
             );
           })}
         </div>
 
-        {/* Key Time Windows */}
-        <div className="grid grid-cols-2 gap-2 pt-2 border-t border-[#0C4137]/[0.06]">
-          <div className="bg-[#F8FAF9] p-2.5 rounded-lg border border-[#0C4137]/[0.06] flex items-center gap-2">
-            <Flame className="w-4 h-4 text-amber-500 flex-shrink-0" />
+        {/* Selected Slot Detail Strip */}
+        {activeSlot && (
+          <div className="bg-black/[0.025] dark:bg-white/[0.03] border border-black/[0.05] dark:border-white/[0.06] rounded-lg p-2.5 flex items-center justify-between text-[11px]">
+            <div className="flex items-center gap-2 min-w-0">
+              <Flame className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+              <span className="text-[#525854] dark:text-[#D1D5DB] truncate font-medium">
+                {activeSlot.label}
+              </span>
+            </div>
+            <span className="font-mono font-bold text-[#0E9F6E] shrink-0 ml-2">
+              Konversiya: {activeSlot.conversion_rate}%
+            </span>
+          </div>
+        )}
+      </div>
+
+      {/* Customer Funnel & Unit Economics Summary */}
+      {fin && (
+        <div className="grid grid-cols-2 gap-2.5">
+          <div className="bg-white dark:bg-[#161618] border border-black/[0.07] dark:border-white/[0.08] rounded-xl p-3 flex items-center gap-2.5">
+            <div className="p-2 rounded-lg bg-[#0E9F6E]/10 text-[#0E9F6E]">
+              <Users className="w-4 h-4" />
+            </div>
             <div>
-              <span className="text-[10px] text-neutral-500 font-medium block">Tushlik To'lqini:</span>
-              <span className="text-xs font-bold text-[#0C4137] font-mono">12:00 — 14:00</span>
+              <span className="text-[10px] text-[#7A807C] dark:text-[#9CA3AF] block">
+                Kutilayotgan mijozlar
+              </span>
+              <span className="text-xs font-mono font-bold text-[#111111] dark:text-[#FDFDFD]">
+                ~{fin.estimated_customers_daily} xarid / kun
+              </span>
             </div>
           </div>
-          <div className="bg-[#F8FAF9] p-2.5 rounded-lg border border-[#0C4137]/[0.06] flex items-center gap-2">
-            <Calendar className="w-4 h-4 text-[#06D6A0] flex-shrink-0" />
+
+          <div className="bg-white dark:bg-[#161618] border border-black/[0.07] dark:border-white/[0.08] rounded-xl p-3 flex items-center gap-2.5">
+            <div className="p-2 rounded-lg bg-indigo-500/10 text-indigo-500">
+              <DollarSign className="w-4 h-4" />
+            </div>
             <div>
-              <span className="text-[10px] text-neutral-500 font-medium block">Dam olish kunlari:</span>
-              <span className="text-xs font-bold text-[#06D6A0] font-mono">+24% Oqim</span>
+              <span className="text-[10px] text-[#7A807C] dark:text-[#9CA3AF] block">
+                O‘rtacha chek & Ijara
+              </span>
+              <span className="text-xs font-mono font-bold text-[#111111] dark:text-[#FDFDFD]">
+                ${fin.avg_check_usd} · ${fin.estimated_rent_sqm_usd}/m²
+              </span>
             </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

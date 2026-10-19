@@ -1,121 +1,217 @@
-import React, { useState } from 'react';
-import { GitCompare, CheckCircle2 } from 'lucide-react';
+import React from 'react';
+import {
+  GitCompare,
+  CheckCircle2,
+  Crosshair,
+  ArrowLeftRight,
+  Trophy,
+} from 'lucide-react';
 import { useAnalyticsStore } from '../../store/useAnalyticsStore';
 
-interface BenchmarkLocation {
-  name: string;
-  lat: number;
-  lon: number;
-  score: number;
-  metroDist: number;
-  competitors: number;
-  households: number;
-}
-
-const PRESET_BENCHMARKS: BenchmarkLocation[] = [
-  { name: 'Chilonzor 9-Mavze', lat: 41.2728, lon: 69.2062, score: 79.5, metroDist: 80, competitors: 4, households: 3800 },
-  { name: 'Yunusobod 4-Mavze', lat: 41.3562, lon: 69.2891, score: 74.5, metroDist: 410, competitors: 1, households: 2900 },
-  { name: 'Oybek / Mirobod', lat: 41.2981, lon: 69.2783, score: 84.0, metroDist: 120, competitors: 3, households: 2400 },
-  { name: 'Tashkent City', lat: 41.3142, lon: 69.2483, score: 92.0, metroDist: 380, competitors: 2, households: 4200 },
+const BENCHMARK_HUBS = [
+  { name: 'Tashkent City IBC', lat: 41.3145, lon: 69.2485 },
+  { name: 'Chilonzor Savdo Markazi', lat: 41.2728, lon: 69.2062 },
+  { name: 'Chorsu Bozori', lat: 41.3271, lon: 69.2346 },
+  { name: 'Oybek / Mirabad', lat: 41.2981, lon: 69.2783 },
+  { name: 'Yunusobod Mega Planet', lat: 41.3654, lon: 69.2907 },
+  { name: 'Buyuk Ipak Yo‘li', lat: 41.3262, lon: 69.3347 },
 ];
 
 export const CompareLocations: React.FC = () => {
-  const { inspection } = useAnalyticsStore();
-  const [selectedBenchmark, setSelectedBenchmark] = useState<BenchmarkLocation>(PRESET_BENCHMARKS[0]);
+  const {
+    inspection,
+    compareCoords,
+    compareInspection,
+    setCompareCoords,
+    isPickingCompareOnMap,
+    setIsPickingCompareOnMap,
+    swapCompareLocations,
+  } = useAnalyticsStore();
 
-  const locAScore = inspection?.makon_score || 83.5;
-  const locAMetro = inspection?.context?.nearest_metro?.distance_meters || 260;
-  const locAComp = inspection?.context?.direct_competitors_count || 3;
-  const locAHouse = inspection?.context?.estimated_households || 1820;
+  const locA = inspection;
+  const locB = compareInspection;
 
-  const diffScore = locAScore - selectedBenchmark.score;
+  const scoreA = locA.makon_score;
+  const scoreB = locB.makon_score;
+  const diffScore = scoreA - scoreB;
+
+  const finA = locA.context.financials;
+  const finB = locB.context.financials;
+
+  const labelA = locA.context.location_label?.split(' (')[0] || 'Nuqta A';
+  const labelB = locB.context.location_label?.split(' (')[0] || 'Nuqta B';
 
   return (
-    <div className="space-y-4 select-none">
-      <div className="bg-[#F8FAF9] border border-[#0C4137]/[0.08] rounded-xl p-3.5 flex items-center justify-between">
-        <div className="flex items-center gap-2.5">
-          <div className="p-2 rounded-lg bg-[#E6FBF6] text-[#0C4137] border border-[#06D6A0]/30">
-            <GitCompare className="w-4 h-4 text-[#06D6A0]" />
+    <div className="space-y-3.5 select-none">
+      {/* Header + Interactive Map Pick & Swap Buttons */}
+      <div className="bg-black/[0.025] dark:bg-white/[0.03] border border-black/[0.06] dark:border-white/[0.07] rounded-xl p-3 flex items-center justify-between gap-2">
+        <div className="flex items-center gap-2.5 min-w-0">
+          <div className="p-2 rounded-lg bg-indigo-500/10 text-indigo-500 border border-indigo-500/25 shrink-0">
+            <GitCompare className="w-4 h-4" />
           </div>
-          <div>
-            <span className="text-[10px] uppercase font-bold text-neutral-400 tracking-wider">A/B Lokatsiya Solishtiruvi</span>
-            <div className="text-xs font-bold text-[#0C4137]">Ikki muqobil nuqta taqqoslanishi</div>
+          <div className="min-w-0">
+            <span className="text-[10px] uppercase font-mono font-bold text-[#7A807C] dark:text-[#9CA3AF] tracking-wider block">
+              Jonli A/B Taqqoslash
+            </span>
+            <div className="text-xs font-bold text-[#111111] dark:text-[#FDFDFD] truncate">
+              {labelA} vs {labelB}
+            </div>
           </div>
+        </div>
+
+        <div className="flex items-center gap-1.5 shrink-0">
+          <button
+            onClick={swapCompareLocations}
+            title="A va B nuqtalarni o'zaro almashtirish"
+            className="p-1.5 rounded-lg bg-black/[0.04] dark:bg-white/[0.06] hover:bg-black/[0.08] dark:hover:bg-white/[0.1] text-[#111111] dark:text-white transition-all cursor-pointer"
+          >
+            <ArrowLeftRight className="w-3.5 h-3.5" />
+          </button>
+          <button
+            onClick={() => setIsPickingCompareOnMap(!isPickingCompareOnMap)}
+            className={`flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[11px] font-semibold transition-all cursor-pointer ${
+              isPickingCompareOnMap
+                ? 'bg-indigo-600 text-white shadow-sm animate-pulse'
+                : 'bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 border border-indigo-500/25'
+            }`}
+          >
+            <Crosshair className="w-3.5 h-3.5" />
+            <span>{isPickingCompareOnMap ? 'Xaritani bosing...' : 'Xaritadan B tanlash'}</span>
+          </button>
         </div>
       </div>
 
-      {/* Benchmark Selector */}
+      {/* Quick Preset Benchmark Picker */}
       <div className="space-y-1.5">
-        <label className="text-[11px] font-bold text-neutral-500">Taqqoslash uchun muqobil nuqta (Lokatsiya B):</label>
-        <div className="grid grid-cols-2 gap-2">
-          {PRESET_BENCHMARKS.map((bm) => {
-            const isSelected = selectedBenchmark.name === bm.name;
+        <div className="text-[10px] font-mono uppercase tracking-wider text-[#7A807C] dark:text-[#9CA3AF] font-semibold">
+          Yoki tayyor etalon hududni tanlang (Lokatsiya B):
+        </div>
+        <div className="grid grid-cols-3 gap-1.5">
+          {BENCHMARK_HUBS.map((bm) => {
+            const isSelected =
+              Math.abs(compareCoords.latitude - bm.lat) < 0.002 &&
+              Math.abs(compareCoords.longitude - bm.lon) < 0.002;
             return (
               <button
                 key={bm.name}
-                onClick={() => setSelectedBenchmark(bm)}
-                className={`px-3 py-2 rounded-xl text-xs font-medium text-left transition-all ${
+                onClick={() => setCompareCoords({ latitude: bm.lat, longitude: bm.lon })}
+                className={`px-2.5 py-1.5 rounded-lg text-[11px] font-medium text-left truncate transition-all cursor-pointer ${
                   isSelected
-                    ? 'bg-[#E6FBF6] text-[#0C4137] border border-[#06D6A0]/50 shadow-sm'
-                    : 'bg-white text-neutral-600 border border-[#0C4137]/[0.08] hover:text-[#0C4137]'
+                    ? 'bg-indigo-600 text-white font-semibold shadow-sm'
+                    : 'bg-white dark:bg-[#161618] text-[#525854] dark:text-[#D1D5DB] border border-black/[0.07] dark:border-white/[0.08] hover:border-indigo-500/50'
                 }`}
               >
-                <div className="truncate font-bold">{bm.name}</div>
-                <div className="text-[10px] text-neutral-500 font-mono mt-0.5">Score: {bm.score}</div>
+                {bm.name}
               </button>
             );
           })}
         </div>
       </div>
 
-      {/* Comparison Grid Table */}
-      <div className="bg-white border border-[#0C4137]/[0.08] rounded-xl overflow-hidden text-xs shadow-sm">
-        <div className="grid grid-cols-3 bg-[#F8FAF9] p-3 border-b border-[#0C4137]/[0.08] font-bold text-[#0C4137] text-[11px]">
-          <div>Ko'rsatkich</div>
-          <div className="text-center text-[#06D6A0]">Lokatsiya A (Faol)</div>
-          <div className="text-center text-indigo-600">Lokatsiya B ({selectedBenchmark.name.split(' ')[0]})</div>
+      {/* Head-to-Head Comparison Matrix */}
+      <div className="bg-white dark:bg-[#161618] border border-black/[0.07] dark:border-white/[0.08] rounded-xl overflow-hidden text-xs">
+        <div className="grid grid-cols-3 bg-black/[0.03] dark:bg-white/[0.04] px-3 py-2.5 border-b border-black/[0.06] dark:border-white/[0.07] font-semibold text-[11px]">
+          <div className="text-[#7A807C] dark:text-[#9CA3AF]">Mezon</div>
+          <div className="text-center text-[#0E9F6E] truncate px-1">A: {labelA}</div>
+          <div className="text-center text-indigo-500 truncate px-1">B: {labelB}</div>
         </div>
 
-        {/* Row 1: Score */}
-        <div className="grid grid-cols-3 p-3 border-b border-[#0C4137]/[0.06] items-center">
-          <div className="text-neutral-600 font-medium">MakonScore™</div>
-          <div className="text-center font-mono font-bold text-[#06D6A0]">{locAScore.toFixed(1)}</div>
-          <div className="text-center font-mono font-bold text-indigo-600">{selectedBenchmark.score.toFixed(1)}</div>
+        {/* Row 1: MakonScore */}
+        <div className="grid grid-cols-3 px-3 py-2.5 border-b border-black/[0.05] dark:border-white/[0.05] items-center">
+          <div className="text-[#525854] dark:text-[#D1D5DB] font-medium">MakonScore™</div>
+          <div className="text-center font-mono font-bold text-[#0E9F6E] flex items-center justify-center gap-1">
+            <span>{scoreA.toFixed(1)}</span>
+            {scoreA >= scoreB && <Trophy className="w-3 h-3 text-[#0E9F6E]" />}
+          </div>
+          <div className="text-center font-mono font-bold text-indigo-500 flex items-center justify-center gap-1">
+            <span>{scoreB.toFixed(1)}</span>
+            {scoreB > scoreA && <Trophy className="w-3 h-3 text-indigo-500" />}
+          </div>
         </div>
 
-        {/* Row 2: Metro */}
-        <div className="grid grid-cols-3 p-3 border-b border-[#0C4137]/[0.06] items-center">
-          <div className="text-neutral-600 font-medium">Metro Masofasi</div>
-          <div className="text-center font-mono text-[#0C4137] font-semibold">{locAMetro.toFixed(0)}m</div>
-          <div className="text-center font-mono text-[#0C4137] font-semibold">{selectedBenchmark.metroDist}m</div>
+        {/* Row 2: Daily Foot Traffic */}
+        <div className="grid grid-cols-3 px-3 py-2.5 border-b border-black/[0.05] dark:border-white/[0.05] items-center">
+          <div className="text-[#525854] dark:text-[#D1D5DB] font-medium">Kunlik Oqim</div>
+          <div className="text-center font-mono font-semibold text-[#111111] dark:text-[#FDFDFD]">
+            ~{(finA?.daily_foot_traffic || 12400).toLocaleString()}
+          </div>
+          <div className="text-center font-mono font-semibold text-[#111111] dark:text-[#FDFDFD]">
+            ~{(finB?.daily_foot_traffic || 11200).toLocaleString()}
+          </div>
         </div>
 
-        {/* Row 3: Competitors */}
-        <div className="grid grid-cols-3 p-3 border-b border-[#0C4137]/[0.06] items-center">
-          <div className="text-neutral-600 font-medium">Raqobatchilar</div>
-          <div className="text-center font-mono text-amber-600 font-bold">{locAComp} ta</div>
-          <div className="text-center font-mono text-amber-600 font-bold">{selectedBenchmark.competitors} ta</div>
+        {/* Row 3: Monthly Revenue Forecast */}
+        <div className="grid grid-cols-3 px-3 py-2.5 border-b border-black/[0.05] dark:border-white/[0.05] items-center">
+          <div className="text-[#525854] dark:text-[#D1D5DB] font-medium">Oylik Tushum</div>
+          <div className="text-center font-mono font-bold text-[#0E9F6E]">
+            ${Math.round((finA?.monthly_revenue_min_usd || 16000) / 1000)}k–$
+            {Math.round((finA?.monthly_revenue_max_usd || 22000) / 1000)}k
+          </div>
+          <div className="text-center font-mono font-bold text-indigo-500">
+            ${Math.round((finB?.monthly_revenue_min_usd || 14000) / 1000)}k–$
+            {Math.round((finB?.monthly_revenue_max_usd || 19000) / 1000)}k
+          </div>
         </div>
 
-        {/* Row 4: Households */}
-        <div className="grid grid-cols-3 p-3 items-center">
-          <div className="text-neutral-600 font-medium">Xonadonlar Qamrovi</div>
-          <div className="text-center font-mono text-[#0C4137] font-semibold">~{locAHouse.toLocaleString()}</div>
-          <div className="text-center font-mono text-[#0C4137] font-semibold">~{selectedBenchmark.households.toLocaleString()}</div>
+        {/* Row 4: Payback Period */}
+        <div className="grid grid-cols-3 px-3 py-2.5 border-b border-black/[0.05] dark:border-white/[0.05] items-center">
+          <div className="text-[#525854] dark:text-[#D1D5DB] font-medium">Qoplash (ROI)</div>
+          <div className="text-center font-mono font-semibold text-[#111111] dark:text-[#FDFDFD]">
+            ~{finA?.payback_months || 10.5} oy
+          </div>
+          <div className="text-center font-mono font-semibold text-[#111111] dark:text-[#FDFDFD]">
+            ~{finB?.payback_months || 12.0} oy
+          </div>
+        </div>
+
+        {/* Row 5: Nearest Metro */}
+        <div className="grid grid-cols-3 px-3 py-2.5 border-b border-black/[0.05] dark:border-white/[0.05] items-center">
+          <div className="text-[#525854] dark:text-[#D1D5DB] font-medium">Metro Masofasi</div>
+          <div className="text-center font-mono text-[#111111] dark:text-[#FDFDFD] font-semibold">
+            {locA.context.nearest_metro ? `${locA.context.nearest_metro.distance_meters}m` : '>800m'}
+          </div>
+          <div className="text-center font-mono text-[#111111] dark:text-[#FDFDFD] font-semibold">
+            {locB.context.nearest_metro ? `${locB.context.nearest_metro.distance_meters}m` : '>800m'}
+          </div>
+        </div>
+
+        {/* Row 6: Direct Competitors */}
+        <div className="grid grid-cols-3 px-3 py-2.5 items-center">
+          <div className="text-[#525854] dark:text-[#D1D5DB] font-medium">Raqobatchilar</div>
+          <div className="text-center font-mono text-amber-500 font-bold">
+            {locA.context.direct_competitors_count} ta
+          </div>
+          <div className="text-center font-mono text-amber-500 font-bold">
+            {locB.context.direct_competitors_count} ta
+          </div>
         </div>
       </div>
 
-      {/* Delta Callout */}
-      <div className={`p-3 rounded-xl border flex items-center gap-2.5 text-xs ${
-        diffScore >= 0
-          ? 'bg-[#E6FBF6] border-[#06D6A0]/40 text-[#0C4137]'
-          : 'bg-amber-50 border-amber-200 text-amber-800'
-      }`}>
-        <CheckCircle2 className="w-4 h-4 flex-shrink-0 text-[#06D6A0]" />
+      {/* Verdict Callout */}
+      <div
+        className={`p-3 rounded-xl border flex items-start gap-2.5 text-[11px] leading-relaxed ${
+          diffScore >= 0
+            ? 'bg-[#0E9F6E]/10 border-[#0E9F6E]/30 text-[#111111] dark:text-[#E5E7EB]'
+            : 'bg-indigo-500/10 border-indigo-500/30 text-[#111111] dark:text-[#E5E7EB]'
+        }`}
+      >
+        <CheckCircle2
+          className={`w-4 h-4 flex-shrink-0 mt-0.5 ${
+            diffScore >= 0 ? 'text-[#0E9F6E]' : 'text-indigo-500'
+          }`}
+        />
         <span>
-          {diffScore >= 0
-            ? `Tanlangan Lokatsiya A ${selectedBenchmark.name} ga nisbatan +${diffScore.toFixed(1)} ball yuqoriroq salohiyatga ega.`
-            : `Lokatsiya B umumiy reyting bo'yicha +${Math.abs(diffScore).toFixed(1)} ball ustunlikka ega.`}
+          {diffScore >= 0 ? (
+            <>
+              <strong className="text-[#0E9F6E]">Lokatsiya A ({labelA})</strong> muqobil nuqtaga nisbatan{' '}
+              <strong>+{diffScore.toFixed(1)} ball</strong> yuqori salohiyatga ega.
+            </>
+          ) : (
+            <>
+              <strong className="text-indigo-500">Lokatsiya B ({labelB})</strong> joriy nuqtaga nisbatan{' '}
+              <strong>+{Math.abs(diffScore).toFixed(1)} ball</strong> ustunroq ko‘rsatkich qayd etdi.
+            </>
+          )}
         </span>
       </div>
     </div>
