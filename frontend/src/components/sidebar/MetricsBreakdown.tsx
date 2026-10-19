@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   Layers,
   Train,
@@ -12,12 +12,18 @@ import {
   Sparkles,
   ArrowUpRight,
   Eye,
+  Clock,
+  Target,
 } from 'lucide-react';
 import { useAnalyticsStore, SidebarTabKey } from '../../store/useAnalyticsStore';
 import { CompetitorsRadar } from './CompetitorsRadar';
 import { FootTrafficDynamics } from './FootTrafficDynamics';
 import { CompareLocations } from './CompareLocations';
 import { scanTopHotspots } from '../../utils/clientSpatialEngine';
+import {
+  recommendOptimalBusinessFormat,
+  simulateUnitEconomics,
+} from '../../utils/spatialIntelligenceModels';
 
 export const MetricsBreakdown: React.FC = () => {
   const {
@@ -31,12 +37,24 @@ export const MetricsBreakdown: React.FC = () => {
     setHighlightedPoiCoords,
   } = useAnalyticsStore();
 
-  const [customAreaSqm, setCustomAreaSqm] = useState<number>(85);
-  const [regionFilter, setRegionFilter] = useState<'all' | 'tashkent' | 'regions'>('all');
-
   const factors = inspection?.factors;
   const context = inspection?.context;
   const fin = context?.financials;
+
+  const formatAdvisor = useMemo(
+    () => recommendOptimalBusinessFormat(inspection, category),
+    [inspection, category]
+  );
+
+  const [customAreaSqm, setCustomAreaSqm] = useState<number>(85);
+  const [customAvgCheck, setCustomAvgCheck] = useState<number>(fin?.avg_check_usd || 5.0);
+  const [regionFilter, setRegionFilter] = useState<'all' | 'tashkent' | 'regions'>('all');
+
+  // Sync default area and avgCheck when category changes
+  useEffect(() => {
+    setCustomAreaSqm(formatAdvisor.defaultAreaSqm);
+    setCustomAvgCheck(fin?.avg_check_usd || 5.0);
+  }, [category]);
 
   const tScore = factors?.transit_score ?? 0;
   const aScore = factors?.anchor_score ?? 0;
@@ -59,11 +77,17 @@ export const MetricsBreakdown: React.FC = () => {
   }, [hotspots, regionFilter]);
 
   const rentPerSqm = fin?.estimated_rent_sqm_usd || 22;
-  const customMonthlyRent = Math.round(customAreaSqm * rentPerSqm);
-  const avgMonthlyRev = fin
-    ? Math.round((fin.monthly_revenue_min_usd + fin.monthly_revenue_max_usd) / 2)
-    : 21000;
-  const rentToRevRatio = Math.min(45, Math.max(4, Math.round((customMonthlyRent / avgMonthlyRev) * 100)));
+  const unitEcon = useMemo(
+    () =>
+      simulateUnitEconomics(
+        inspection,
+        category,
+        customAreaSqm,
+        customAvgCheck,
+        rentPerSqm
+      ),
+    [inspection, category, customAreaSqm, customAvgCheck, rentPerSqm]
+  );
 
   const tabs: { id: SidebarTabKey; label: string; icon: React.ReactNode }[] = [
     { id: 'factors', label: 'Omillar', icon: <Layers className="w-3.5 h-3.5" /> },
@@ -103,9 +127,42 @@ export const MetricsBreakdown: React.FC = () => {
         })}
       </div>
 
-      {/* TAB 1: 4 Key Spatial Factors + Live Rent & ROI Simulator */}
+      {/* TAB 1: AI Format Advisor + 4 Key Spatial Factors + Live Unit-Economics Simulator */}
       {activeSidebarTab === 'factors' && (
         <div className="space-y-2.5">
+          {/* 0. MakonAI Optimal Format & Operating Schedule Card */}
+          <div className="spatial-glass-subcard rounded-2xl p-3 space-y-2 border-l-2 border-l-[#0E9F6E]">
+            <div className="flex items-start justify-between gap-2">
+              <div>
+                <span className="text-[9px] font-mono uppercase tracking-wider font-bold text-[#0E9F6E] flex items-center gap-1">
+                  <Sparkles className="w-3 h-3" />
+                  <span>MakonAI Tavsiya Etilgan Format</span>
+                </span>
+                <div className="text-xs font-bold text-[#111111] dark:text-[#FDFDFD] mt-0.5 select-text">
+                  {formatAdvisor.formatTitle}
+                </div>
+              </div>
+              <span className="px-2 py-0.5 rounded-md bg-[#0E9F6E]/15 text-[#0E9F6E] font-mono tabular-nums text-[10px] font-bold shrink-0">
+                {formatAdvisor.recommendedAreaSqm}
+              </span>
+            </div>
+
+            <div className="grid grid-cols-2 gap-1.5 text-[10px] text-[#525854] dark:text-[#9CA3AF]">
+              <div className="flex items-center gap-1 truncate">
+                <Clock className="w-3 h-3 text-[#0E9F6E] shrink-0" />
+                <span className="truncate">{formatAdvisor.operatingHours}</span>
+              </div>
+              <div className="flex items-center gap-1 truncate">
+                <Target className="w-3 h-3 text-indigo-500 shrink-0" />
+                <span className="truncate">{formatAdvisor.pricingPositioning}</span>
+              </div>
+            </div>
+
+            <p className="text-[10.5px] leading-relaxed text-[#525854] dark:text-[#9CA3AF] select-text">
+              {formatAdvisor.strategicAdvice}
+            </p>
+          </div>
+
           {/* 1. Transit Factor */}
           <div className="spatial-glass-subcard hover:border-[#0E9F6E]/40 rounded-2xl p-3 space-y-2 transition-colors">
             <div className="flex items-center justify-between text-xs">
@@ -152,6 +209,11 @@ export const MetricsBreakdown: React.FC = () => {
                   <strong className="text-[#111111] dark:text-[#E5E7EB] font-semibold">
                     {context.nearest_metro.name}
                   </strong>
+                  {typeof context.bus_stops_count === 'number' && context.bus_stops_count > 0 && (
+                    <span className="text-[10px] font-mono text-[#0E9F6E]">
+                      (+{context.bus_stops_count} avtobus bekati)
+                    </span>
+                  )}
                 </span>
                 <span className="font-mono tabular-nums font-bold text-[#0E9F6E] flex items-center gap-1 shrink-0">
                   {context.nearest_metro.distance_meters.toFixed(0)}m
@@ -303,62 +365,137 @@ export const MetricsBreakdown: React.FC = () => {
             </div>
           </div>
 
-          {/* 5. Interactive Commercial Space & Rent Simulator */}
+          {/* 5. Interactive Unit-Economics, Break-Even & 3-Scenario Simulator */}
           <div className="bg-[#0E9F6E]/[0.07] dark:bg-[#0E9F6E]/[0.1] border border-[#0E9F6E]/25 rounded-2xl p-3 space-y-2.5">
             <div className="flex items-center justify-between text-xs">
-              <label
-                htmlFor="rent-area-slider"
-                className="font-semibold text-[#111111] dark:text-[#FDFDFD] flex items-center gap-1.5 cursor-pointer"
-              >
+              <span className="font-semibold text-[#111111] dark:text-[#FDFDFD] flex items-center gap-1.5">
                 <Calculator className="w-3.5 h-3.5 text-[#0E9F6E]" />
-                <span>Ijara va Maydon Kalkulyatori</span>
-              </label>
-              <span className="font-mono tabular-nums text-[11px] font-bold text-[#0E9F6E]">
-                {customAreaSqm} m² · ~${rentPerSqm}/m²
+                <span>Unit-Ekonomika & Break-Even Simulyatori</span>
+              </span>
+              <span className="font-mono tabular-nums text-[10px] font-bold text-[#0E9F6E]">
+                ~${rentPerSqm}/m² ijara
               </span>
             </div>
 
-            <input
-              id="rent-area-slider"
-              type="range"
-              min={30}
-              max={350}
-              step={5}
-              value={customAreaSqm}
-              aria-label="Savdo maydoni kvadrat metrda"
-              onChange={(e) => setCustomAreaSqm(Number(e.target.value))}
-              className="w-full accent-[#0E9F6E] h-1.5 bg-black/10 dark:bg-white/15 rounded-lg cursor-pointer"
-            />
+            {/* Sliders: Area (m2) and Avg Check ($) */}
+            <div className="grid grid-cols-2 gap-3 pt-0.5">
+              <div className="space-y-1">
+                <div className="flex items-center justify-between text-[10px]">
+                  <label htmlFor="rent-area-slider" className="text-[#6E7470] dark:text-[#9CA3AF]">
+                    Maydon:
+                  </label>
+                  <span className="font-mono tabular-nums font-bold text-[#111111] dark:text-[#FDFDFD]">
+                    {customAreaSqm} m²
+                  </span>
+                </div>
+                <input
+                  id="rent-area-slider"
+                  type="range"
+                  min={25}
+                  max={350}
+                  step={5}
+                  value={customAreaSqm}
+                  aria-label="Savdo maydoni kvadrat metrda"
+                  onChange={(e) => setCustomAreaSqm(Number(e.target.value))}
+                  className="w-full accent-[#0E9F6E] h-1.5 bg-black/10 dark:bg-white/15 rounded-lg cursor-pointer"
+                />
+              </div>
 
-            <div className="grid grid-cols-3 gap-2 pt-0.5 text-[11px] select-text">
-              <div>
-                <span className="text-[9px] text-[#7A807C] dark:text-[#9CA3AF] block select-none">
+              <div className="space-y-1">
+                <div className="flex items-center justify-between text-[10px]">
+                  <label htmlFor="avg-check-slider" className="text-[#6E7470] dark:text-[#9CA3AF]">
+                    O‘rtacha chek:
+                  </label>
+                  <span className="font-mono tabular-nums font-bold text-[#0E9F6E]">
+                    ${customAvgCheck.toFixed(1)}
+                  </span>
+                </div>
+                <input
+                  id="avg-check-slider"
+                  type="range"
+                  min={2}
+                  max={40}
+                  step={0.5}
+                  value={customAvgCheck}
+                  aria-label="O'rtacha xarid cheki dollarda"
+                  onChange={(e) => setCustomAvgCheck(Number(e.target.value))}
+                  className="w-full accent-[#0E9F6E] h-1.5 bg-black/10 dark:bg-white/15 rounded-lg cursor-pointer"
+                />
+              </div>
+            </div>
+
+            {/* Break-Even & Rent KPI Strip */}
+            <div className="grid grid-cols-3 gap-1.5 pt-1 text-[10px] select-text">
+              <div className="bg-white/55 dark:bg-white/[0.04] rounded-xl p-2 border border-black/[0.05] dark:border-white/[0.06]">
+                <span className="text-[9px] text-[#7A807C] dark:text-[#9CA3AF] block">
                   Oylik ijara
                 </span>
-                <span className="font-mono tabular-nums font-bold text-[#111111] dark:text-[#FDFDFD]">
-                  ${customMonthlyRent.toLocaleString()}
+                <span className="font-mono tabular-nums font-bold text-xs text-[#111111] dark:text-[#FDFDFD]">
+                  ${unitEcon.monthlyRentUsd.toLocaleString()}
+                </span>
+                <span className="text-[9px] font-mono text-[#7A807C] block">
+                  {unitEcon.rentToRevenuePercent}% tushumdan
                 </span>
               </div>
-              <div>
-                <span className="text-[9px] text-[#7A807C] dark:text-[#9CA3AF] block select-none">
-                  Ijara / Tushum
+
+              <div className="bg-white/55 dark:bg-white/[0.04] rounded-xl p-2 border border-black/[0.05] dark:border-white/[0.06]">
+                <span className="text-[9px] text-[#7A807C] dark:text-[#9CA3AF] block">
+                  Zararsizlik (Break-even)
+                </span>
+                <span className="font-mono tabular-nums font-bold text-xs text-[#111111] dark:text-[#FDFDFD]">
+                  {unitEcon.breakEvenDailyCustomers} ta/kun
                 </span>
                 <span
-                  className={`font-mono tabular-nums font-bold ${
-                    rentToRevRatio <= 15 ? 'text-[#0E9F6E]' : 'text-amber-500'
+                  className={`text-[9px] font-mono font-semibold block ${
+                    unitEcon.safetyMarginPercent >= 0 ? 'text-[#0E9F6E]' : 'text-rose-500'
                   }`}
                 >
-                  {rentToRevRatio}% (Optimal &lt;15%)
+                  {unitEcon.safetyMarginPercent >= 0
+                    ? `+${unitEcon.safetyMarginPercent}% xavfsiz`
+                    : `${unitEcon.safetyMarginPercent}% tanqislik`}
                 </span>
               </div>
-              <div className="text-right">
-                <span className="text-[9px] text-[#7A807C] dark:text-[#9CA3AF] block select-none">
-                  Yillik ROI
+
+              <div className="bg-white/55 dark:bg-white/[0.04] rounded-xl p-2 border border-black/[0.05] dark:border-white/[0.06]">
+                <span className="text-[9px] text-[#7A807C] dark:text-[#9CA3AF] block">
+                  Boshlang‘ich CAPEX
                 </span>
-                <span className="font-mono tabular-nums font-bold text-[#0E9F6E]">
-                  ~{fin?.roi_annual_percent || 96}%
+                <span className="font-mono tabular-nums font-bold text-xs text-[#0E9F6E]">
+                  ${(unitEcon.estimatedCapexUsd / 1000).toFixed(1)}k
+                </span>
+                <span className="text-[9px] font-mono text-[#7A807C] block">
+                  Marja ~{unitEcon.grossMarginPercent}%
                 </span>
               </div>
+            </div>
+
+            {/* 3-Scenario Financial Forecast Matrix */}
+            <div className="bg-white/60 dark:bg-white/[0.04] rounded-xl p-2 border border-black/[0.05] dark:border-white/[0.07] space-y-1.5 select-text">
+              <div className="grid grid-cols-4 text-[9px] font-mono uppercase text-[#7A807C] dark:text-[#9CA3AF] pb-1 border-b border-black/[0.05] dark:border-white/[0.06]">
+                <span>Ssenariy</span>
+                <span className="text-right">Aylanma/oy</span>
+                <span className="text-right">Sof foyda</span>
+                <span className="text-right">Qoplash</span>
+              </div>
+              {[
+                unitEcon.scenarios.pessimistic,
+                unitEcon.scenarios.base,
+                unitEcon.scenarios.optimistic,
+              ].map((sc, i) => (
+                <div
+                  key={sc.label}
+                  className={`grid grid-cols-4 items-center text-[10px] font-mono tabular-nums py-0.5 ${
+                    i === 1
+                      ? 'font-bold text-[#0E9F6E]'
+                      : 'text-[#525854] dark:text-[#9CA3AF]'
+                  }`}
+                >
+                  <span className="font-sans truncate">{sc.label}</span>
+                  <span className="text-right">${(sc.monthlyRevenueUsd / 1000).toFixed(1)}k</span>
+                  <span className="text-right">${(sc.monthlyNetProfitUsd / 1000).toFixed(1)}k</span>
+                  <span className="text-right">{sc.paybackMonths} oy</span>
+                </div>
+              ))}
             </div>
           </div>
         </div>

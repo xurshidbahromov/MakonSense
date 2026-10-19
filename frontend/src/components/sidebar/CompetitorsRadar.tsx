@@ -1,17 +1,57 @@
-import React from 'react';
-import { ShieldAlert, Footprints, CheckCircle, Navigation, Eye, Crosshair } from 'lucide-react';
+import React, { useMemo } from 'react';
+import {
+  ShieldAlert,
+  Footprints,
+  CheckCircle,
+  Navigation,
+  Eye,
+  Crosshair,
+  PieChart,
+  Compass,
+  ArrowUpRight,
+} from 'lucide-react';
 import { useAnalyticsStore } from '../../store/useAnalyticsStore';
+import {
+  calculateHuffMarketShare,
+  scanLocalWhiteSpaceVectors,
+} from '../../utils/spatialIntelligenceModels';
 
 export const CompetitorsRadar: React.FC = () => {
   const {
     inspection,
     category,
     radiusMeters,
+    selectedCoords,
     setHighlightedPoiCoords,
     setSelectedCoords,
   } = useAnalyticsStore();
+
   const competitors = inspection?.context?.competitors || [];
   const count = inspection?.context?.direct_competitors_count || 0;
+
+  // 1. Huff Retail Gravity Model (Market Share & Cannibalization)
+  const huffModel = useMemo(
+    () => calculateHuffMarketShare(inspection),
+    [inspection]
+  );
+
+  // 2. Micro-Grid White-Space ("Bo'sh Bozor") Scanner within 240m–440m
+  const whiteSpaceZones = useMemo(
+    () =>
+      scanLocalWhiteSpaceVectors(
+        selectedCoords,
+        inspection.makon_score,
+        category,
+        radiusMeters
+      ),
+    [
+      selectedCoords.latitude,
+      selectedCoords.longitude,
+      inspection.makon_score,
+      category,
+      radiusMeters,
+    ]
+  );
 
   const getWalkingMinutes = (meters: number) => {
     const mins = Math.max(1, Math.round(meters / 80));
@@ -49,38 +89,103 @@ export const CompetitorsRadar: React.FC = () => {
 
   return (
     <div className="space-y-3">
-      {/* Risk Summary Banner */}
-      <div className="spatial-glass-subcard rounded-2xl p-3.5 flex items-center justify-between">
-        <div className="flex items-center gap-2.5">
-          <div className="p-2 rounded-lg bg-amber-500/10 text-amber-500 border border-amber-500/25">
-            <ShieldAlert className="w-4 h-4" />
-          </div>
-          <div>
-            <span className="text-[10px] uppercase font-mono font-bold text-[#7A807C] dark:text-[#9CA3AF] tracking-wider">
-              Kannibalizatsiya Indeksi
-            </span>
-            <div className="text-xs font-bold text-[#111111] dark:text-[#FDFDFD]">
-              {count === 0
-                ? 'Erkin Bozor (Monopol Ustunlik)'
-                : count >= 3
-                ? "Kuchli Bozor To'yinganligi"
-                : "Mo'tadil Raqobat Muhiti"}
+      {/* 1. Huff Gravity Model & Market Share Banner */}
+      <div className="spatial-glass-subcard rounded-2xl p-3.5 space-y-2.5">
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2.5">
+            <div className="p-2 rounded-lg bg-[#0E9F6E]/10 text-[#0E9F6E] border border-[#0E9F6E]/25">
+              <PieChart className="w-4 h-4" />
+            </div>
+            <div>
+              <span className="text-[10px] uppercase font-mono font-bold text-[#7A807C] dark:text-[#9CA3AF] tracking-wider block">
+                Huff Gravitatsiya Modeli
+              </span>
+              <div className="text-xs font-bold text-[#111111] dark:text-[#FDFDFD]">
+                {huffModel.saturationLabel}
+              </div>
             </div>
           </div>
+          <div className="text-right">
+            <span className="text-base font-mono tabular-nums font-bold text-[#0E9F6E]">
+              {huffModel.marketSharePercent}%
+            </span>
+            <span className="text-[9px] text-[#7A807C] dark:text-[#9CA3AF] block -mt-0.5 font-medium">
+              bozor ulushi
+            </span>
+          </div>
         </div>
-        <div className="text-right">
-          <span className="text-lg font-mono tabular-nums font-bold text-amber-500">{count}</span>
-          <span className="text-[10px] text-[#7A807C] dark:text-[#9CA3AF] block -mt-1 font-medium">
-            ta raqobatchi
-          </span>
+
+        {/* Dual Share Bar: Proposed Point vs Existing Competitors */}
+        <div className="space-y-1">
+          <div className="w-full h-2 rounded-full bg-amber-500/25 overflow-hidden flex">
+            <div
+              className="bg-[#0E9F6E] h-full rounded-l-full transition-all duration-500"
+              style={{ width: `${huffModel.marketSharePercent}%` }}
+            />
+          </div>
+          <div className="flex items-center justify-between text-[10px] text-[#6E7470] dark:text-[#9CA3AF] font-mono tabular-nums">
+            <span className="text-[#0E9F6E] font-semibold">
+              Sizning ulushingiz: ~{huffModel.marketSharePercent}%
+            </span>
+            <span className="text-amber-600 dark:text-amber-400">
+              Kannibalizatsiya xavfi: {huffModel.cannibalizationRiskPercent}% ({count} ta raqobatchi)
+            </span>
+          </div>
         </div>
       </div>
 
-      {/* Competitors List */}
+      {/* 2. Micro-Grid "Bo'sh Bozor" (White-Space) Optimizer */}
+      {whiteSpaceZones.length > 0 && (
+        <div className="spatial-glass-subcard rounded-2xl p-3 space-y-2">
+          <div className="flex items-center justify-between">
+            <span className="text-[10px] font-mono uppercase tracking-wider font-bold text-[#0E9F6E] flex items-center gap-1.5">
+              <Compass className="w-3.5 h-3.5" />
+              <span>Yaqin Atrofdagi "Bo‘sh Bozor" Radari (240–440m)</span>
+            </span>
+          </div>
+          <div className="grid grid-cols-1 gap-1.5">
+            {whiteSpaceZones.slice(0, 2).map((ws) => (
+              <button
+                key={ws.id}
+                type="button"
+                onClick={() => setSelectedCoords(ws.coordinates)}
+                className="press-scale w-full text-left px-2.5 py-2 rounded-xl bg-white/50 dark:bg-white/[0.04] hover:bg-[#0E9F6E]/10 border border-black/[0.05] dark:border-white/[0.07] hover:border-[#0E9F6E]/40 flex items-center justify-between gap-2 transition-colors cursor-pointer group"
+              >
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-1.5 text-xs font-semibold text-[#111111] dark:text-[#FDFDFD] group-hover:text-[#0E9F6E]">
+                    <span>
+                      {ws.directionLabel}ga {ws.distanceMeters}m
+                    </span>
+                    <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-black/[0.04] dark:bg-white/[0.07] text-[#6E7470] dark:text-[#9CA3AF]">
+                      {ws.competitorsCount} raqobatchi
+                    </span>
+                  </div>
+                  <div className="text-[10px] text-[#7A807C] dark:text-[#9CA3AF] truncate">
+                    {ws.reason}
+                  </div>
+                </div>
+                <div className="flex items-center gap-1.5 shrink-0">
+                  <span className="font-mono tabular-nums text-xs font-bold text-[#0E9F6E]">
+                    {ws.score.toFixed(1)}
+                  </span>
+                  {ws.scoreDelta > 0 && (
+                    <span className="text-[10px] font-mono tabular-nums font-bold px-1.5 py-0.5 rounded bg-[#0E9F6E]/15 text-[#0E9F6E]">
+                      +{ws.scoreDelta}
+                    </span>
+                  )}
+                  <ArrowUpRight className="w-3.5 h-3.5 text-[#7A807C] group-hover:text-[#0E9F6E]" />
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* 3. Discovered Real Competitors List */}
       <div className="space-y-2">
         <div className="text-[11px] font-medium text-[#525854] dark:text-[#9CA3AF] flex items-center justify-between">
           <span>
-            <span className="tabular-nums">{radiusMeters}m</span> radiusdagi toifadosh obyektlar ({category}):
+            <span className="tabular-nums">{radiusMeters}m</span> radiusdagi real raqobatchilar ({count} ta):
           </span>
           <span className="text-[10px] font-mono text-[#7A807C]">Xaritada ko‘rish</span>
         </div>
@@ -92,12 +197,13 @@ export const CompetitorsRadar: React.FC = () => {
               To‘g‘ridan-to‘g‘ri raqobatchi aniqlanmadi
             </div>
             <p className="text-[11px] text-[#7A807C] dark:text-[#9CA3AF] leading-relaxed">
-              {radiusMeters}m radiusda tanlangan toifadagi raqobatchilar yo‘q. Birinchi o‘yinchi (First-mover) ustunligi mavjud.
+              {radiusMeters}m radiusda tanlangan toifadagi raqobatchilar yo‘q. Birinchi o‘yinchi (First-mover) ustunligi mavjud (~92% bozor ulushi).
             </p>
           </div>
         ) : (
           competitors.map((item, idx) => {
             const urgency = getUrgencyBadge(item.distance_meters);
+            const huffComp = huffModel.competitorWeights[idx];
             return (
               <div
                 key={idx}
@@ -133,6 +239,14 @@ export const CompetitorsRadar: React.FC = () => {
                       <Footprints className="w-2.5 h-2.5 text-[#0E9F6E]" />
                       {getWalkingMinutes(item.distance_meters)}
                     </span>
+                    {huffComp && (
+                      <>
+                        <span>•</span>
+                        <span className="font-mono tabular-nums text-amber-600 dark:text-amber-400 font-semibold">
+                          ~{huffComp.estimatedSharePercent}% ulush
+                        </span>
+                      </>
+                    )}
                   </div>
                 </div>
 
@@ -166,8 +280,9 @@ export const CompetitorsRadar: React.FC = () => {
 
       {/* Category-Specific Differentiation Strategy */}
       <div className="bg-[#0E9F6E]/[0.07] dark:bg-[#0E9F6E]/[0.1] border-l-2 border-[#0E9F6E] p-3 text-[11px] text-[#111111] dark:text-[#E5E7EB] leading-relaxed rounded-r-xl select-text">
-        <strong className="text-[#0E9F6E] font-semibold block mb-0.5">
-          Strategik Differentsiatsiya ({category.toUpperCase()}):
+        <strong className="text-[#0E9F6E] font-semibold block mb-0.5 flex items-center gap-1.5">
+          <ShieldAlert className="w-3.5 h-3.5" />
+          <span>Strategik Differentsiatsiya ({category.toUpperCase()}):</span>
         </strong>
         {strategyByCat[category] || strategyByCat.cafe}
       </div>

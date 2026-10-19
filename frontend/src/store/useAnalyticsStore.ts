@@ -8,6 +8,11 @@ import {
 } from '../types';
 import { calculateLocalSpatialScore } from '../utils/clientSpatialEngine';
 import { fetchLiveOsmSpatialIntelligence } from '../utils/liveOsmSpatialService';
+import {
+  calculateHuffMarketShare,
+  recommendOptimalBusinessFormat,
+  simulateUnitEconomics,
+} from '../utils/spatialIntelligenceModels';
 
 export interface LayerVisibility {
   hexagons: boolean;
@@ -424,6 +429,15 @@ export const useAnalyticsStore = create<AnalyticsState>((set, get) => ({
     const revRange = fin
       ? `$${(fin.monthly_revenue_min_usd / 1000).toFixed(1)}k – $${(fin.monthly_revenue_max_usd / 1000).toFixed(1)}k`
       : '$18k – $26k';
+    const huff = calculateHuffMarketShare(currentInspection);
+    const fmt = recommendOptimalBusinessFormat(currentInspection, category);
+    const unitEcon = simulateUnitEconomics(
+      currentInspection,
+      category,
+      fmt.defaultAreaSqm,
+      fin?.avg_check_usd || 5.0,
+      fin?.estimated_rent_sqm_usd || 22
+    );
 
     set({
       auditReport: {
@@ -434,12 +448,7 @@ export const useAnalyticsStore = create<AnalyticsState>((set, get) => ({
         business_category: category,
         makon_score: currentInspection.makon_score,
         status: currentInspection.status,
-        recommendation:
-          currentInspection.makon_score >= 80
-            ? "Loyiha uchun to'liq tavsiya etiladi. Joylashuv yuqori tranzit, kuchli magnit nuqtalar va barqaror xarid qobiliyatiga ega."
-            : currentInspection.makon_score >= 55
-            ? "Shartli tavsiya etiladi. Toifadosh raqobatchilardan aniq UTP (unikal savdo taklifi) va marketing orqali ajralib chiqish talab etiladi."
-            : "Yuqori ehtiyotkorlik talab etiladi. Piyodalar oqimi nisbatan past yoki yaqin radiusda kuchli tarmoqli raqobatchilar zich joylashgan.",
+        recommendation: `${fmt.formatTitle} (${fmt.recommendedAreaSqm}, ish vaqti: ${fmt.operatingHours}). ${fmt.strategicAdvice}`,
         risk_level:
           currentInspection.makon_score >= 80
             ? 'PAST XAVF / YUQORI RENTABELLIK'
@@ -448,30 +457,29 @@ export const useAnalyticsStore = create<AnalyticsState>((set, get) => ({
             : 'YUQORI XAVF',
         factors: currentInspection.factors,
         context: currentInspection.context,
-        executive_summary: `${locLabel} (${currentInspection.context.district_name || 'Toshkent sh.'}) koordinatalari [${coords.latitude.toFixed(4)}, ${coords.longitude.toFixed(4)}] bo'yicha ${radius}m radiusda MakonScore indeksi ${currentInspection.makon_score}/100 ('${currentInspection.status}') deb baholandi. Kutilayotgan oylik aylanma prognozi: ${revRange}.`,
+        executive_summary: `${locLabel} (${currentInspection.context.district_name || 'Toshkent sh.'}) koordinatalari [${coords.latitude.toFixed(4)}, ${coords.longitude.toFixed(4)}] bo'yicha ${radius}m radiusda MakonScore indeksi ${currentInspection.makon_score}/100 ('${currentInspection.status}') deb baholandi. Huff gravitatsiya modeli bo'yicha kutilayotgan bozor ulushi ~${huff.marketSharePercent}%, zararsizlik nuqtasi (Break-even) kuniga ${unitEcon.breakEvenDailyCustomers} ta mijoz (${unitEcon.safetyMarginPercent >= 0 ? `+${unitEcon.safetyMarginPercent}% xavfsizlik zaxirasi` : `${unitEcon.safetyMarginPercent}%`}), oylik aylanma prognozi: ${revRange}.`,
         swot_analysis: {
           strengths: [
-            `Tranzit qulayligi indeksi: ${currentInspection.factors.transit_score}/100 (Kunlik ~${(fin?.daily_foot_traffic || 12400).toLocaleString()} piyoda oqimi)`,
+            `Tranzit qulayligi indeksi: ${currentInspection.factors.transit_score}/100 (Kunlik ~${(fin?.daily_foot_traffic || 12400).toLocaleString()} piyoda oqimi${currentInspection.context.bus_stops_count ? `, +${currentInspection.context.bus_stops_count} ta avtobus bekati` : ''})`,
             currentInspection.context.nearest_metro
               ? `Metro bekatiga yaqinlik: ${currentInspection.context.nearest_metro.distance_meters}m (${currentInspection.context.nearest_metro.name})`
               : "Asosiy avtomobil va piyoda koridorlari tutashuvida joylashgan",
+            `Huff modeli bo'yicha kutilayotgan bozor ulushi: ~${huff.marketSharePercent}% (${huff.saturationLabel})`,
             `Hududiy iste'molchilar bazasi: ~${currentInspection.context.estimated_households.toLocaleString()} xonadon`,
           ],
           weaknesses: [
             currentInspection.context.direct_competitors_count > 0
-              ? `${radius}m radiusda ${currentInspection.context.direct_competitors_count} ta to'g'ridan-to'g'ri raqobatchi mavjud (eng yaqini ${currentInspection.context.nearest_competitor_meters}m)`
+              ? `${radius}m radiusda ${currentInspection.context.direct_competitors_count} ta real raqobatchi mavjud (eng yaqini ${currentInspection.context.nearest_competitor_meters}m, kannibalizatsiya xavfi ${huff.cannibalizationRiskPercent}%)`
               : "Yaqin atrofda shu toifadagi yirik klaster shakllanmagani sababli birlamchi marketing xarajatlari talab etiladi",
-            fin
-              ? `Tijoriy ijara stavkasi (~$${fin.estimated_rent_sqm_usd}/m²) doimiy operatsion samaradorlikni talab qiladi`
-              : "Markaziy hududlarda avtoturargoh sig'imi cheklangan bo'lishi mumkin",
+            `Zararsizlik nuqtasi (Break-even): kuniga kamida ${unitEcon.breakEvenDailyCustomers} ta xarid (~$${unitEcon.monthlyRentUsd.toLocaleString()}/oy ijara va OPEX qoplash uchun)`,
           ],
           opportunities: [
-            `Prognoz qilinayotgan oylik daromad salohiyati: ${revRange} (o'zini oqlash muddati ~${fin?.payback_months || 11} oy)`,
+            `Tavsiya etilgan format: ${fmt.formatTitle} (${fmt.recommendedAreaSqm}) — oylik sof foyda bazaviy ssenariyda ~$${(unitEcon.scenarios.base.monthlyNetProfitUsd / 1000).toFixed(1)}k (qoplash muddati ~${unitEcon.scenarios.base.paybackMonths} oy)`,
             "Zamonaviy turar-joy majmualari va biznes markazlar hisobiga B2C hamda korporativ yetkazib berish (Delivery) ulushini oshirish",
           ],
           threats: [
             "Tijoriy ko'chmas mulk ijara stavkalarining yillik 10–15% indeksatsiyasi",
-            "Yirik federal yoki xalqaro tarmoqlarning shu mikro-hududga kirib kelish ehtimoli",
+            "Yirik tarmoqli raqobatchilarning shu mikro-hududga kirib kelish ehtimoli",
           ],
         },
       },
