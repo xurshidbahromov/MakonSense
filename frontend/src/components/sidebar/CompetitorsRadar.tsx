@@ -48,7 +48,7 @@ export const CompetitorsRadar: React.FC = () => {
   };
 
   return (
-    <div className="space-y-3 select-none">
+    <div className="space-y-3">
       {/* Risk Summary Banner */}
       <div className="bg-black/[0.025] dark:bg-white/[0.03] border border-black/[0.06] dark:border-white/[0.07] rounded-xl p-3.5 flex items-center justify-between">
         <div className="flex items-center gap-2.5">
@@ -69,7 +69,7 @@ export const CompetitorsRadar: React.FC = () => {
           </div>
         </div>
         <div className="text-right">
-          <span className="text-lg font-mono font-bold text-amber-500">{count}</span>
+          <span className="text-lg font-mono tabular-nums font-bold text-amber-500">{count}</span>
           <span className="text-[10px] text-[#7A807C] dark:text-[#9CA3AF] block -mt-1 font-medium">
             ta raqobatchi
           </span>
@@ -80,7 +80,7 @@ export const CompetitorsRadar: React.FC = () => {
       <div className="space-y-2">
         <div className="text-[11px] font-medium text-[#525854] dark:text-[#9CA3AF] flex items-center justify-between">
           <span>
-            {radiusMeters}m radiusdagi toifadosh obyektlar ({category}):
+            <span className="tabular-nums">{radiusMeters}m</span> radiusdagi toifadosh obyektlar ({category}):
           </span>
           <span className="text-[10px] font-mono text-[#7A807C]">Xaritada ko‘rish</span>
         </div>
@@ -110,11 +110,11 @@ export const CompetitorsRadar: React.FC = () => {
                     });
                   }
                 }}
-                className="bg-white dark:bg-[#161618] border border-black/[0.07] dark:border-white/[0.08] hover:border-[#0E9F6E]/50 rounded-xl p-3 flex items-center justify-between transition-all cursor-pointer group"
+                className="bg-white dark:bg-[#161618] border border-black/[0.07] dark:border-white/[0.08] hover:border-[#0E9F6E]/50 rounded-xl p-3 flex items-center justify-between transition-colors cursor-pointer group"
               >
                 <div className="space-y-1 min-w-0 flex-1 pr-2">
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-semibold text-[#111111] dark:text-[#FDFDFD] group-hover:text-[#0E9F6E] transition-colors truncate">
+                    <span className="text-xs font-semibold text-[#111111] dark:text-[#FDFDFD] group-hover:text-[#0E9F6E] transition-colors truncate select-text">
                       {item.name}
                     </span>
                     {item.brand && (
@@ -124,19 +124,19 @@ export const CompetitorsRadar: React.FC = () => {
                     )}
                   </div>
                   <div className="flex items-center gap-2 text-[10px] text-[#7A807C] dark:text-[#9CA3AF]">
-                    <span className="flex items-center gap-1 font-mono font-semibold text-[#111111] dark:text-[#E5E7EB]">
+                    <span className="flex items-center gap-1 font-mono tabular-nums font-semibold text-[#111111] dark:text-[#E5E7EB]">
                       <Navigation className="w-2.5 h-2.5 text-[#0E9F6E]" />
                       {item.distance_meters.toFixed(0)}m
                     </span>
                     <span>•</span>
-                    <span className="flex items-center gap-1">
+                    <span className="flex items-center gap-1 tabular-nums">
                       <Footprints className="w-2.5 h-2.5 text-[#0E9F6E]" />
                       {getWalkingMinutes(item.distance_meters)}
                     </span>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-1.5 shrink-0">
+                <div className="flex items-center gap-1.5 shrink-0 select-none">
                   <div
                     className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border ${urgency.color} whitespace-nowrap`}
                   >
@@ -144,12 +144,14 @@ export const CompetitorsRadar: React.FC = () => {
                   </div>
                   {item.lat && item.lon && (
                     <button
+                      type="button"
                       onClick={(e) => {
                         e.stopPropagation();
                         setSelectedCoords({ latitude: item.lat!, longitude: item.lon! });
                       }}
+                      aria-label="Shu nuqtani markaz sifatida tahlil qilish"
                       title="Shu nuqtani markaz sifatida tahlil qilish"
-                      className="p-1.5 rounded-lg bg-black/[0.04] dark:bg-white/[0.06] hover:bg-[#0E9F6E]/15 text-[#7A807C] hover:text-[#0E9F6E] transition-colors cursor-pointer"
+                      className="press-scale p-1.5 rounded-lg bg-black/[0.04] dark:bg-white/[0.06] hover:bg-[#0E9F6E]/15 text-[#7A807C] hover:text-[#0E9F6E] transition-colors cursor-pointer"
                     >
                       <Crosshair className="w-3 h-3" />
                     </button>
@@ -163,7 +165,7 @@ export const CompetitorsRadar: React.FC = () => {
       </div>
 
       {/* Category-Specific Differentiation Strategy */}
-      <div className="bg-[#0E9F6E]/[0.07] dark:bg-[#0E9F6E]/[0.1] border-l-2 border-[#0E9F6E] p-3 text-[11px] text-[#111111] dark:text-[#E5E7EB] leading-relaxed rounded-r-xl">
+      <div className="bg-[#0E9F6E]/[0.07] dark:bg-[#0E9F6E]/[0.1] border-l-2 border-[#0E9F6E] p-3 text-[11px] text-[#111111] dark:text-[#E5E7EB] leading-relaxed rounded-r-xl select-text">
         <strong className="text-[#0E9F6E] font-semibold block mb-0.5">
           Strategik Differentsiatsiya ({category.toUpperCase()}):
         </strong>

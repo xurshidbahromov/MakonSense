@@ -42,7 +42,7 @@ export const CompareLocations: React.FC = () => {
   const labelB = locB.context.location_label?.split(' (')[0] || 'Nuqta B';
 
   return (
-    <div className="space-y-3.5 select-none">
+    <div className="space-y-3.5">
       {/* Header + Interactive Map Pick & Swap Buttons */}
       <div className="bg-black/[0.025] dark:bg-white/[0.03] border border-black/[0.06] dark:border-white/[0.07] rounded-xl p-3 flex items-center justify-between gap-2">
         <div className="flex items-center gap-2.5 min-w-0">
@@ -59,17 +59,21 @@ export const CompareLocations: React.FC = () => {
           </div>
         </div>
 
-        <div className="flex items-center gap-1.5 shrink-0">
+        <div className="flex items-center gap-1.5 shrink-0 select-none">
           <button
+            type="button"
             onClick={swapCompareLocations}
+            aria-label="A va B nuqtalarni o'zaro almashtirish"
             title="A va B nuqtalarni o'zaro almashtirish"
-            className="p-1.5 rounded-lg bg-black/[0.04] dark:bg-white/[0.06] hover:bg-black/[0.08] dark:hover:bg-white/[0.1] text-[#111111] dark:text-white transition-all cursor-pointer"
+            className="press-scale p-1.5 rounded-lg bg-black/[0.04] dark:bg-white/[0.06] hover:bg-black/[0.08] dark:hover:bg-white/[0.1] text-[#111111] dark:text-white cursor-pointer"
           >
             <ArrowLeftRight className="w-3.5 h-3.5" />
           </button>
           <button
+            type="button"
+            aria-pressed={isPickingCompareOnMap}
             onClick={() => setIsPickingCompareOnMap(!isPickingCompareOnMap)}
-            className={`flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[11px] font-semibold transition-all cursor-pointer ${
+            className={`press-scale flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[11px] font-semibold cursor-pointer ${
               isPickingCompareOnMap
                 ? 'bg-indigo-600 text-white shadow-sm animate-pulse'
                 : 'bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 border border-indigo-500/25'
@@ -82,7 +86,7 @@ export const CompareLocations: React.FC = () => {
       </div>
 
       {/* Quick Preset Benchmark Picker */}
-      <div className="space-y-1.5">
+      <div className="space-y-1.5 select-none">
         <div className="text-[10px] font-mono uppercase tracking-wider text-[#7A807C] dark:text-[#9CA3AF] font-semibold">
           Yoki tayyor etalon hududni tanlang (Lokatsiya B):
         </div>
@@ -94,8 +98,10 @@ export const CompareLocations: React.FC = () => {
             return (
               <button
                 key={bm.name}
+                type="button"
+                aria-pressed={isSelected}
                 onClick={() => setCompareCoords({ latitude: bm.lat, longitude: bm.lon })}
-                className={`px-2.5 py-1.5 rounded-lg text-[11px] font-medium text-left truncate transition-all cursor-pointer ${
+                className={`press-scale px-2.5 py-1.5 rounded-lg text-[11px] font-medium text-left truncate cursor-pointer ${
                   isSelected
                     ? 'bg-indigo-600 text-white font-semibold shadow-sm'
                     : 'bg-white dark:bg-[#161618] text-[#525854] dark:text-[#D1D5DB] border border-black/[0.07] dark:border-white/[0.08] hover:border-indigo-500/50'
@@ -109,7 +115,7 @@ export const CompareLocations: React.FC = () => {
       </div>
 
       {/* Head-to-Head Comparison Matrix */}
-      <div className="bg-white dark:bg-[#161618] border border-black/[0.07] dark:border-white/[0.08] rounded-xl overflow-hidden text-xs">
+      <div className="bg-white dark:bg-[#161618] border border-black/[0.07] dark:border-white/[0.08] rounded-xl overflow-hidden text-xs tabular-nums select-text">
         <div className="grid grid-cols-3 bg-black/[0.03] dark:bg-white/[0.04] px-3 py-2.5 border-b border-black/[0.06] dark:border-white/[0.07] font-semibold text-[11px]">
           <div className="text-[#7A807C] dark:text-[#9CA3AF]">Mezon</div>
           <div className="text-center text-[#0E9F6E] truncate px-1">A: {labelA}</div>
@@ -119,11 +125,11 @@ export const CompareLocations: React.FC = () => {
         {/* Row 1: MakonScore */}
         <div className="grid grid-cols-3 px-3 py-2.5 border-b border-black/[0.05] dark:border-white/[0.05] items-center">
           <div className="text-[#525854] dark:text-[#D1D5DB] font-medium">MakonScore™</div>
-          <div className="text-center font-mono font-bold text-[#0E9F6E] flex items-center justify-center gap-1">
+          <div className="text-center font-mono tabular-nums font-bold text-[#0E9F6E] flex items-center justify-center gap-1">
             <span>{scoreA.toFixed(1)}</span>
             {scoreA >= scoreB && <Trophy className="w-3 h-3 text-[#0E9F6E]" />}
           </div>
-          <div className="text-center font-mono font-bold text-indigo-500 flex items-center justify-center gap-1">
+          <div className="text-center font-mono tabular-nums font-bold text-indigo-500 flex items-center justify-center gap-1">
             <span>{scoreB.toFixed(1)}</span>
             {scoreB > scoreA && <Trophy className="w-3 h-3 text-indigo-500" />}
           </div>
@@ -132,10 +138,10 @@ export const CompareLocations: React.FC = () => {
         {/* Row 2: Daily Foot Traffic */}
         <div className="grid grid-cols-3 px-3 py-2.5 border-b border-black/[0.05] dark:border-white/[0.05] items-center">
           <div className="text-[#525854] dark:text-[#D1D5DB] font-medium">Kunlik Oqim</div>
-          <div className="text-center font-mono font-semibold text-[#111111] dark:text-[#FDFDFD]">
+          <div className="text-center font-mono tabular-nums font-semibold text-[#111111] dark:text-[#FDFDFD]">
             ~{(finA?.daily_foot_traffic || 12400).toLocaleString()}
           </div>
-          <div className="text-center font-mono font-semibold text-[#111111] dark:text-[#FDFDFD]">
+          <div className="text-center font-mono tabular-nums font-semibold text-[#111111] dark:text-[#FDFDFD]">
             ~{(finB?.daily_foot_traffic || 11200).toLocaleString()}
           </div>
         </div>
@@ -143,11 +149,11 @@ export const CompareLocations: React.FC = () => {
         {/* Row 3: Monthly Revenue Forecast */}
         <div className="grid grid-cols-3 px-3 py-2.5 border-b border-black/[0.05] dark:border-white/[0.05] items-center">
           <div className="text-[#525854] dark:text-[#D1D5DB] font-medium">Oylik Tushum</div>
-          <div className="text-center font-mono font-bold text-[#0E9F6E]">
+          <div className="text-center font-mono tabular-nums font-bold text-[#0E9F6E]">
             ${Math.round((finA?.monthly_revenue_min_usd || 16000) / 1000)}k–$
             {Math.round((finA?.monthly_revenue_max_usd || 22000) / 1000)}k
           </div>
-          <div className="text-center font-mono font-bold text-indigo-500">
+          <div className="text-center font-mono tabular-nums font-bold text-indigo-500">
             ${Math.round((finB?.monthly_revenue_min_usd || 14000) / 1000)}k–$
             {Math.round((finB?.monthly_revenue_max_usd || 19000) / 1000)}k
           </div>
@@ -156,10 +162,10 @@ export const CompareLocations: React.FC = () => {
         {/* Row 4: Payback Period */}
         <div className="grid grid-cols-3 px-3 py-2.5 border-b border-black/[0.05] dark:border-white/[0.05] items-center">
           <div className="text-[#525854] dark:text-[#D1D5DB] font-medium">Qoplash (ROI)</div>
-          <div className="text-center font-mono font-semibold text-[#111111] dark:text-[#FDFDFD]">
+          <div className="text-center font-mono tabular-nums font-semibold text-[#111111] dark:text-[#FDFDFD]">
             ~{finA?.payback_months || 10.5} oy
           </div>
-          <div className="text-center font-mono font-semibold text-[#111111] dark:text-[#FDFDFD]">
+          <div className="text-center font-mono tabular-nums font-semibold text-[#111111] dark:text-[#FDFDFD]">
             ~{finB?.payback_months || 12.0} oy
           </div>
         </div>
@@ -167,10 +173,10 @@ export const CompareLocations: React.FC = () => {
         {/* Row 5: Nearest Metro */}
         <div className="grid grid-cols-3 px-3 py-2.5 border-b border-black/[0.05] dark:border-white/[0.05] items-center">
           <div className="text-[#525854] dark:text-[#D1D5DB] font-medium">Metro Masofasi</div>
-          <div className="text-center font-mono text-[#111111] dark:text-[#FDFDFD] font-semibold">
+          <div className="text-center font-mono tabular-nums text-[#111111] dark:text-[#FDFDFD] font-semibold">
             {locA.context.nearest_metro ? `${locA.context.nearest_metro.distance_meters}m` : '>800m'}
           </div>
-          <div className="text-center font-mono text-[#111111] dark:text-[#FDFDFD] font-semibold">
+          <div className="text-center font-mono tabular-nums text-[#111111] dark:text-[#FDFDFD] font-semibold">
             {locB.context.nearest_metro ? `${locB.context.nearest_metro.distance_meters}m` : '>800m'}
           </div>
         </div>
@@ -178,10 +184,10 @@ export const CompareLocations: React.FC = () => {
         {/* Row 6: Direct Competitors */}
         <div className="grid grid-cols-3 px-3 py-2.5 items-center">
           <div className="text-[#525854] dark:text-[#D1D5DB] font-medium">Raqobatchilar</div>
-          <div className="text-center font-mono text-amber-500 font-bold">
+          <div className="text-center font-mono tabular-nums text-amber-500 font-bold">
             {locA.context.direct_competitors_count} ta
           </div>
-          <div className="text-center font-mono text-amber-500 font-bold">
+          <div className="text-center font-mono tabular-nums text-amber-500 font-bold">
             {locB.context.direct_competitors_count} ta
           </div>
         </div>
@@ -189,7 +195,7 @@ export const CompareLocations: React.FC = () => {
 
       {/* Verdict Callout */}
       <div
-        className={`p-3 rounded-xl border flex items-start gap-2.5 text-[11px] leading-relaxed ${
+        className={`p-3 rounded-xl border flex items-start gap-2.5 text-[11px] leading-relaxed select-text ${
           diffScore >= 0
             ? 'bg-[#0E9F6E]/10 border-[#0E9F6E]/30 text-[#111111] dark:text-[#E5E7EB]'
             : 'bg-indigo-500/10 border-indigo-500/30 text-[#111111] dark:text-[#E5E7EB]'
@@ -204,12 +210,12 @@ export const CompareLocations: React.FC = () => {
           {diffScore >= 0 ? (
             <>
               <strong className="text-[#0E9F6E]">Lokatsiya A ({labelA})</strong> muqobil nuqtaga nisbatan{' '}
-              <strong>+{diffScore.toFixed(1)} ball</strong> yuqori salohiyatga ega.
+              <strong className="tabular-nums">+{diffScore.toFixed(1)} ball</strong> yuqori salohiyatga ega.
             </>
           ) : (
             <>
               <strong className="text-indigo-500">Lokatsiya B ({labelB})</strong> joriy nuqtaga nisbatan{' '}
-              <strong>+{Math.abs(diffScore).toFixed(1)} ball</strong> ustunroq ko‘rsatkich qayd etdi.
+              <strong className="tabular-nums">+{Math.abs(diffScore).toFixed(1)} ball</strong> ustunroq ko‘rsatkich qayd etdi.
             </>
           )}
         </span>

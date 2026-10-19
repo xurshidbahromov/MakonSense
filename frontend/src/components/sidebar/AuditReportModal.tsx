@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   X,
   Printer,
@@ -15,6 +15,18 @@ import { useAnalyticsStore } from '../../store/useAnalyticsStore';
 export const AuditReportModal: React.FC = () => {
   const { reportModalOpen, setReportModalOpen, auditReport, auditLoading } = useAnalyticsStore();
   const [copied, setCopied] = useState(false);
+
+  // Close Audit Modal on Escape key
+  useEffect(() => {
+    if (!reportModalOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setReportModalOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [reportModalOpen, setReportModalOpen]);
 
   if (!reportModalOpen) return null;
 
@@ -42,16 +54,28 @@ export const AuditReportModal: React.FC = () => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/50 backdrop-blur-md overflow-y-auto select-text">
-      <div className="bg-white dark:bg-[#141416] border border-black/[0.08] dark:border-white/[0.1] rounded-3xl w-full max-w-4xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden relative text-[#111111] dark:text-[#FDFDFD]">
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="audit-modal-title"
+      onClick={() => setReportModalOpen(false)}
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/50 backdrop-blur-md overflow-y-auto overscroll-contain select-text"
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="popover-origin-tc bg-white dark:bg-[#141416] border border-black/[0.08] dark:border-white/[0.1] rounded-3xl w-full max-w-4xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden relative text-[#111111] dark:text-[#FDFDFD] tabular-nums"
+      >
         {/* Modal Header */}
         <div className="px-5 sm:px-6 py-4 border-b border-black/[0.07] dark:border-white/[0.08] flex items-center justify-between bg-[#F8F9F8] dark:bg-[#18181B] no-print">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-xl bg-[#0E9F6E]/15 border border-[#0E9F6E]/30 flex items-center justify-center text-[#0E9F6E] font-mono font-bold text-xs">
+            <div className="w-8 h-8 rounded-xl bg-[#0E9F6E]/15 border border-[#0E9F6E]/30 flex items-center justify-center text-[#0E9F6E] font-mono font-bold text-xs select-none">
               MKN
             </div>
             <div>
-              <h2 className="text-sm font-bold text-[#111111] dark:text-[#FDFDFD] flex items-center gap-2">
+              <h2
+                id="audit-modal-title"
+                className="text-sm font-bold text-[#111111] dark:text-[#FDFDFD] flex items-center gap-2"
+              >
                 <span>Fazoviy va Moliyaviy Audit Hisoboti</span>
                 <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#0E9F6E]/10 text-[#0E9F6E] border border-[#0E9F6E]/25 font-semibold">
                   {auditReport?.report_id || 'YUKLANMOQDA...'}
@@ -63,11 +87,12 @@ export const AuditReportModal: React.FC = () => {
             </div>
           </div>
 
-          <div className="flex items-center gap-1.5 sm:gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-2 select-none">
             <button
+              type="button"
               onClick={handleCopySummary}
               title="Xulosani nusxalash"
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/[0.04] dark:bg-white/[0.06] hover:bg-black/[0.08] dark:hover:bg-white/[0.1] text-xs font-medium transition-all cursor-pointer"
+              className="press-scale flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/[0.04] dark:bg-white/[0.06] hover:bg-black/[0.08] dark:hover:bg-white/[0.1] text-xs font-medium cursor-pointer"
             >
               {copied ? (
                 <>
@@ -83,25 +108,30 @@ export const AuditReportModal: React.FC = () => {
             </button>
 
             <button
+              type="button"
               onClick={handleDownloadJson}
               title="JSON formatda yuklab olish"
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/[0.04] dark:bg-white/[0.06] hover:bg-black/[0.08] dark:hover:bg-white/[0.1] text-xs font-medium transition-all cursor-pointer"
+              className="press-scale flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/[0.04] dark:bg-white/[0.06] hover:bg-black/[0.08] dark:hover:bg-white/[0.1] text-xs font-medium cursor-pointer"
             >
               <Download className="w-3.5 h-3.5 text-[#0E9F6E]" />
               <span className="hidden sm:inline">JSON</span>
             </button>
 
             <button
+              type="button"
               onClick={() => window.print()}
-              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#111111] dark:bg-white text-white dark:text-[#111111] font-semibold text-xs hover:opacity-90 transition-all shadow-sm cursor-pointer"
+              className="press-scale flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#111111] dark:bg-white text-white dark:text-[#111111] font-semibold text-xs hover:opacity-90 shadow-sm cursor-pointer"
             >
               <Printer className="w-3.5 h-3.5 text-[#0E9F6E]" />
               <span>Chop etish / PDF</span>
             </button>
 
             <button
+              type="button"
+              aria-label="Hisobot oynasini yopish (Esc)"
+              title="Yopish (Esc)"
               onClick={() => setReportModalOpen(false)}
-              className="p-1.5 rounded-full bg-black/[0.05] dark:bg-white/[0.07] text-[#7A807C] hover:text-[#111111] dark:hover:text-white transition-all cursor-pointer"
+              className="press-scale p-1.5 rounded-full bg-black/[0.05] dark:bg-white/[0.07] text-[#7A807C] hover:text-[#111111] dark:hover:text-white cursor-pointer"
             >
               <X className="w-4 h-4" />
             </button>
@@ -109,7 +139,7 @@ export const AuditReportModal: React.FC = () => {
         </div>
 
         {/* Printable Audit Content */}
-        <div className="p-5 sm:p-6 overflow-y-auto space-y-5">
+        <div className="p-5 sm:p-6 overflow-y-auto overscroll-contain space-y-5">
           {auditLoading ? (
             <div className="py-20 flex flex-col items-center justify-center gap-3 text-center">
               <div className="w-9 h-9 border-2 border-[#0E9F6E] border-t-transparent rounded-full animate-spin" />
