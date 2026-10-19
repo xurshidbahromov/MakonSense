@@ -19,6 +19,7 @@ import {
   GitCompare,
   X,
   ArrowLeftRight,
+  Undo2,
 } from 'lucide-react';
 
 const OPENFREEMAP_LIGHT_STYLE = 'https://tiles.openfreemap.org/styles/positron';
@@ -94,6 +95,8 @@ export const MapView: React.FC = () => {
   const {
     selectedCoords,
     setSelectedCoords,
+    recentHistory,
+    goBackLocation,
     activeLayers,
     radiusMeters,
     category,
@@ -114,7 +117,18 @@ export const MapView: React.FC = () => {
     isPickingCompareRef.current = isPickingCompareOnMap;
   }, [isPickingCompareOnMap]);
 
-  // Guaranteed rich client-side spatial datasets
+  // Allow cancelling map pick mode via Escape key
+  useEffect(() => {
+    if (!isPickingCompareOnMap) return;
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setIsPickingCompareOnMap(false);
+      }
+    };
+    window.addEventListener('keydown', handleEsc);
+    return () => window.removeEventListener('keydown', handleEsc);
+  }, [isPickingCompareOnMap, setIsPickingCompareOnMap]);
+
   const [pois, setPois] = useState<any[]>(() => getClientPoisGeoJSON());
   const [transit, setTransit] = useState<any[]>(() => getClientTransitGeoJSON());
   const [hoverInfo, setHoverInfo] = useState<{
@@ -125,13 +139,11 @@ export const MapView: React.FC = () => {
     distanceMeters?: number;
   } | null>(null);
 
-  // Dynamically generated H3 hexagonal clusters around the active point & category
   const hexagons = useMemo<HexFeature[]>(
     () => generateLocalHexagons(selectedCoords, category, radiusMeters),
     [selectedCoords.latitude, selectedCoords.longitude, category, radiusMeters]
   );
 
-  // Optional backend enrichment for POIs & Transit if server is running
   useEffect(() => {
     fetch('/api/v1/poi/geojson')
       .then((res) => (res.ok ? res.json() : null))
@@ -148,7 +160,6 @@ export const MapView: React.FC = () => {
       .catch(() => {});
   }, []);
 
-  // Initialize MapLibre GL Map
   useEffect(() => {
     if (!mapContainerRef.current || mapRef.current) return;
 
@@ -195,13 +206,11 @@ export const MapView: React.FC = () => {
     };
   }, []);
 
-  // Basemap Style Switch
   useEffect(() => {
     if (!mapRef.current) return;
     mapRef.current.setStyle(getBasemapStyle(basemapMode));
   }, [basemapMode]);
 
-  // Perspective Mode Switch (2D vs 3D)
   useEffect(() => {
     if (!mapRef.current) return;
     const targetPitch = pitchMode === '3d' ? 42 : 0;
@@ -209,12 +218,11 @@ export const MapView: React.FC = () => {
     mapRef.current.easeTo({
       pitch: targetPitch,
       bearing: targetBearing,
-      duration: 650,
+      duration: 600,
       easing: (t) => t * (2 - t),
     });
   }, [pitchMode]);
 
-  // Smooth Camera Fly-to when Primary Target Coordinates Change
   useEffect(() => {
     if (!mapRef.current) return;
     mapRef.current.flyTo({
@@ -225,23 +233,20 @@ export const MapView: React.FC = () => {
     });
   }, [selectedCoords.latitude, selectedCoords.longitude]);
 
-  // Smooth Camera Pan when a specific POI/Competitor is clicked in the sidebar
   useEffect(() => {
     if (!mapRef.current || !highlightedPoiCoords) return;
     mapRef.current.easeTo({
       center: [highlightedPoiCoords.longitude, highlightedPoiCoords.latitude],
       zoom: Math.max(mapRef.current.getZoom(), 14.8),
-      duration: 600,
+      duration: 500,
     });
   }, [highlightedPoiCoords]);
 
-  // Deck.gl Precision Spatial Layers
   useEffect(() => {
     if (!deckOverlayRef.current) return;
 
     const layers: any[] = [];
 
-    // Layer A: H3 Hexagons Heatmap
     if (activeLayers.hexagons && hexagons.length > 0) {
       layers.push(
         new PolygonLayer({
@@ -249,9 +254,9 @@ export const MapView: React.FC = () => {
           data: hexagons,
           getPolygon: (d: HexFeature) => d.coordinates[0],
           getFillColor: (d: HexFeature) => {
-            if (d.tier === 'high') return [14, 159, 110, 42];   // Emerald high potential
-            if (d.tier === 'medium') return [245, 158, 11, 28]; // Amber medium potential
-            return [239, 68, 68, 24];                           // Rose low potential
+            if (d.tier === 'high') return [14, 159, 110, 42];
+            if (d.tier === 'medium') return [245, 158, 11, 28];
+            return [239, 68, 68, 24];
           },
           getLineColor: (d: HexFeature) => {
             if (d.tier === 'high') return [14, 159, 110, 95];
@@ -291,7 +296,6 @@ export const MapView: React.FC = () => {
       );
     }
 
-    // Layer B: Primary Inspection Radar Field (Location A Radius Buffer)
     if (activeLayers.scanRadius) {
       const circleData = createCircleGeoJSON(
         selectedCoords.latitude,
@@ -312,7 +316,6 @@ export const MapView: React.FC = () => {
       );
     }
 
-    // Layer B2: Secondary Comparison Radar & Geodesic Line (Location B)
     if (showComparePinOnMap && compareCoords) {
       const compareCircleData = createCircleGeoJSON(
         compareCoords.latitude,
@@ -332,7 +335,6 @@ export const MapView: React.FC = () => {
         })
       );
 
-      // Connection line between Location A and Location B
       const lineGeoJSON = {
         type: 'Feature' as const,
         geometry: {
@@ -356,7 +358,6 @@ export const MapView: React.FC = () => {
       );
     }
 
-    // Layer C: Transit Stops (Metro Stations & Hubs)
     if (activeLayers.transit && transit.length > 0) {
       layers.push(
         new ScatterplotLayer({
@@ -417,7 +418,6 @@ export const MapView: React.FC = () => {
       );
     }
 
-    // Layer D: POIs & Competitors
     if (activeLayers.pois && pois.length > 0) {
       layers.push(
         new ScatterplotLayer({
@@ -433,9 +433,9 @@ export const MapView: React.FC = () => {
           radiusMaxPixels: 9,
           getFillColor: (d: any) => {
             const isCompetitor = d.properties?.category === category;
-            if (isCompetitor) return [245, 158, 11, 240]; // Amber for direct competitors
+            if (isCompetitor) return [245, 158, 11, 240];
             if (['mall', 'bazaar', 'university'].includes(d.properties?.category)) {
-              return [99, 102, 241, 215]; // Indigo for major anchors
+              return [99, 102, 241, 215];
             }
             return [107, 114, 128, 185];
           },
@@ -470,7 +470,6 @@ export const MapView: React.FC = () => {
       );
     }
 
-    // Layer E: Highlighted Sidebar POI Focus Ring
     if (highlightedPoiCoords) {
       layers.push(
         new ScatterplotLayer({
@@ -488,7 +487,6 @@ export const MapView: React.FC = () => {
       );
     }
 
-    // Layer F: Location B Marker Pin (when compare pin is active)
     if (showComparePinOnMap && compareCoords) {
       layers.push(
         new ScatterplotLayer({
@@ -521,7 +519,6 @@ export const MapView: React.FC = () => {
       );
     }
 
-    // Layer G: Selected Primary Target Marker Pin (Location A)
     layers.push(
       new ScatterplotLayer({
         id: 'selected-point-outer-pulse',
@@ -580,7 +577,6 @@ export const MapView: React.FC = () => {
         });
       },
       () => {
-        // Fallback to central Tashkent if permission denied
         setSelectedCoords({ latitude: 41.3120, longitude: 69.2800 });
       }
     );
@@ -600,23 +596,38 @@ export const MapView: React.FC = () => {
 
   return (
     <div
-      className={`relative w-full h-full overflow-hidden bg-[#FDFDFD] dark:bg-[#111111] ${
+      className={`relative w-full h-full overflow-hidden bg-[#FDFDFD] dark:bg-[#111111] select-none ${
         isPickingCompareOnMap ? 'cursor-crosshair' : ''
       }`}
     >
       {/* MapLibre Canvas Container */}
       <div ref={mapContainerRef} className="w-full h-full" />
 
-      {/* Top-Left Quick City/Hub Jumper Bar + GPS Locate Button */}
+      {/* Top-Left Quick City/Hub Jumper Bar + GPS Locate + Undo Button */}
       <div className="absolute top-3.5 left-3.5 z-20 flex items-center gap-1.5 max-w-[calc(100%-290px)] overflow-x-auto no-scrollbar">
         <button
+          type="button"
           onClick={handleGeolocate}
           title="Mening joylashuvim (GPS)"
-          className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-white/95 dark:bg-[#161618]/95 backdrop-blur-xl border border-black/[0.08] dark:border-white/[0.1] shadow-md text-[11px] font-semibold text-[#111111] dark:text-[#FDFDFD] hover:border-[#0E9F6E] transition-all shrink-0 cursor-pointer"
+          aria-label="Mening joylashuvimni aniqlash (GPS)"
+          className="press-scale flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-white/95 dark:bg-[#161618]/95 backdrop-blur-xl border border-black/[0.08] dark:border-white/[0.1] shadow-md text-[11px] font-semibold text-[#111111] dark:text-[#FDFDFD] hover:border-[#0E9F6E] shrink-0 cursor-pointer"
         >
-          <LocateFixed className="w-3.5 h-3.5 text-[#0E9F6E]" />
+          <LocateFixed className="w-3.5 h-3.5 text-[#0E9F6E]" aria-hidden="true" />
           <span className="hidden xl:inline">GPS</span>
         </button>
+
+        {recentHistory.length > 0 && (
+          <button
+            type="button"
+            onClick={goBackLocation}
+            title="Oldingi ko'rilgan nuqtaga qaytish"
+            aria-label="Oldingi nuqtaga qaytish"
+            className="press-scale flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-white/95 dark:bg-[#161618]/95 backdrop-blur-xl border border-black/[0.08] dark:border-white/[0.1] shadow-md text-[11px] font-semibold text-[#111111] dark:text-[#FDFDFD] hover:border-[#0E9F6E] shrink-0 cursor-pointer"
+          >
+            <Undo2 className="w-3.5 h-3.5 text-[#0E9F6E]" aria-hidden="true" />
+            <span className="hidden xl:inline">Orqaga</span>
+          </button>
+        )}
 
         <div className="hidden lg:flex items-center gap-1 bg-white/90 dark:bg-[#161618]/90 backdrop-blur-xl border border-black/[0.08] dark:border-white/[0.1] p-1 rounded-xl shadow-md">
           {QUICK_JUMP_HUBS.map((hub) => {
@@ -626,8 +637,9 @@ export const MapView: React.FC = () => {
             return (
               <button
                 key={hub.label}
+                type="button"
                 onClick={() => setSelectedCoords({ latitude: hub.lat, longitude: hub.lon })}
-                className={`px-2.5 py-1 rounded-lg text-[10px] font-medium transition-all whitespace-nowrap cursor-pointer ${
+                className={`press-scale px-2.5 py-1 rounded-[8px] text-[10px] font-medium whitespace-nowrap cursor-pointer ${
                   isActive
                     ? 'bg-[#111111] text-white dark:bg-white dark:text-[#111111] font-semibold'
                     : 'text-[#525854] dark:text-[#9CA3AF] hover:text-[#111111] dark:hover:text-white'
@@ -640,14 +652,19 @@ export const MapView: React.FC = () => {
         </div>
       </div>
 
-      {/* Interactive Mode Banner when Picking Location B on Map */}
+      {/* Interactive Mode Banner when Picking Location B on Map (Origin-aware, no infinite bounce) */}
       {isPickingCompareOnMap && (
-        <div className="absolute top-16 left-1/2 -translate-x-1/2 z-30 bg-indigo-600 text-white px-4 py-2 rounded-full shadow-2xl flex items-center gap-2.5 text-xs font-semibold animate-bounce">
-          <GitCompare className="w-4 h-4" />
-          <span>Solishtirish uchun xaritadan B nuqtani bosing</span>
+        <div
+          role="status"
+          className="popover-origin-tc absolute top-16 left-1/2 -translate-x-1/2 z-30 bg-indigo-600 text-white px-4 py-2 rounded-full shadow-2xl flex items-center gap-2.5 text-xs font-semibold"
+        >
+          <GitCompare className="w-4 h-4 shrink-0" aria-hidden="true" />
+          <span>Solishtirish uchun xaritadan B nuqtani bosing (Esc — bekor qilish)</span>
           <button
+            type="button"
+            aria-label="Xaritadan B nuqta tanlashni bekor qilish"
             onClick={() => setIsPickingCompareOnMap(false)}
-            className="p-0.5 rounded-full bg-white/20 hover:bg-white/30 transition-colors cursor-pointer"
+            className="press-scale p-0.5 rounded-full bg-white/20 hover:bg-white/30 cursor-pointer"
           >
             <X className="w-3.5 h-3.5" />
           </button>
@@ -672,7 +689,7 @@ export const MapView: React.FC = () => {
               <div className="text-[10px] text-[#7A807C] dark:text-[#9CA3AF]">
                 {hoverInfo.object.properties?.line_name || 'Tranzit bekati'}
               </div>
-              <div className="flex items-center justify-between text-[10px] text-[#525854] dark:text-[#D1D5DB] font-mono mt-1 pt-1 border-t border-black/[0.06] dark:border-white/[0.07]">
+              <div className="flex items-center justify-between text-[10px] text-[#525854] dark:text-[#D1D5DB] font-mono tabular-nums mt-1 pt-1 border-t border-black/[0.06] dark:border-white/[0.07]">
                 <span>
                   Oqim indeksi:{' '}
                   <strong className="text-[#0E9F6E]">
@@ -699,7 +716,7 @@ export const MapView: React.FC = () => {
                 )}
               </div>
               {hoverInfo.distanceMeters !== undefined && (
-                <div className="text-[10px] text-[#525854] dark:text-[#D1D5DB] font-mono mt-1 pt-1 border-t border-black/[0.06] dark:border-white/[0.07] flex items-center justify-between">
+                <div className="text-[10px] text-[#525854] dark:text-[#D1D5DB] font-mono tabular-nums mt-1 pt-1 border-t border-black/[0.06] dark:border-white/[0.07] flex items-center justify-between">
                   <span>A nuqtadan masofa:</span>
                   <span className="font-bold">~{Math.round(hoverInfo.distanceMeters)} metr</span>
                 </div>
@@ -711,7 +728,7 @@ export const MapView: React.FC = () => {
                 <Sparkles className="w-3.5 h-3.5 text-[#0E9F6E]" />
                 <span>{hoverInfo.object.label || 'H3 Fazoviy Klaster'}</span>
               </div>
-              <div className="text-[10px] text-[#525854] dark:text-[#D1D5DB] font-mono mt-0.5">
+              <div className="text-[10px] text-[#525854] dark:text-[#D1D5DB] font-mono tabular-nums mt-0.5">
                 Klaster MakonScore:{' '}
                 <strong className="text-[#0E9F6E]">{hoverInfo.object.score}/100</strong>
               </div>
@@ -723,7 +740,7 @@ export const MapView: React.FC = () => {
       {/* Bottom Left Status & A/B Distance HUD */}
       <div className="absolute bottom-3.5 left-3.5 z-20 flex flex-wrap items-center gap-2">
         <div className="bg-white/95 dark:bg-[#161618]/95 backdrop-blur-xl border border-black/[0.08] dark:border-white/[0.1] px-3 py-1.5 rounded-xl text-[11px] text-[#111111] dark:text-[#FDFDFD] flex items-center gap-2 shadow-lg pointer-events-none">
-          <span className="relative flex h-2 w-2">
+          <span className="relative flex h-2 w-2" aria-hidden="true">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#0E9F6E] opacity-75" />
             <span className="relative inline-flex rounded-full h-2 w-2 bg-[#0E9F6E]" />
           </span>
@@ -733,7 +750,7 @@ export const MapView: React.FC = () => {
         </div>
 
         {showComparePinOnMap && abDistanceMeters !== null && (
-          <div className="bg-indigo-600/95 backdrop-blur-xl text-white px-3 py-1.5 rounded-xl text-[11px] font-mono flex items-center gap-2 shadow-lg">
+          <div className="bg-indigo-600/95 backdrop-blur-xl text-white px-3 py-1.5 rounded-xl text-[11px] font-mono tabular-nums flex items-center gap-2 shadow-lg">
             <span>
               A ↔ B masofa:{' '}
               <strong>
@@ -743,9 +760,11 @@ export const MapView: React.FC = () => {
               </strong>
             </span>
             <button
+              type="button"
               onClick={swapCompareLocations}
               title="A va B nuqtalarni almashtirish"
-              className="p-0.5 rounded bg-white/15 hover:bg-white/25 transition-colors cursor-pointer"
+              aria-label="A va B nuqtalarni almashtirish"
+              className="press-scale p-0.5 rounded bg-white/15 hover:bg-white/25 cursor-pointer"
             >
               <ArrowLeftRight className="w-3 h-3" />
             </button>
@@ -756,8 +775,10 @@ export const MapView: React.FC = () => {
           <div className="bg-amber-500/95 backdrop-blur-xl text-white px-3 py-1.5 rounded-xl text-[11px] font-medium flex items-center gap-2 shadow-lg">
             <span>Tanlangan obyekt: {highlightedPoiCoords.name}</span>
             <button
+              type="button"
+              aria-label="Obyekt fokusini yopish"
               onClick={() => setHighlightedPoiCoords(null)}
-              className="p-0.5 rounded bg-white/20 hover:bg-white/30 cursor-pointer"
+              className="press-scale p-0.5 rounded bg-white/20 hover:bg-white/30 cursor-pointer"
             >
               <X className="w-3 h-3" />
             </button>

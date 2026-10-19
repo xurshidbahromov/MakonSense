@@ -68,8 +68,10 @@ export const SearchBar: React.FC = () => {
   const [query, setQuery] = useState('');
   const [activeFilter, setActiveFilter] = useState<'all' | 'metro' | 'hub' | 'district' | 'region'>('all');
   const [isOpen, setIsOpen] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(0);
   const { setSelectedCoords, setCompareCoords, setActiveSidebarTab } = useAnalyticsStore();
   const containerRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const parsedCoord = parseCoordinateQuery(query);
 
@@ -81,6 +83,31 @@ export const SearchBar: React.FC = () => {
       item.description.toLowerCase().includes(query.toLowerCase());
     return matchesCategory && matchesQuery;
   }).slice(0, 9);
+
+  // Reset highlighted index when results change
+  useEffect(() => {
+    setActiveIndex(0);
+  }, [query, activeFilter]);
+
+  // Global Cmd+K / Ctrl+K or '/' shortcut to focus SearchBar instantly (no animation delay)
+  useEffect(() => {
+    const handleGlobalKeyDown = (e: KeyboardEvent) => {
+      const tag = (e.target as HTMLElement)?.tagName;
+      const isEditing = tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT';
+
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        inputRef.current?.focus();
+        setIsOpen(true);
+      } else if (!isEditing && e.key === '/') {
+        e.preventDefault();
+        inputRef.current?.focus();
+        setIsOpen(true);
+      }
+    };
+    window.addEventListener('keydown', handleGlobalKeyDown);
+    return () => window.removeEventListener('keydown', handleGlobalKeyDown);
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -96,6 +123,7 @@ export const SearchBar: React.FC = () => {
     setSelectedCoords({ latitude: lat, longitude: lon });
     setQuery(label);
     setIsOpen(false);
+    inputRef.current?.blur();
   };
 
   const handleSelectCompare = (e: React.MouseEvent, lat: number, lon: number) => {
@@ -107,49 +135,85 @@ export const SearchBar: React.FC = () => {
 
   return (
     <div ref={containerRef} className="relative w-full">
+      <label className="sr-only" htmlFor="makon-spatial-search">
+        Manzil, metro, savdo markazi yoki GPS koordinata qidiruvi
+      </label>
       <div className="relative flex items-center">
-        <Search className="w-3.5 h-3.5 text-[#7A807C] absolute left-3.5 pointer-events-none" />
+        <Search className="w-3.5 h-3.5 text-[#7A807C] absolute left-3.5 pointer-events-none" aria-hidden="true" />
         <input
+          id="makon-spatial-search"
+          ref={inputRef}
           type="text"
+          role="combobox"
+          aria-expanded={isOpen}
+          aria-controls="makon-search-listbox"
+          aria-autocomplete="list"
           value={query}
           onFocus={() => setIsOpen(true)}
           onKeyDown={(e) => {
-            if (e.key === 'Enter' && parsedCoord) {
+            if (e.key === 'ArrowDown') {
+              e.preventDefault();
+              setIsOpen(true);
+              if (filtered.length > 0) {
+                setActiveIndex((prev) => (prev + 1) % filtered.length);
+              }
+            } else if (e.key === 'ArrowUp') {
+              e.preventDefault();
+              setIsOpen(true);
+              if (filtered.length > 0) {
+                setActiveIndex((prev) => (prev - 1 + filtered.length) % filtered.length);
+              }
+            } else if (e.key === 'Enter' && parsedCoord) {
+              e.preventDefault();
               handleSelectPrimary(
                 parsedCoord.lat,
                 parsedCoord.lon,
                 `${parsedCoord.lat.toFixed(4)}, ${parsedCoord.lon.toFixed(4)}`
               );
             } else if (e.key === 'Enter' && filtered.length > 0) {
-              handleSelectPrimary(filtered[0].lat, filtered[0].lon, filtered[0].name);
+              e.preventDefault();
+              const chosen = filtered[activeIndex] || filtered[0];
+              handleSelectPrimary(chosen.lat, chosen.lon, chosen.name);
             } else if (e.key === 'Escape') {
               setIsOpen(false);
+              inputRef.current?.blur();
             }
           }}
           onChange={(e) => {
             setQuery(e.target.value);
             setIsOpen(true);
           }}
-          placeholder="Manzil, metro, savdo markazi yoki koordinata (41.312, 69.280)..."
-          className="w-full bg-[#F5F6F5] dark:bg-white/[0.05] border border-black/[0.08] dark:border-white/[0.09] focus:border-[#0E9F6E] dark:focus:border-[#0E9F6E] rounded-full pl-9 pr-8 py-1.5 text-xs text-[#111111] dark:text-[#FDFDFD] placeholder-[#8A908C] focus:outline-none focus:ring-2 focus:ring-[#0E9F6E]/15 transition-all font-medium"
+          placeholder="Manzil, metro yoki GPS (41.312, 69.280)..."
+          className="w-full bg-[#F5F6F5] dark:bg-white/[0.05] border border-black/[0.08] dark:border-white/[0.09] focus:border-[#0E9F6E] dark:focus:border-[#0E9F6E] rounded-full pl-9 pr-14 py-1.5 text-base sm:text-xs text-[#111111] dark:text-[#FDFDFD] placeholder-[#8A908C] focus:outline-none focus:ring-2 focus:ring-[#0E9F6E]/15 transition-[border-color,box-shadow,background-color] duration-150 font-medium"
         />
-        {query && (
+        {query ? (
           <button
+            type="button"
+            aria-label="Qidiruv maydonini tozalash"
             onClick={() => {
               setQuery('');
               setIsOpen(false);
+              inputRef.current?.focus();
             }}
-            className="absolute right-2.5 text-[#8A908C] hover:text-[#111111] dark:hover:text-white p-0.5 cursor-pointer"
+            className="absolute right-2.5 text-[#8A908C] hover:text-[#111111] dark:hover:text-white p-1 rounded-full press-scale cursor-pointer"
           >
             <X className="w-3.5 h-3.5" />
           </button>
+        ) : (
+          <kbd className="hidden md:inline-flex items-center gap-0.5 px-1.5 py-0.5 text-[10px] font-mono font-medium text-[#7A807C] dark:text-[#9CA3AF] bg-black/[0.04] dark:bg-white/[0.06] border border-black/[0.06] dark:border-white/[0.08] rounded-md absolute right-2.5 pointer-events-none select-none">
+            ⌘K
+          </kbd>
         )}
       </div>
 
       {isOpen && (
-        <div className="absolute top-full mt-2 left-0 w-full sm:w-[400px] bg-white/95 dark:bg-[#161618]/95 backdrop-blur-2xl border border-black/[0.08] dark:border-white/[0.1] rounded-2xl shadow-2xl overflow-hidden z-50">
+        <div
+          id="makon-search-listbox"
+          role="listbox"
+          className="popover-origin-tc absolute top-full mt-2 left-0 w-full sm:w-[410px] bg-white/95 dark:bg-[#161618]/95 backdrop-blur-2xl border border-black/[0.08] dark:border-white/[0.1] rounded-2xl shadow-2xl overflow-hidden z-50"
+        >
           {/* Category Filter Pills */}
-          <div className="px-3 py-2 border-b border-black/[0.06] dark:border-white/[0.06] flex items-center gap-1 overflow-x-auto no-scrollbar">
+          <div className="px-3 py-2 border-b border-black/[0.06] dark:border-white/[0.06] flex items-center gap-1 overflow-x-auto no-scrollbar select-none">
             {[
               { id: 'all', label: 'Barchasi' },
               { id: 'metro', label: 'Metro' },
@@ -159,8 +223,9 @@ export const SearchBar: React.FC = () => {
             ].map((tab) => (
               <button
                 key={tab.id}
+                type="button"
                 onClick={() => setActiveFilter(tab.id as any)}
-                className={`px-2.5 py-1 rounded-full text-[10px] font-semibold whitespace-nowrap transition-all cursor-pointer ${
+                className={`press-scale px-2.5 py-1 rounded-full text-[10px] font-semibold whitespace-nowrap cursor-pointer ${
                   activeFilter === tab.id
                     ? 'bg-[#111111] text-white dark:bg-white dark:text-[#111111]'
                     : 'bg-black/[0.04] dark:bg-white/[0.05] text-[#6E7470] dark:text-[#9CA3AF] hover:text-[#111111] dark:hover:text-white'
@@ -174,6 +239,7 @@ export const SearchBar: React.FC = () => {
           <div className="max-h-72 overflow-y-auto divide-y divide-black/[0.04] dark:divide-white/[0.04]">
             {parsedCoord && (
               <button
+                type="button"
                 onClick={() =>
                   handleSelectPrimary(
                     parsedCoord.lat,
@@ -181,13 +247,13 @@ export const SearchBar: React.FC = () => {
                     `${parsedCoord.lat.toFixed(4)}, ${parsedCoord.lon.toFixed(4)}`
                   )
                 }
-                className="w-full px-3.5 py-2.5 text-left bg-[#0E9F6E]/[0.08] hover:bg-[#0E9F6E]/[0.14] flex items-center gap-2.5 transition-colors cursor-pointer"
+                className="w-full px-3.5 py-2.5 text-left bg-[#0E9F6E]/[0.08] hover:bg-[#0E9F6E]/[0.14] flex items-center gap-2.5 transition-colors duration-150 cursor-pointer"
               >
                 <div className="p-1.5 rounded-lg bg-[#0E9F6E] text-white">
                   <Compass className="w-3.5 h-3.5" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="text-xs font-bold text-[#0E9F6E]">
+                  <div className="text-xs font-bold text-[#0E9F6E] tabular-nums">
                     Koordinataga o‘tish: [{parsedCoord.lat.toFixed(4)}, {parsedCoord.lon.toFixed(4)}]
                   </div>
                   <div className="text-[10px] text-[#6E7470] dark:text-[#9CA3AF]">
@@ -202,45 +268,58 @@ export const SearchBar: React.FC = () => {
                 Manzil topilmadi. Koordinata kiriting (masalan: 41.312, 69.280) yoki xaritadan bosing.
               </div>
             ) : (
-              filtered.map((item) => (
-                <div
-                  key={item.id}
-                  onClick={() => handleSelectPrimary(item.lat, item.lon, item.name)}
-                  className="w-full px-3.5 py-2.5 text-left hover:bg-black/[0.03] dark:hover:bg-white/[0.04] transition-colors flex items-center justify-between gap-2 group cursor-pointer"
-                >
-                  <div className="flex items-start gap-2.5 min-w-0 flex-1">
-                    <div className="p-1.5 rounded-lg bg-black/[0.04] dark:bg-white/[0.06] text-[#111111] dark:text-white mt-0.5 shrink-0">
-                      {item.category === 'metro' ? (
-                        <Train className="w-3.5 h-3.5 text-[#0E9F6E]" />
-                      ) : item.category === 'hub' ? (
-                        <ShoppingBag className="w-3.5 h-3.5 text-amber-500" />
-                      ) : item.category === 'region' ? (
-                        <Globe2 className="w-3.5 h-3.5 text-indigo-500" />
-                      ) : (
-                        <MapPin className="w-3.5 h-3.5 text-[#0E9F6E]" />
-                      )}
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <div className="text-xs font-semibold text-[#111111] dark:text-[#FDFDFD] group-hover:text-[#0E9F6E] transition-colors truncate">
-                        {item.name}
-                      </div>
-                      <div className="text-[10px] text-[#7A807C] dark:text-[#9CA3AF] truncate">
-                        {item.description}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Quick A/B Compare Action Button */}
-                  <button
-                    onClick={(e) => handleSelectCompare(e, item.lat, item.lon)}
-                    title="B nuqta sifatida solishtirish"
-                    className="opacity-0 group-hover:opacity-100 px-2 py-1 rounded-md bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 text-[10px] font-mono font-semibold flex items-center gap-1 transition-all shrink-0 cursor-pointer"
+              filtered.map((item, idx) => {
+                const isHighlighted = idx === activeIndex;
+                return (
+                  <div
+                    key={item.id}
+                    role="option"
+                    aria-selected={isHighlighted}
+                    onMouseEnter={() => setActiveIndex(idx)}
+                    onClick={() => handleSelectPrimary(item.lat, item.lon, item.name)}
+                    className={`w-full px-3.5 py-2.5 text-left transition-colors duration-150 flex items-center justify-between gap-2 group cursor-pointer ${
+                      isHighlighted
+                        ? 'bg-black/[0.04] dark:bg-white/[0.06]'
+                        : 'hover:bg-black/[0.03] dark:hover:bg-white/[0.04]'
+                    }`}
                   >
-                    <GitCompare className="w-3 h-3" />
-                    <span>B nuqta</span>
-                  </button>
-                </div>
-              ))
+                    <div className="flex items-start gap-2.5 min-w-0 flex-1">
+                      <div className="p-1.5 rounded-lg bg-black/[0.04] dark:bg-white/[0.06] text-[#111111] dark:text-white mt-0.5 shrink-0">
+                        {item.category === 'metro' ? (
+                          <Train className="w-3.5 h-3.5 text-[#0E9F6E]" />
+                        ) : item.category === 'hub' ? (
+                          <ShoppingBag className="w-3.5 h-3.5 text-amber-500" />
+                        ) : item.category === 'region' ? (
+                          <Globe2 className="w-3.5 h-3.5 text-indigo-500" />
+                        ) : (
+                          <MapPin className="w-3.5 h-3.5 text-[#0E9F6E]" />
+                        )}
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <div className="text-xs font-semibold text-[#111111] dark:text-[#FDFDFD] group-hover:text-[#0E9F6E] transition-colors duration-150 truncate">
+                          {item.name}
+                        </div>
+                        <div className="text-[10px] text-[#7A807C] dark:text-[#9CA3AF] truncate">
+                          {item.description}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Quick A/B Compare Action Button */}
+                    <button
+                      type="button"
+                      onClick={(e) => handleSelectCompare(e, item.lat, item.lon)}
+                      title="B nuqta sifatida solishtirish"
+                      className={`press-scale px-2 py-1 rounded-md bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 text-[10px] font-mono font-semibold flex items-center gap-1 shrink-0 cursor-pointer ${
+                        isHighlighted ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
+                      }`}
+                    >
+                      <GitCompare className="w-3 h-3" />
+                      <span>B nuqta</span>
+                    </button>
+                  </div>
+                );
+              })
             )}
           </div>
         </div>

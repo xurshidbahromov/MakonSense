@@ -4,12 +4,16 @@
 
 :root {
   color-scheme: light;
-  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
   --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
-  --brand-emerald: #06D6A0;
+  --brand-emerald: #0E9F6E;
   --brand-brunswick: #0C4137;
   --brand-polar: #E6FBF6;
+}
+
+.dark {
+  color-scheme: dark;
 }
 
 body {
@@ -24,14 +28,31 @@ body {
 
 h1, h2, h3 {
   letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+/* Tabular numbers on all monospace and dynamic numeric readouts */
+.font-mono,
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Keyboard-only accessible focus indicator */
+:focus-visible {
+  outline: 2px solid #0E9F6E;
+  outline-offset: 2px;
 }
 
 ::selection {
-  background-color: rgba(14, 159, 110, 0.25);
+  background-color: rgba(14, 159, 110, 0.22);
   color: inherit;
 }
 
-/* Custom luxury emerald scrollbars */
+/* Custom subtle scrollbars */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -42,17 +63,52 @@ h1, h2, h3 {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(12, 65, 55, 0.2);
+  background: rgba(120, 125, 122, 0.25);
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #06D6A0;
+  background: #0E9F6E;
 }
 
-/* Crystalline Light Glassmorphism */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Origin-aware popover entrance animations (never from scale(0)) */
+@keyframes popover-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.popover-origin-tr {
+  transform-origin: top right;
+  animation: popover-in 160ms var(--ease-out) forwards;
+}
+
+.popover-origin-tc {
+  transform-origin: top center;
+  animation: popover-in 160ms var(--ease-out) forwards;
+}
+
+.popover-origin-tl {
+  transform-origin: top left;
+  animation: popover-in 160ms var(--ease-out) forwards;
+}
+
+/* Crystalline Light/Dark Glassmorphism */
 .apple-glass-dropdown {
-  background: rgba(255, 255, 255, 0.65) !important;
+  background: rgba(255, 255, 255, 0.72) !important;
   backdrop-filter: blur(40px) saturate(200%) !important;
   -webkit-backdrop-filter: blur(40px) saturate(200%) !important;
   border: 1px solid rgba(0, 0, 0, 0.07) !important;
@@ -60,60 +116,29 @@ h1, h2, h3 {
 }
 
 .dark .apple-glass-dropdown {
-  background: rgba(22, 22, 22, 0.70) !important;
+  background: rgba(22, 22, 24, 0.76) !important;
   backdrop-filter: blur(40px) saturate(200%) !important;
   -webkit-backdrop-filter: blur(40px) saturate(200%) !important;
-  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
   box-shadow: none !important;
-}
-
-.glass-panel {
-  background: rgba(255, 255, 255, 0.88);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(12, 65, 55, 0.08);
-  box-shadow: 0 10px 30px -10px rgba(12, 65, 55, 0.06);
-}
-
-.glass-card {
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(12, 65, 55, 0.08);
-  box-shadow: 0 4px 20px -2px rgba(12, 65, 55, 0.03);
-  transition: border-color 200ms var(--ease-out), box-shadow 200ms var(--ease-out), transform 150ms var(--ease-out);
-}
-
-.glass-card:hover {
-  border-color: rgba(6, 214, 160, 0.45);
-  box-shadow: 0 12px 32px -4px rgba(6, 214, 160, 0.1);
 }
 
 /* Concentric border-radius container helpers */
 .concentric-container {
-  border-radius: 20px;
-  padding: 8px;
+  border-radius: 16px;
+  padding: 4px;
 }
 
 .concentric-item {
   border-radius: 12px;
 }
 
-/* Subtle glowing rim border */
-.rim-glow-emerald {
-  box-shadow: 0 0 0 1px rgba(6, 214, 160, 0.3), 0 8px 24px -6px rgba(6, 214, 160, 0.2);
-}
-
-.rim-glow-polar {
-  box-shadow: 0 0 0 1px rgba(12, 65, 55, 0.08), 0 4px 16px -2px rgba(6, 214, 160, 0.12);
-}
-
-/* Tactile micro-press feedback */
+/* Tactile micro-press feedback (exact 0.96 scale on press) */
 .press-scale {
-  transition: transform 160ms cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 150ms var(--ease-out), background-color 150ms var(--ease-out), border-color 150ms var(--ease-out), color 150ms var(--ease-out), opacity 150ms var(--ease-out);
 }
 .press-scale:active {
-  transform: scale(0.97);
+  transform: scale(0.96);
 }
 
 /* Pulse radar ring animation */
@@ -146,33 +171,6 @@ h1, h2, h3 {
   }
 }
 
-/* Soft Cloud Floating Keyframes */
-@keyframes cloud-float-slow {
-  0%, 100% {
-    transform: translate(0, 0) scale(1);
-  }
-  50% {
-    transform: translate(25px, -15px) scale(1.04);
-  }
-}
-
-@keyframes cloud-float-reverse {
-  0%, 100% {
-    transform: translate(0, 0) scale(1);
-  }
-  50% {
-    transform: translate(-30px, 18px) scale(1.03);
-  }
-}
-
-.animate-cloud-slow {
-  animation: cloud-float-slow 22s ease-in-out infinite;
-}
-
-.animate-cloud-reverse {
-  animation: cloud-float-reverse 26s ease-in-out infinite;
-}
-
 /* Branded Emerald Range Slider Thumb */
 input[type="range"] {
   accent-color: #0E9F6E;
@@ -181,45 +179,59 @@ input[type="range"] {
 input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   border-radius: 9999px;
   background: #0E9F6E;
-  border: 3px solid #FFFFFF;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(0, 0, 0, 0.05);
+  border: 2.5px solid #FFFFFF;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(0, 0, 0, 0.06);
   cursor: pointer;
-  transition: transform 0.15s ease, background-color 0.15s ease;
+  transition: transform 150ms var(--ease-out), background-color 150ms var(--ease-out);
 }
 
 .dark input[type="range"]::-webkit-slider-thumb {
   background: #0E9F6E;
-  border: 3px solid #161616;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.12);
+  border: 2.5px solid #161618;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.14);
 }
 
-input[type="range"]::-webkit-slider-thumb:hover {
-  transform: scale(1.15);
-  background: #057A55;
+@media (hover: hover) and (pointer: fine) {
+  input[type="range"]::-webkit-slider-thumb:hover {
+    transform: scale(1.12);
+    background: #057A55;
+  }
 }
 
 input[type="range"]::-webkit-slider-thumb:active {
-  transform: scale(1.05);
+  transform: scale(0.96);
 }
 
 input[type="range"]::-moz-range-thumb {
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   border-radius: 9999px;
   background: #0E9F6E;
-  border: 3px solid #FFFFFF;
+  border: 2.5px solid #FFFFFF;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
   cursor: pointer;
 }
 
 .dark input[type="range"]::-moz-range-thumb {
   background: #0E9F6E;
-  border: 3px solid #161616;
+  border: 2.5px solid #161618;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+}
+
+/* Reduced motion accessibility compliance */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 /* Print Styles for PDF Audit Report */

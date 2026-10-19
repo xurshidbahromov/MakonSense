@@ -26,12 +26,12 @@ export const LayerControl: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false);
 
   return (
-    <div className="absolute top-3.5 right-3.5 z-20 bg-white/95 dark:bg-[#161618]/95 backdrop-blur-2xl border border-black/[0.08] dark:border-white/[0.1] rounded-2xl p-3 shadow-xl space-y-2.5 select-none w-64 transition-all duration-200">
+    <div className=" absolute top-3.5 right-3.5 z-20 bg-white/95 dark:bg-[#161618]/95 backdrop-blur-2xl border border-black/[0.08] dark:border-white/[0.1] rounded-2xl p-3 shadow-xl space-y-2.5 select-none w-64">
       {/* HUD Header */}
       <div className="flex items-center justify-between pb-2 border-b border-black/[0.06] dark:border-white/[0.07]">
         <div className="flex items-center gap-2">
-          <div className="w-6 h-6 rounded-lg bg-[#0E9F6E]/10 border border-[#0E9F6E]/25 flex items-center justify-center">
-            <Layers className="w-3.5 h-3.5 text-[#0E9F6E]" />
+          <div className="w-6 h-6 rounded-[8px] bg-[#0E9F6E]/10 border border-[#0E9F6E]/25 flex items-center justify-center">
+            <Layers className="w-3.5 h-3.5 text-[#0E9F6E]" aria-hidden="true" />
           </div>
           <span className="text-[11px] font-semibold text-[#111111] dark:text-[#FDFDFD] tracking-tight">
             Xarita Qatlamlari
@@ -39,20 +39,25 @@ export const LayerControl: React.FC = () => {
         </div>
         <div className="flex items-center gap-1">
           <button
+            type="button"
             onClick={togglePitchMode}
             title={pitchMode === '3d' ? "2D tekis ko'rinish" : "3D izometrik ko'rinish"}
-            className={`px-2 py-0.5 rounded-md text-[10px] font-mono font-bold flex items-center gap-1 transition-all cursor-pointer ${
+            aria-label={pitchMode === '3d' ? "2D ko'rinishga o'tish" : "3D ko'rinishga o'tish"}
+            className={`press-scale px-2 py-0.5 rounded-[7px] text-[10px] font-mono font-bold flex items-center gap-1 cursor-pointer ${
               pitchMode === '3d'
                 ? 'bg-[#111111] text-white dark:bg-white dark:text-[#111111]'
                 : 'bg-black/[0.05] dark:bg-white/[0.07] text-[#6E7470] dark:text-[#9CA3AF]'
             }`}
           >
-            <Boxes className="w-3 h-3 text-[#0E9F6E]" />
+            <Boxes className="w-3 h-3 text-[#0E9F6E]" aria-hidden="true" />
             <span>{pitchMode.toUpperCase()}</span>
           </button>
           <button
+            type="button"
             onClick={() => setCollapsed(!collapsed)}
-            className="p-1 rounded-md text-[#7A807C] hover:text-[#111111] dark:hover:text-white hover:bg-black/[0.04] dark:hover:bg-white/[0.06] transition-all cursor-pointer"
+            aria-label={collapsed ? "Qatlamlar menyusini ochish" : "Qatlamlar menyusini yig'ish"}
+            aria-expanded={!collapsed}
+            className="press-scale p-1 rounded-[7px] text-[#7A807C] hover:text-[#111111] dark:hover:text-white hover:bg-black/[0.04] dark:hover:bg-white/[0.06] cursor-pointer"
           >
             {collapsed ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronUp className="w-3.5 h-3.5" />}
           </button>
@@ -61,39 +66,42 @@ export const LayerControl: React.FC = () => {
 
       {!collapsed && (
         <div className="space-y-2.5">
-          {/* Basemap Switcher */}
+          {/* Basemap Switcher (Concentric radius: outer rounded-xl p-1 -> inner rounded-[8px]) */}
           <div className="grid grid-cols-3 gap-1 bg-black/[0.04] dark:bg-white/[0.05] p-1 rounded-xl border border-black/[0.05] dark:border-white/[0.06]">
             <button
+              type="button"
               onClick={() => setBasemapMode('light')}
-              className={`flex items-center justify-center gap-1 py-1.5 rounded-lg text-[10px] font-semibold transition-all cursor-pointer ${
+              className={`press-scale flex items-center justify-center gap-1 py-1.5 rounded-[8px] text-[10px] font-semibold cursor-pointer ${
                 basemapMode === 'light'
                   ? 'bg-white dark:bg-[#27272A] text-[#111111] dark:text-white shadow-sm'
                   : 'text-[#6E7470] dark:text-[#9CA3AF] hover:text-[#111111] dark:hover:text-white'
               }`}
             >
-              <Sun className="w-3 h-3 text-[#0E9F6E]" />
+              <Sun className="w-3 h-3 text-[#0E9F6E]" aria-hidden="true" />
               <span>Yorug‘</span>
             </button>
             <button
+              type="button"
               onClick={() => setBasemapMode('satellite')}
-              className={`flex items-center justify-center gap-1 py-1.5 rounded-lg text-[10px] font-semibold transition-all cursor-pointer ${
+              className={`press-scale flex items-center justify-center gap-1 py-1.5 rounded-[8px] text-[10px] font-semibold cursor-pointer ${
                 basemapMode === 'satellite'
                   ? 'bg-white dark:bg-[#27272A] text-[#111111] dark:text-white shadow-sm'
                   : 'text-[#6E7470] dark:text-[#9CA3AF] hover:text-[#111111] dark:hover:text-white'
               }`}
             >
-              <Globe className="w-3 h-3 text-[#0E9F6E]" />
+              <Globe className="w-3 h-3 text-[#0E9F6E]" aria-hidden="true" />
               <span>Sputnik</span>
             </button>
             <button
+              type="button"
               onClick={() => setBasemapMode('dark')}
-              className={`flex items-center justify-center gap-1 py-1.5 rounded-lg text-[10px] font-semibold transition-all cursor-pointer ${
+              className={`press-scale flex items-center justify-center gap-1 py-1.5 rounded-[8px] text-[10px] font-semibold cursor-pointer ${
                 basemapMode === 'dark'
                   ? 'bg-white dark:bg-[#27272A] text-[#111111] dark:text-white shadow-sm'
                   : 'text-[#6E7470] dark:text-[#9CA3AF] hover:text-[#111111] dark:hover:text-white'
               }`}
             >
-              <Moon className="w-3 h-3 text-[#0E9F6E]" />
+              <Moon className="w-3 h-3 text-[#0E9F6E]" aria-hidden="true" />
               <span>Tungi</span>
             </button>
           </div>
@@ -124,10 +132,10 @@ export const LayerControl: React.FC = () => {
             ].map((item) => (
               <label
                 key={item.key}
-                className="flex items-center justify-between px-2 py-1.5 rounded-xl hover:bg-black/[0.03] dark:hover:bg-white/[0.04] cursor-pointer transition-all group"
+                className="flex items-center justify-between px-2 py-1.5 rounded-[10px] hover:bg-black/[0.03] dark:hover:bg-white/[0.04] cursor-pointer transition-colors duration-150 group"
               >
                 <div className="flex items-center gap-2">
-                  <span className={`w-2 h-2 rounded-full ${item.dotClass}`} />
+                  <span className={`w-2 h-2 rounded-full ${item.dotClass}`} aria-hidden="true" />
                   <span className="text-[11px] font-medium text-[#525854] dark:text-[#D1D5DB] group-hover:text-[#111111] dark:group-hover:text-white">
                     {item.label}
                   </span>
@@ -142,9 +150,9 @@ export const LayerControl: React.FC = () => {
             ))}
 
             {/* A/B Comparison Pin Toggle */}
-            <label className="flex items-center justify-between px-2 py-1.5 rounded-xl hover:bg-black/[0.03] dark:hover:bg-white/[0.04] cursor-pointer transition-all group border-t border-black/[0.05] dark:border-white/[0.06] pt-2 mt-1">
+            <label className="flex items-center justify-between px-2 py-1.5 rounded-[10px] hover:bg-black/[0.03] dark:hover:bg-white/[0.04] cursor-pointer transition-colors duration-150 group border-t border-black/[0.05] dark:border-white/[0.06] pt-2 mt-1">
               <div className="flex items-center gap-2">
-                <GitCompare className="w-3 h-3 text-indigo-500" />
+                <GitCompare className="w-3 h-3 text-indigo-500" aria-hidden="true" />
                 <span className="text-[11px] font-medium text-[#525854] dark:text-[#D1D5DB] group-hover:text-[#111111] dark:group-hover:text-white">
                   A/B Solishtirish (B nuqta)
                 </span>
@@ -156,6 +164,22 @@ export const LayerControl: React.FC = () => {
                 className="w-3.5 h-3.5 accent-indigo-500 rounded cursor-pointer"
               />
             </label>
+          </div>
+
+          {/* Accessible Color + Label Legend for H3 Clusters & Pins */}
+          <div className="pt-2 border-t border-black/[0.05] dark:border-white/[0.06] grid grid-cols-3 gap-1 text-[9px] font-mono tabular-nums text-[#6E7470] dark:text-[#9CA3AF]">
+            <div className="flex items-center gap-1 bg-[#0E9F6E]/10 text-[#0E9F6E] px-1.5 py-1 rounded-[6px]">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#0E9F6E] shrink-0" />
+              <span>≥80 A’lo</span>
+            </div>
+            <div className="flex items-center gap-1 bg-amber-500/10 text-amber-600 dark:text-amber-400 px-1.5 py-1 rounded-[6px]">
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-500 shrink-0" />
+              <span>58–79 O‘rta</span>
+            </div>
+            <div className="flex items-center gap-1 bg-rose-500/10 text-rose-600 dark:text-rose-400 px-1.5 py-1 rounded-[6px]">
+              <span className="w-1.5 h-1.5 rounded-full bg-rose-500 shrink-0" />
+              <span>&lt;58 Past</span>
+            </div>
           </div>
         </div>
       )}

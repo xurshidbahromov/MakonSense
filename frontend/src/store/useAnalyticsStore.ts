@@ -93,9 +93,11 @@ interface AnalyticsState {
   activeSidebarTab: SidebarTabKey;
   savedLocations: SavedLocation[];
   highlightedPoiCoords: { latitude: number; longitude: number; name: string } | null;
+  recentHistory: Coordinates[];
 
   // Actions
   setSelectedCoords: (coords: Coordinates) => void;
+  goBackLocation: () => void;
   setCategory: (cat: BusinessCategory) => void;
   setRadiusMeters: (r: number) => void;
   toggleLayer: (key: keyof LayerVisibility) => void;
@@ -149,6 +151,7 @@ export const useAnalyticsStore = create<AnalyticsState>((set, get) => ({
   activeSidebarTab: 'factors',
   savedLocations: loadInitialSavedLocations(),
   highlightedPoiCoords: null,
+  recentHistory: [],
 
   setBasemapMode: (mode: 'light' | 'dark' | 'satellite') => {
     set({ basemapMode: mode });
@@ -168,8 +171,23 @@ export const useAnalyticsStore = create<AnalyticsState>((set, get) => ({
   },
 
   setSelectedCoords: (coords: Coordinates) => {
-    set({ selectedCoords: coords, highlightedPoiCoords: null });
+    const prev = get().selectedCoords;
+    const isSame =
+      Math.abs(prev.latitude - coords.latitude) < 0.0001 &&
+      Math.abs(prev.longitude - coords.longitude) < 0.0001;
+    const nextHistory = isSame
+      ? get().recentHistory
+      : [prev, ...get().recentHistory].slice(0, 10);
+    set({ selectedCoords: coords, highlightedPoiCoords: null, recentHistory: nextHistory });
     get().inspectPoint(coords);
+  },
+
+  goBackLocation: () => {
+    const history = get().recentHistory;
+    if (history.length === 0) return;
+    const [prev, ...rest] = history;
+    set({ selectedCoords: prev, highlightedPoiCoords: null, recentHistory: rest });
+    get().inspectPoint(prev);
   },
 
   setCategory: (cat: BusinessCategory) => {

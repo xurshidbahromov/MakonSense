@@ -9,7 +9,7 @@ interface AnimatedCounterProps {
 
 export const AnimatedCounter: React.FC<AnimatedCounterProps> = ({
   value,
-  duration = 800,
+  duration = 280,
   decimals = 1,
   className = '',
 }) => {
@@ -20,6 +20,15 @@ export const AnimatedCounter: React.FC<AnimatedCounterProps> = ({
   const animationFrameRef = useRef<number | null>(null);
 
   useEffect(() => {
+    const prefersReducedMotion =
+      typeof window !== 'undefined' &&
+      window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+
+    if (prefersReducedMotion || duration <= 0) {
+      setDisplayValue(value);
+      return;
+    }
+
     startValueRef.current = displayValue;
     targetValueRef.current = value;
     startTimeRef.current = null;
@@ -29,9 +38,10 @@ export const AnimatedCounter: React.FC<AnimatedCounterProps> = ({
       const elapsed = timestamp - startTimeRef.current;
       const progress = Math.min(elapsed / duration, 1);
 
-      // Custom ease-out cubic curve
+      // Strong ease-out cubic curve
       const easeOut = 1 - Math.pow(1 - progress, 3);
-      const current = startValueRef.current + (targetValueRef.current - startValueRef.current) * easeOut;
+      const current =
+        startValueRef.current + (targetValueRef.current - startValueRef.current) * easeOut;
 
       setDisplayValue(current);
 
@@ -51,5 +61,5 @@ export const AnimatedCounter: React.FC<AnimatedCounterProps> = ({
     };
   }, [value, duration]);
 
-  return <span className={className}>{displayValue.toFixed(decimals)}</span>;
+  return <span className={`tabular-nums ${className}`}>{displayValue.toFixed(decimals)}</span>;
 };

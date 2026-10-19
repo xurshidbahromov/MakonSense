@@ -17,6 +17,7 @@ import {
 import { useAnalyticsStore } from '../../store/useAnalyticsStore';
 import { useAuthStore } from '../../store/useAuthStore';
 import { Magnet } from '../ui/Magnet';
+import { initThemeFromStorage, toggleThemeWithoutSmear } from '../../utils/themeUtils';
 
 interface TabItem {
   id: string;
@@ -34,7 +35,7 @@ const NAV_TABS: TabItem[] = [
 ];
 
 export const LandingNavbar: React.FC = () => {
-  const { setCurrentView } = useAnalyticsStore();
+  const { setCurrentView, basemapMode, setBasemapMode } = useAnalyticsStore();
   const { setAuthMode } = useAuthStore();
   const [scrolled, setScrolled] = useState(false);
   const [activeTab, setActiveTab] = useState<string>('home');
@@ -42,19 +43,13 @@ export const LandingNavbar: React.FC = () => {
   const [solutionsOpen, setSolutionsOpen] = useState(false);
   const [regionsOpen, setRegionsOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(() =>
-    document.documentElement.classList.contains('dark')
-  );
+  const [isDarkMode, setIsDarkMode] = useState(() => initThemeFromStorage());
 
   const toggleDarkMode = () => {
-    const next = !isDarkMode;
+    const next = toggleThemeWithoutSmear(!isDarkMode);
     setIsDarkMode(next);
-    if (next) {
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('makonsense_theme', 'dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('makonsense_theme', 'light');
+    if (basemapMode !== 'satellite') {
+      setBasemapMode(next ? 'dark' : 'light');
     }
   };
 
