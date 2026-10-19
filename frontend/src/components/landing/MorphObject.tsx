@@ -17,6 +17,7 @@ type Vec3 = [number, number, number];
 interface Formation {
   pts: Vec3[];
   accent: number[];
+  weight: number[];
 }
 
 export type MorphShape =
@@ -39,12 +40,15 @@ const ACCENT: [number, number, number] = [14, 159, 110]; // Signature Silky Emer
 const fill = (pts: Vec3[], acc: number[]): Formation => {
   const out: Vec3[] = [];
   const a: number[] = [];
+  const w: number[] = [];
+  const M = pts.length;
   for (let i = 0; i < N; i++) {
-    const k = i % pts.length;
+    const k = i % M;
     out.push(pts[k]);
     a.push(acc[k]);
+    w.push(i < M ? 1.0 : 0.0);
   }
-  return { pts: out, accent: a };
+  return { pts: out, accent: a, weight: w };
 };
 
 const segment = (a: Vec3, b: Vec3, n: number): Vec3[] => {
@@ -208,356 +212,180 @@ const buildFormations = (): Record<MorphShape, Formation> => {
   })();
 
   // 2. ScrollExperience (Tahlil Section — "Uch qatlam tahlil. Bir hisobot."):
-  // 3-Tier Isometric Geospatial Intelligence Stack:
-  // - Layer 01 (Top, cy = +0.62): Piyodalar Tranziti (Isochrone diamond + internal transit corridor crosshairs)
-  // - Layer 02 (Mid, cy =  0.00): Raqobat Tahlili (Isochrone diamond + 350m elliptical radar buffer ring)
-  // - Layer 03 (Bot, cy = -0.62): Daromad Prognozi / 94.0 MakonScore (Triple-nested synthesis diamond)
-  // Connected by a central vertical AI synthesis laser beam + side architectural alignment guides (300 pts, 14 beacons)
+  // Pure 3-Layer Isometric Planes (NO vertical pillars, NO extra clutter!):
+  // 3 planes x (5x5 = 25 wide-spaced dots) = 75 unique dots total!
   const layers = (() => {
     const pts: Vec3[] = [];
     const acc: number[] = [];
 
-    const rx = 0.88;
-    const ry = 0.22;
+    const rx = 0.94;
+    const ry = 0.24;
+    const layerCenters = [
+      { cy: 0.66, zBase: 0.08 },  // Layer 01: Piyodalar Tranziti
+      { cy: 0.0, zBase: 0.0 },    // Layer 02: Raqobat Tahlili
+      { cy: -0.66, zBase: -0.08 } // Layer 03: Daromad Prognozi
+    ];
 
-    const addDiamondRing = (
-      cy: number,
-      scale: number,
-      nPerSide: number,
-      z: number,
-      beaconCorners = false
-    ) => {
-      const W = rx * scale;
-      const H = ry * scale;
-      const verts: Vec3[] = [
-        [0, cy + H, z - 0.06],
-        [W, cy, z],
-        [0, cy - H, z + 0.06],
-        [-W, cy, z],
-      ];
-      for (let k = 0; k < 4; k++) {
-        const edge = segment(verts[k], verts[(k + 1) % 4], nPerSide).slice(0, -1);
-        edge.forEach((p, idx) => {
-          pts.push(p);
-          const isCorner = beaconCorners && idx === 0;
-          acc.push(isCorner ? 1.0 : 0.15);
-        });
+    layerCenters.forEach((layer) => {
+      for (let iu = 0; iu < 5; iu++) {
+        for (let iv = 0; iv < 5; iv++) {
+          const u = -1 + (iu / 4) * 2;
+          const v = -1 + (iv / 4) * 2;
+          const x = (u - v) * 0.5 * rx;
+          const y = layer.cy + (u + v) * 0.5 * ry;
+          const z = layer.zBase + (v - u) * 0.04;
+          pts.push([x, y, z]);
+
+          const isCornerOrCenter =
+            ((iu === 0 || iu === 4) && (iv === 0 || iv === 4)) || (iu === 2 && iv === 2);
+          acc.push(isCornerOrCenter ? 1.0 : 0.15);
+        }
       }
-    };
-
-    // --- LAYER 01 (TOP, cy = +0.62): Piyodalar Tranziti (92 pts, 5 beacons) ---
-    const cy1 = 0.62;
-    addDiamondRing(cy1, 1.0, 14, 0.08, true); // 52 pts (4 corner beacons)
-    addDiamondRing(cy1, 0.55, 7, 0.08, false); // 24 pts
-    const axis1X = segment([-rx * 0.82, cy1, 0.08], [rx * 0.82, cy1, 0.08], 9);
-    const axis1Y = segment([0, cy1 - ry * 0.75, 0.10], [0, cy1 + ry * 0.75, 0.06], 7);
-    axis1X.forEach((p, i) => {
-      pts.push(p);
-      acc.push(i === 4 ? 1.0 : 0.15);
-    });
-    axis1Y.forEach((p) => {
-      pts.push(p);
-      acc.push(0.15);
-    });
-
-    // --- LAYER 02 (MIDDLE, cy = 0.00): Raqobat Tahlili (92 pts, 5 beacons) ---
-    const cy2 = 0.0;
-    const verts2: Vec3[] = [
-      [0, cy2 + ry, -0.06],
-      [rx, cy2, 0.0],
-      [0, cy2 - ry, 0.06],
-      [-rx, cy2, 0.0],
-    ];
-    for (let k = 0; k < 4; k++) {
-      const edge = segment(verts2[k], verts2[(k + 1) % 4], 14).slice(0, -1);
-      edge.forEach((p, idx) => {
-        pts.push(p);
-        acc.push((k === 1 || k === 3) && idx === 0 ? 1.0 : 0.15);
-      });
-    }
-    // Elliptical 350m Competitor Buffer Radar Ring inside Layer 2: 28 pts
-    for (let i = 0; i < 28; i++) {
-      const a = (i / 28) * Math.PI * 2;
-      pts.push([Math.cos(a) * (rx * 0.54), cy2 + Math.sin(a) * (ry * 0.54), 0.04]);
-      acc.push(i === 5 || i === 19 ? 1.0 : 0.15);
-    }
-    const sweep2 = segment([-rx * 0.50, cy2, 0.04], [rx * 0.50, cy2, 0.04], 12);
-    sweep2.forEach((p, i) => {
-      pts.push(p);
-      acc.push(i === 6 ? 1.0 : 0.15);
-    });
-
-    // --- LAYER 03 (BOTTOM, cy = -0.62): Daromad Prognozi / 94.0 MakonScore (92 pts, 2 beacons) ---
-    const cy3 = -0.62;
-    const verts3: Vec3[] = [
-      [0, cy3 + ry, -0.10],
-      [rx, cy3, -0.04],
-      [0, cy3 - ry, 0.02],
-      [-rx, cy3, -0.04],
-    ];
-    for (let k = 0; k < 4; k++) {
-      const edge = segment(verts3[k], verts3[(k + 1) % 4], 14).slice(0, -1);
-      edge.forEach((p, idx) => {
-        pts.push(p);
-        acc.push((k === 0 || k === 2) && idx === 0 ? 1.0 : 0.15);
-      });
-    }
-    addDiamondRing(cy3, 0.60, 8, -0.02, false); // 28 pts
-    addDiamondRing(cy3, 0.28, 4, 0.02, false);  // 12 pts
-
-    // --- VERTICAL AI SYNTHESIS LASER SPINE & SIDE ALIGNMENT PILLARS (24 pts -> Total 300 pts, +2 = 14 beacons) ---
-    const spine = segment([0, 0.94, 0.12], [0, -0.94, 0.12], 16);
-    spine.forEach((p, i) => {
-      pts.push(p);
-      acc.push(i === 0 || i === 15 ? 1.0 : 0.15);
-    });
-    const leftGuide = segment([-rx, cy1, 0], [-rx, cy3, 0], 4);
-    const rightGuide = segment([rx, cy1, 0], [rx, cy3, 0], 4);
-    [...leftGuide, ...rightGuide].forEach((p) => {
-      pts.push(p);
-      acc.push(0.15);
     });
 
     return fill(pts, acc);
   })();
 
-  // 3. ProblemSolution (cube): Broad Noble Heraldic Shield + Bold 3-Layer Checkmark (94.2% Protected Investment)
-  // Double-rimmed architectural shield + bold 3-layer verification checkmark (300 pts, 14 emerald beacons)
+  // 3. ProblemSolution (cube): Single Crisp Shield Outline + Single Crisp Checkmark (NO inner shield, NO interior filler!)
+  // 40 outer shield dots + 16 checkmark dots = 56 unique wide-spaced dots total!
   const cube = (() => {
     const pts: Vec3[] = [];
     const acc: number[] = [];
 
-    const shieldPoint = (t: number, side: number, scale = 1.0, z = 0): Vec3 => {
+    const shieldPoint = (t: number, side: number, z = 0): Vec3 => {
       if (t <= 0.22) {
         const u = t / 0.22;
-        const x = side * (u * 0.84) * scale;
-        const y = (0.92 - Math.sin(u * Math.PI * 0.5) * 0.16) * scale;
+        const x = side * (u * 0.86);
+        const y = 0.90 - Math.sin(u * Math.PI * 0.5) * 0.16;
         return [x, y, z];
       } else {
         const u = (t - 0.22) / 0.78;
-        const x = side * 0.84 * Math.pow(1 - Math.pow(u, 1.55), 0.62) * scale;
-        const y = (0.76 - u * 1.66) * scale;
+        const x = side * 0.86 * Math.pow(1 - Math.pow(u, 1.55), 0.62);
+        const y = 0.74 - u * 1.64;
         return [x, y, z];
       }
     };
 
-    // Outer shield perimeter: left (56 pts) + right (54 pts) = 110 pts
-    for (let i = 0; i < 56; i++) {
-      const t = i / 55;
-      pts.push(shieldPoint(t, -1, 1.0, 0.08));
-      const isBeacon = i === 0 || i === 12 || i === 32 || i === 55;
-      acc.push(isBeacon ? 1.0 : 0.15);
+    // 1. Single Crisp Shield Outline: left (21 pts) + right (19 pts) = 40 wide-spaced dots
+    for (let i = 0; i < 21; i++) {
+      const t = i / 20;
+      pts.push(shieldPoint(t, -1, 0.06));
+      acc.push(i === 0 || i === 4 || i === 12 || i === 20 ? 1.0 : 0.15);
     }
-    for (let i = 1; i < 55; i++) {
-      const t = i / 55;
-      pts.push(shieldPoint(t, 1, 1.0, 0.08));
-      const isBeacon = i === 12 || i === 32;
-      acc.push(isBeacon ? 1.0 : 0.15);
+    for (let i = 1; i < 20; i++) {
+      const t = i / 20;
+      pts.push(shieldPoint(t, 1, 0.06));
+      acc.push(i === 4 || i === 12 ? 1.0 : 0.15);
     }
 
-    // Inner shield frame (scale = 0.83): left (44 pts) + right (42 pts) = 86 pts
-    for (let i = 0; i < 44; i++) {
-      const t = i / 43;
-      pts.push(shieldPoint(t, -1, 0.83, -0.04));
-      const isBeacon = i === 0 || i === 43;
-      acc.push(isBeacon ? 1.0 : 0.15);
-    }
-    for (let i = 1; i < 43; i++) {
-      const t = i / 43;
-      pts.push(shieldPoint(t, 1, 0.83, -0.04));
-      acc.push(0.15);
-    }
-
-    // Bold 3-layer Checkmark (✓) centered in the broad chest of the shield: 104 pts (196 + 104 = 300 pts)
-    const offsets = [-0.052, 0.0, 0.052];
-    offsets.forEach((off, oIdx) => {
-      const pStart: Vec3 = [-0.36, 0.04 + off, 0.14];
-      const pKnee: Vec3 = [-0.08, -0.26 + off, 0.16];
-      const pEnd: Vec3 = [0.44, 0.36 + off, 0.14];
-
-      const leg1Count = oIdx === 1 ? 14 : 13;
-      const leg2Count = oIdx === 1 ? 22 : 21;
-      const leg1 = segment(pStart, pKnee, leg1Count);
-      const leg2 = segment(pKnee, pEnd, leg2Count);
-
-      leg1.forEach((p, idx) => {
-        pts.push(p);
-        const isB = oIdx === 1 && (idx === 0 || idx === 7 || idx === leg1Count - 1);
-        acc.push(isB ? 1.0 : 0.15);
-      });
-      leg2.forEach((p, idx) => {
-        pts.push(p);
-        const isB = oIdx === 1 && (idx === 7 || idx === 14 || idx === leg2Count - 1);
-        acc.push(isB ? 1.0 : 0.15);
-      });
+    // 2. Single Crisp Checkmark (✓) in the open center: 6 short leg + 10 long leg = 16 wide-spaced dots
+    const pStart: Vec3 = [-0.36, 0.02, 0.12];
+    const pKnee: Vec3 = [-0.08, -0.26, 0.14];
+    const pEnd: Vec3 = [0.42, 0.34, 0.12];
+    const leg1 = segment(pStart, pKnee, 6);
+    const leg2 = segment(pKnee, pEnd, 11).slice(1);
+    leg1.forEach((p, idx) => {
+      pts.push(p);
+      acc.push(idx === 0 || idx === 3 || idx === 5 ? 1.0 : 0.15);
+    });
+    leg2.forEach((p, idx) => {
+      pts.push(p);
+      acc.push(idx === 3 || idx === 6 || idx === 9 ? 1.0 : 0.15);
     });
 
     return fill(pts, acc);
   })();
 
-  // 4. LocationCompareSection (towers): Architectural A/B Comparison Monolith Towers
-  // Tall Winner Tower A (Amir Temur 94.0 with stepped crown & spire) vs Shorter Tower B (Chilonzor 62.3) + Curved Advantage Vector
+  // 4. LocationCompareSection (towers): Pure A/B Comparison Columns on a Baseline (NO ticks, NO bridges, NO clutter!)
+  // 15 baseline dots + 45 Tower A (5x9) + 25 Tower B (5x5) = 85 unique wide-spaced dots total!
   const towers = (() => {
     const pts: Vec3[] = [];
     const acc: number[] = [];
 
-    // Ground foundation baseline: 28 pts
-    const baseLine = segment([-0.94, -0.84, 0], [0.94, -0.84, 0], 28);
+    // 1. Clean Ground Baseline: 15 wide-spaced dots
+    const baseLine = segment([-0.88, -0.82, 0], [0.88, -0.82, 0], 15);
     baseLine.forEach((p, i) => {
       pts.push(p);
-      acc.push(i === 0 || i === 27 ? 1.0 : 0.15);
+      acc.push(i === 0 || i === 14 ? 1.0 : 0.15);
     });
 
-    // --- LEFT TOWER A (Winner: Amir Temur 94.0, x in [-0.76, -0.18], y in [-0.84, +0.66]) ---
-    const xA1 = -0.76, xA2 = -0.18, yB = -0.84, yA = 0.66;
-    const wallAL = segment([xA1, yB, 0.06], [xA1, yA, 0.06], 24);
-    const wallAR = segment([xA2, yB, 0.06], [xA2, yA, 0.06], 24);
-    wallAL.forEach((p, i) => {
-      pts.push(p);
-      acc.push(i === 23 ? 1.0 : 0.15);
-    });
-    wallAR.forEach((p, i) => {
-      pts.push(p);
-      acc.push(i === 23 ? 1.0 : 0.15);
-    });
-
-    // 9 Horizontal architectural floor bands inside Tower A (9 * 7 = 63 pts)
-    for (let f = 1; f <= 9; f++) {
-      const yf = yB + (f / 9) * (yA - yB);
-      const row = segment([xA1 + 0.06, yf, 0.04], [xA2 - 0.06, yf, 0.04], 7);
-      row.forEach((p, idx) => {
-        pts.push(p);
-        const isB = (f === 9 || f === 5) && idx === 3;
-        acc.push(isB ? 1.0 : 0.15);
-      });
+    // 2. Left Column A (Winner: Amir Temur 94.0) — 5 cols x 9 rows = 45 wide-spaced dots
+    for (let r = 0; r < 9; r++) {
+      const y = -0.64 + (r / 8) * 1.44;
+      for (let c = 0; c < 5; c++) {
+        const x = -0.78 + (c / 4) * 0.58;
+        pts.push([x, y, 0.06]);
+        const isTopRow = r === 8;
+        const isCore = r === 4 && c === 2;
+        acc.push(isTopRow || isCore ? 1.0 : 0.15);
+      }
     }
 
-    // Stepped Crown & Spire on Tower A (21 pts)
-    const crownTop = segment([-0.64, 0.78, 0.08], [-0.30, 0.78, 0.08], 7);
-    const crownL = segment([-0.64, 0.66, 0.08], [-0.64, 0.78, 0.08], 3);
-    const crownR = segment([-0.30, 0.66, 0.08], [-0.30, 0.78, 0.08], 3);
-    const spire = segment([-0.47, 0.78, 0.10], [-0.47, 1.04, 0.12], 8);
-    [...crownTop, ...crownL, ...crownR].forEach((p) => {
-      pts.push(p);
-      acc.push(0.15);
-    });
-    spire.forEach((p, i) => {
-      pts.push(p);
-      acc.push(i === 7 || i === 0 ? 1.0 : 0.15);
-    });
-
-    // --- RIGHT TOWER B (Chilonzor 62.3, x in [0.18, 0.76], y in [-0.84, +0.02]) ---
-    const xB1 = 0.18, xB2 = 0.76, yTopB = 0.02;
-    const wallBL = segment([xB1, yB, -0.04], [xB1, yTopB, -0.04], 16);
-    const wallBR = segment([xB2, yB, -0.04], [xB2, yTopB, -0.04], 16);
-    [...wallBL, ...wallBR].forEach((p) => {
-      pts.push(p);
-      acc.push(0.15);
-    });
-
-    // 6 Horizontal floor bands inside Tower B (6 * 7 = 42 pts)
-    for (let f = 1; f <= 6; f++) {
-      const yf = yB + (f / 6) * (yTopB - yB);
-      const row = segment([xB1 + 0.06, yf, -0.04], [xB2 - 0.06, yf, -0.04], 7);
-      row.forEach((p, idx) => {
-        pts.push(p);
-        acc.push(f === 6 && idx === 3 ? 1.0 : 0.15);
-      });
+    // 3. Right Column B (Chilonzor 62.3) — 5 cols x 5 rows = 25 wide-spaced dots
+    for (let r = 0; r < 5; r++) {
+      const y = -0.64 + (r / 4) * 0.72;
+      for (let c = 0; c < 5; c++) {
+        const x = 0.20 + (c / 4) * 0.58;
+        pts.push([x, y, -0.02]);
+        acc.push(r === 4 && c === 2 ? 1.0 : 0.15);
+      }
     }
-
-    // --- COMPARISON BRIDGES & CRISP CURVED ADVANTAGE TRAJECTORY (66 pts -> Total 300 pts) ---
-    const bridge1 = segment([-0.18, -0.22, 0.02], [0.18, -0.22, 0.02], 9);
-    const bridge2 = segment([-0.18, -0.46, 0.02], [0.18, -0.46, 0.02], 9);
-    [...bridge1, ...bridge2].forEach((p, i) => {
-      pts.push(p);
-      acc.push(i === 4 || i === 13 ? 1.0 : 0.15);
-    });
-
-    for (let i = 0; i < 32; i++) {
-      const t = i / 31;
-      const x = 0.47 - t * 0.65;
-      const y = 0.18 + Math.pow(t, 0.82) * 0.72;
-      pts.push([x, y, 0.12]);
-      acc.push(i === 0 || i === 16 || i === 31 ? 1.0 : 0.15);
-    }
-
-    const arrowL = segment([-0.18, 0.90, 0.12], [-0.15, 0.66, 0.12], 8);
-    const arrowR = segment([-0.18, 0.90, 0.12], [0.06, 0.88, 0.12], 8);
-    [...arrowL, ...arrowR].forEach((p) => {
-      pts.push(p);
-      acc.push(0.15);
-    });
 
     return fill(pts, acc);
   })();
 
-  // 5. HowItWorks (steps): Exact Tangent Teardrop Map Pin (📍) + 3 Concentric Isochrone Radius Rings
-  // Directly visualizes: 01 Xaritadan nuqta belgilang -> 02 Toifa va radiusni tanlang (300m-1km) -> 03 MakonScore
+  // 5. HowItWorks (steps): Non-Overlapping Geolocation Map Pin (📍) + 2 Clean Target Rings Underneath
+  // Pin sits cleanly at y in [-0.14, +0.86]; Target rings sit below at y = -0.54 -> ZERO overlap! (77 unique dots total)
   const steps = (() => {
     const pts: Vec3[] = [];
     const acc: number[] = [];
 
-    const cyPin = 0.42;
-    const rPin = 0.40;
-    const tipY = -0.36;
+    const cyPin = 0.48;
+    const rPin = 0.38;
+    const tipY = -0.14;
 
-    const buildPinContour = (scale: number, nArc: number, nLeg: number, z: number): Vec3[] => {
-      const out: Vec3[] = [];
-      const r = rPin * scale;
-      const yT = cyPin - (cyPin - tipY) * scale;
-      const aStart = (-30 * Math.PI) / 180;
-      const aEnd = (210 * Math.PI) / 180;
-      for (let i = 0; i < nArc; i++) {
-        const t = i / (nArc - 1);
-        const a = aStart + t * (aEnd - aStart);
-        out.push([Math.cos(a) * r, cyPin + Math.sin(a) * r, z]);
-      }
-      const pLeft: Vec3 = [Math.cos(aEnd) * r, cyPin + Math.sin(aEnd) * r, z];
-      const pRight: Vec3 = [Math.cos(aStart) * r, cyPin + Math.sin(aStart) * r, z];
-      const pTip: Vec3 = [0, yT, z];
-      const leftLeg = segment(pLeft, pTip, nLeg).slice(1);
-      const rightLeg = segment(pTip, pRight, nLeg).slice(1, -1);
-      return [...out, ...leftLeg, ...rightLeg];
-    };
-
-    // Outer Pin Contour: 83 pts (4 beacons)
-    const outerPin = buildPinContour(1.0, 42, 22, 0.12);
-    outerPin.forEach((p, i) => {
+    // 1. Crisp Teardrop Map Pin Contour: 18 arc dots + 7 left leg + 7 right leg = 32 wide-spaced dots
+    const aStart = (-30 * Math.PI) / 180;
+    const aEnd = (210 * Math.PI) / 180;
+    for (let i = 0; i < 18; i++) {
+      const t = i / 17;
+      const a = aStart + t * (aEnd - aStart);
+      pts.push([Math.cos(a) * rPin, cyPin + Math.sin(a) * rPin, 0.10]);
+      acc.push(i === 0 || i === 8 || i === 17 ? 1.0 : 0.15);
+    }
+    const pLeft: Vec3 = [Math.cos(aEnd) * rPin, cyPin + Math.sin(aEnd) * rPin, 0.10];
+    const pRight: Vec3 = [Math.cos(aStart) * rPin, cyPin + Math.sin(aStart) * rPin, 0.10];
+    const pTip: Vec3 = [0, tipY, 0.10];
+    const leftLeg = segment(pLeft, pTip, 8).slice(1);
+    const rightLeg = segment(pTip, pRight, 9).slice(1, -1);
+    leftLeg.forEach((p, i) => {
       pts.push(p);
-      const isB = i === 0 || i === 21 || i === 41 || i === 62;
-      acc.push(isB ? 1.0 : 0.15);
+      acc.push(i === 6 ? 1.0 : 0.15);
     });
-
-    // Inner Pin Contour: 61 pts
-    const innerPin = buildPinContour(0.84, 32, 16, 0.08);
-    innerPin.forEach((p) => {
+    rightLeg.forEach((p) => {
       pts.push(p);
       acc.push(0.15);
     });
 
-    // Inner Donut Circle inside the Map Pin head + center bullseye beacon: 29 pts (5 beacons)
-    pts.push([0, cyPin, 0.16]);
+    // 2. Pin Eye Circle at (0, 0.48): 1 center bullseye beacon + 10 ring dots (r = 0.14) = 11 dots
+    pts.push([0, cyPin, 0.14]);
     acc.push(1.0);
-    for (let i = 0; i < 28; i++) {
-      const a = (i / 28) * Math.PI * 2;
-      pts.push([Math.cos(a) * 0.17, cyPin + Math.sin(a) * 0.17, 0.14]);
-      acc.push(i % 7 === 0 ? 1.0 : 0.15);
+    for (let i = 0; i < 10; i++) {
+      const a = (i / 10) * Math.PI * 2;
+      pts.push([Math.cos(a) * 0.14, cyPin + Math.sin(a) * 0.14, 0.12]);
+      acc.push(i === 0 || i === 5 ? 1.0 : 0.15);
     }
 
-    // 3 Concentric Perspective Isochrone Radius Rings (300m, 500m, 1km) around the pinpoint target (127 pts -> Total 300 pts)
-    const targetY = -0.44;
+    // 3. 2 Clean Concentric Isochrone Target Rings cleanly below the pin at y = -0.54: 12 + 22 = 34 wide-spaced dots
+    const targetY = -0.54;
     const rings = [
-      { rx: 0.38, ry: 0.15, n: 29, z: 0.02, beacons: [0, 14] },
-      { rx: 0.68, ry: 0.27, n: 42, z: -0.04, beacons: [0, 21] },
-      { rx: 0.98, ry: 0.39, n: 56, z: -0.10, beacons: [0] },
+      { rx: 0.38, ry: 0.11, n: 12, z: 0.02, beacons: [0, 6] },
+      { rx: 0.84, ry: 0.24, n: 22, z: -0.04, beacons: [0, 5, 11, 16] },
     ];
     rings.forEach((rg) => {
       for (let i = 0; i < rg.n; i++) {
         const a = (i / rg.n) * Math.PI * 2;
-        const x = Math.cos(a) * rg.rx;
-        const y = targetY + Math.sin(a) * rg.ry;
-        const z = rg.z + Math.sin(a) * 0.08;
-        pts.push([x, y, z]);
+        pts.push([Math.cos(a) * rg.rx, targetY + Math.sin(a) * rg.ry, rg.z]);
         acc.push(rg.beacons.includes(i) ? 1.0 : 0.15);
       }
     });
@@ -565,212 +393,152 @@ const buildFormations = (): Record<MorphShape, Formation> => {
     return fill(pts, acc);
   })();
 
-  // 6. IndustrySolutions (clusters): Central Hexagonal AI Core + 4 Distinct Quadrant Sector Hexagons
-  // Directly visualizes: Central AI Hub + 4 Distinct Business Sectors (HoReCa, Retail, Dorixona, Ko'chmas Mulk)
+  // 6. IndustrySolutions (clusters): 4 Clean Quadrant Sector Matrices (4x4 = 16 dots each) + Minimalist Center Crosshair
+  // Directly visualizes 4 distinct business sectors (HoReCa, Retail, Dorixona, Ko'chmas Mulk): 64 + 17 = 81 unique dots!
   const clusters = (() => {
     const pts: Vec3[] = [];
     const acc: number[] = [];
 
-    const addHexHub = (
-      cx: number,
-      cy: number,
-      cz: number,
-      rOuter: number,
-      nSideOuter: number,
-      nSideInner: number,
-      extraCenterBeacons = false
-    ) => {
-      pts.push([cx, cy, cz + 0.06]);
-      acc.push(1.0);
-
-      const vertsO: Vec3[] = [];
-      const vertsI: Vec3[] = [];
-      for (let k = 0; k < 6; k++) {
-        const a = (k * Math.PI) / 3 + Math.PI / 6;
-        vertsO.push([cx + Math.cos(a) * rOuter, cy + Math.sin(a) * rOuter, cz]);
-        vertsI.push([
-          cx + Math.cos(a) * (rOuter * 0.56),
-          cy + Math.sin(a) * (rOuter * 0.56),
-          cz + 0.03,
-        ]);
-      }
-      for (let k = 0; k < 6; k++) {
-        const edge = segment(vertsO[k], vertsO[(k + 1) % 6], nSideOuter).slice(0, -1);
-        edge.forEach((p, idx) => {
-          pts.push(p);
-          acc.push(extraCenterBeacons && idx === 0 && k < 4 ? 1.0 : 0.15);
-        });
-      }
-      for (let k = 0; k < 6; k++) {
-        const edge = segment(vertsI[k], vertsI[(k + 1) % 6], nSideInner).slice(0, -1);
-        edge.forEach((p) => {
-          pts.push(p);
-          acc.push(0.15);
-        });
-      }
-    };
-
-    // 1. Central Command Hexagon at (0, 0): 61 pts (5 beacons)
-    addHexHub(0, 0, 0.10, 0.34, 7, 5, true);
-
-    // 2. 4 Sector Satellite Hexagons well-separated in the 4 quadrants: 196 pts (4 beacons)
-    const sectors: Vec3[] = [
-      [-0.66, 0.58, 0.02],  // HoReCa
-      [0.66, 0.58, 0.02],   // Retail
-      [-0.66, -0.58, 0.02], // Dorixona
-      [0.66, -0.58, 0.02],  // Ko'chmas Mulk
+    // 1. 4 Quadrant 4x4 Dot-Matrix Blocks (16 dots each = 64 wide-spaced dots)
+    const quads = [
+      { cx: -0.52, cy: 0.52 },  // HoReCa
+      { cx: 0.52, cy: 0.52 },   // Retail
+      { cx: -0.52, cy: -0.52 }, // Dorixona
+      { cx: 0.52, cy: -0.52 },  // Ko'chmas Mulk
     ];
-    sectors.forEach(([sx, sy, sz]) => {
-      addHexHub(sx, sy, sz, 0.25, 6, 4, false);
+    quads.forEach((q) => {
+      for (let r = 0; r < 4; r++) {
+        const y = q.cy - 0.24 + (r / 3) * 0.48;
+        for (let c = 0; c < 4; c++) {
+          const x = q.cx - 0.24 + (c / 3) * 0.48;
+          pts.push([x, y, 0.04]);
+          const isOuterCorner =
+            (q.cx < 0 && c === 0 && ((q.cy > 0 && r === 3) || (q.cy < 0 && r === 0))) ||
+            (q.cx > 0 && c === 3 && ((q.cy > 0 && r === 3) || (q.cy < 0 && r === 0)));
+          const isInnerHub =
+            (q.cx < 0 && c === 2 && ((q.cy > 0 && r === 1) || (q.cy < 0 && r === 2))) ||
+            (q.cx > 0 && c === 1 && ((q.cy > 0 && r === 1) || (q.cy < 0 && r === 2)));
+          acc.push(isOuterCorner || isInnerHub ? 1.0 : 0.15);
+        }
+      }
     });
 
-    // 3. 4 Radial Laser Bridges from Central Hub to the 4 Sector Hubs: 43 pts -> Total 300 pts (5 beacons)
-    sectors.forEach(([sx, sy], sIdx) => {
-      const p1: Vec3 = [sx * 0.38, sy * 0.38, 0.08];
-      const p2: Vec3 = [sx * 0.72, sy * 0.72, 0.04];
-      const nPts = sIdx < 3 ? 11 : 10;
-      const bridge = segment(p1, p2, nPts);
-      bridge.forEach((p, idx) => {
-        pts.push(p);
-        acc.push(idx === 5 || (sIdx === 0 && idx === 0) ? 1.0 : 0.15);
-      });
+    // 2. Minimalist Central Axis Crosshair (+) separating the 4 sectors: 9 horizontal + 8 vertical = 17 dots
+    const hAxis = segment([-0.84, 0, 0.08], [0.84, 0, 0.08], 9);
+    hAxis.forEach((p, i) => {
+      pts.push(p);
+      acc.push(i === 0 || i === 4 || i === 8 ? 1.0 : 0.15);
+    });
+    const vAxis = segment([0, -0.84, 0.08], [0, 0.84, 0.08], 9);
+    vAxis.forEach((p, i) => {
+      if (i === 4) return;
+      pts.push(p);
+      acc.push(i === 0 || i === 8 ? 1.0 : 0.15);
     });
 
     return fill(pts, acc);
   })();
 
-  // 7. RoiCalculator (bars): 4 Crisp Ascending Financial Columns + High-Clearance Breakout Trend Arrow (📈)
-  // Directly visualizes: Sarmoyangizni hisoblang — ROI Kalkulyatori & Capital Protection Growth
+  // 7. RoiCalculator (bars): 4 Minimalist 3-Column Ascending Bars + Single Trend Arrow (NO Y-axis, NO double curves!)
+  // 15 baseline + 72 bar dots + 16 arrow dots = 103 unique wide-spaced dots total!
   const bars = (() => {
     const pts: Vec3[] = [];
     const acc: number[] = [];
 
-    // Horizontal X-Axis baseline at y = -0.84: 32 pts (2 beacons)
-    const baseAxis = segment([-0.92, -0.84, 0], [0.92, -0.84, 0], 32);
+    // 1. Clean Horizontal Baseline at y = -0.84: 15 wide-spaced dots
+    const baseAxis = segment([-0.86, -0.84, 0], [0.86, -0.84, 0], 15);
     baseAxis.forEach((p, i) => {
       pts.push(p);
-      acc.push(i === 0 || i === 31 ? 1.0 : 0.15);
+      acc.push(i === 0 || i === 14 ? 1.0 : 0.15);
     });
 
-    // 4 Ascending Rectangular Columns (kept below y = +0.46 so the trend arrow soars cleanly above!): 224 pts (6 beacons)
-    const barsCfg = [
-      { x1: -0.78, x2: -0.50, yTop: -0.46, nSide: 10, nFillRows: 3 },
-      { x1: -0.34, x2: -0.06, yTop: -0.16, nSide: 14, nFillRows: 5 },
-      { x1: 0.10, x2: 0.38, yTop: 0.14, nSide: 18, nFillRows: 7 },
-      { x1: 0.54, x2: 0.82, yTop: 0.46, nSide: 22, nFillRows: 9 },
+    // 2. 4 Ascending 3-Column Dot-Matrix Bars: 9 + 15 + 21 + 27 = 72 wide-spaced dots
+    const barDefs = [
+      { x1: -0.80, x2: -0.56, rows: 3 },
+      { x1: -0.36, x2: -0.12, rows: 5 },
+      { x1: 0.08, x2: 0.32, rows: 7 },
+      { x1: 0.52, x2: 0.76, rows: 9 },
     ];
-    barsCfg.forEach((b, bIdx) => {
-      const leftW = segment([b.x1, -0.84, 0.04], [b.x1, b.yTop, 0.04], b.nSide);
-      const rightW = segment([b.x2, -0.84, 0.04], [b.x2, b.yTop, 0.04], b.nSide);
-      const topCap = segment([b.x1, b.yTop, 0.06], [b.x2, b.yTop, 0.06], 6);
-
-      leftW.forEach((p, i) => {
-        pts.push(p);
-        acc.push(bIdx === 3 && i === b.nSide - 1 ? 1.0 : 0.15);
-      });
-      rightW.forEach((p, i) => {
-        pts.push(p);
-        acc.push(bIdx === 3 && i === b.nSide - 1 ? 1.0 : 0.15);
-      });
-      topCap.forEach((p, i) => {
-        pts.push(p);
-        acc.push(i === 2 ? 1.0 : 0.15);
-      });
-
-      for (let r = 1; r <= b.nFillRows; r++) {
-        const yr = -0.84 + (r / (b.nFillRows + 1)) * (b.yTop - -0.84);
-        const row = segment([b.x1 + 0.06, yr, 0.02], [b.x2 - 0.06, yr, 0.02], 3);
-        row.forEach((p) => {
-          pts.push(p);
-          acc.push(0.15);
-        });
+    barDefs.forEach((b) => {
+      for (let r = 0; r < b.rows; r++) {
+        const y = -0.68 + r * 0.13;
+        for (let c = 0; c < 3; c++) {
+          const x = b.x1 + (c / 2) * (b.x2 - b.x1);
+          pts.push([x, y, 0.04]);
+          acc.push(r === b.rows - 1 && c === 1 ? 1.0 : 0.15);
+        }
       }
     });
 
-    // High-Clearance Breakout Trend Curve + Arrowhead at (+0.74, +0.94): 44 pts -> Total 300 pts (6 beacons)
-    for (let i = 0; i < 28; i++) {
-      const t = i / 27;
-      const x = -0.76 + t * 1.50;
-      const y = -0.18 + Math.pow(t, 1.12) * 1.12;
-      pts.push([x, y, 0.14]);
-      const isB = i === 0 || i === 9 || i === 18 || i === 27;
-      acc.push(isB ? 1.0 : 0.15);
+    // 3. Single-Line Rising Breakout Arrow (↗) cleanly above the bars: 10 curve + 3 + 3 wings = 16 wide-spaced dots
+    for (let i = 0; i < 10; i++) {
+      const t = i / 9;
+      const x = -0.72 + t * 1.44;
+      const y = -0.16 + Math.pow(t, 1.10) * 1.04;
+      pts.push([x, y, 0.12]);
+      acc.push(i === 0 || i === 5 || i === 9 ? 1.0 : 0.15);
     }
-
-    const wingL = segment([0.74, 0.94, 0.16], [0.46, 0.90, 0.16], 8);
-    const wingR = segment([0.74, 0.94, 0.16], [0.70, 0.66, 0.16], 8);
-    wingL.forEach((p, i) => {
+    const wingL = segment([0.72, 0.88, 0.14], [0.46, 0.84, 0.14], 4).slice(1);
+    const wingR = segment([0.72, 0.88, 0.14], [0.68, 0.62, 0.14], 4).slice(1);
+    [...wingL, ...wingR].forEach((p, i) => {
       pts.push(p);
-      acc.push(i === 7 ? 1.0 : 0.15);
-    });
-    wingR.forEach((p, i) => {
-      pts.push(p);
-      acc.push(i === 7 ? 1.0 : 0.15);
+      acc.push(i === 2 || i === 5 ? 1.0 : 0.15);
     });
 
     return fill(pts, acc);
   })();
 
-  // 8. FaqSection (ring): Sculptural Question Mark (?) Emblem + 6-Node Knowledge Halo Ring
-  // Directly visualizes: Ko'p so'raladigan savollar (6 FAQs)
+  // 8. FaqSection (ring): Single Clean Halo Ring + Single-Line Crisp Question Mark (?)
+  // 36 outer ring dots + 18 single-line question mark dots + 7 bottom dot = 61 unique wide-spaced dots total!
   const ring = (() => {
     const pts: Vec3[] = [];
     const acc: number[] = [];
 
-    // 1. Outer Knowledge Halo Ring (r = 1.04) with 6 emerald beacons for the 6 FAQs: 84 pts (6 beacons)
-    for (let i = 0; i < 84; i++) {
-      const a = (i / 84) * Math.PI * 2;
-      pts.push([Math.cos(a) * 1.04, Math.sin(a) * 1.04, -0.06]);
-      acc.push(i % 14 === 0 ? 1.0 : 0.15);
+    // 1. Single Crisp Outer Halo Ring (r = 0.94) with 6 beacons for the 6 FAQs: 36 wide-spaced dots
+    for (let i = 0; i < 36; i++) {
+      const a = (i / 36) * Math.PI * 2;
+      pts.push([Math.cos(a) * 0.94, Math.sin(a) * 0.94, -0.04]);
+      acc.push(i % 6 === 0 ? 1.0 : 0.15);
     }
 
-    // 2. Sculptural 3-Ribbon Question Mark (?) in the center: 186 pts (6 beacons)
-    const questionCurve = (t: number, offset: number): Vec3 => {
+    // 2. Single-Track Crisp Question Mark (?) in the center: 18 wide-spaced dots
+    const questionCurve = (t: number): Vec3 => {
       if (t <= 0.62) {
         const u = t / 0.62;
         const a = (165 - u * 210) * (Math.PI / 180);
-        const r = 0.38 + offset;
-        const cx = 0.0, cy = 0.34;
+        const r = 0.36;
+        const cx = 0.0, cy = 0.28;
         return [cx + Math.cos(a) * r, cy + Math.sin(a) * r, 0.10];
       } else if (t <= 0.82) {
         const u = (t - 0.62) / 0.20;
         const aStart = (-45 * Math.PI) / 180;
-        const r = 0.38 + offset;
+        const r = 0.36;
         const x0 = Math.cos(aStart) * r;
-        const y0 = 0.34 + Math.sin(aStart) * r;
-        const x1 = offset;
-        const y1 = -0.06;
+        const y0 = 0.28 + Math.sin(aStart) * r;
+        const x1 = 0.0;
+        const y1 = -0.08;
         const ease = u * u * (3 - 2 * u);
         return [x0 + (x1 - x0) * ease, y0 + (y1 - y0) * ease, 0.12];
       } else {
         const u = (t - 0.82) / 0.18;
-        return [offset, -0.06 - u * 0.26, 0.12];
+        return [0.0, -0.08 - u * 0.22, 0.12];
       }
     };
 
-    const qOffsets = [-0.065, 0.0, 0.065];
-    qOffsets.forEach((off, oIdx) => {
-      for (let i = 0; i < 62; i++) {
-        const t = i / 61;
-        pts.push(questionCurve(t, off));
-        const isB =
-          oIdx === 1 && (i === 0 || i === 15 || i === 30 || i === 44 || i === 53 || i === 61);
-        acc.push(isB ? 1.0 : 0.15);
-      }
-    });
-
-    // 3. The Question Mark Bottom Dot at (0, -0.60): 30 pts -> Total 300 pts (2 beacons)
-    const dotY = -0.60;
-    pts.push([0, dotY, 0.16]);
-    acc.push(1.0);
-    for (let i = 0; i < 11; i++) {
-      const a = (i / 11) * Math.PI * 2;
-      pts.push([Math.cos(a) * 0.055, dotY + Math.sin(a) * 0.055, 0.15]);
-      acc.push(i === 0 ? 1.0 : 0.15);
-    }
     for (let i = 0; i < 18; i++) {
-      const a = (i / 18) * Math.PI * 2;
-      pts.push([Math.cos(a) * 0.105, dotY + Math.sin(a) * 0.105, 0.14]);
+      const t = i / 17;
+      pts.push(questionCurve(t));
+      const isB = i === 0 || i === 4 || i === 9 || i === 13 || i === 17;
+      acc.push(isB ? 1.0 : 0.15);
+    }
+
+    // 3. Question Mark Bottom Dot at (0, -0.52): 1 center + 6 ring dots = 7 dots -> Total 61 dots!
+    const dotY = -0.52;
+    pts.push([0, dotY, 0.14]);
+    acc.push(1.0);
+    for (let i = 0; i < 6; i++) {
+      const a = (i / 6) * Math.PI * 2;
+      pts.push([Math.cos(a) * 0.07, dotY + Math.sin(a) * 0.07, 0.12]);
       acc.push(0.15);
     }
 
@@ -781,6 +549,7 @@ const buildFormations = (): Record<MorphShape, Formation> => {
   const wordmark: Formation = {
     pts: WORDMARK_PTS,
     accent: WORDMARK_ACCENT,
+    weight: Array.from({ length: N }, () => 1.0),
   };
 
   return { map, globe: map, layers, cube, towers, steps, clusters, bars, ring, wordmark };
@@ -825,6 +594,7 @@ export const MorphObject: React.FC = () => {
     const sy = new Float32Array(N);
     const sz = new Float32Array(N);
     const sa = new Float32Array(N);
+    const sw = new Float32Array(N);
     const order = Array.from({ length: N }, (_, i) => i);
 
     let dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -964,13 +734,13 @@ export const MorphObject: React.FC = () => {
         canvas.style.zIndex = '1';
       }
 
-      // Aspect-ratio aware scaling: wide letterform bounds for wordmark and map, enlarged 3D presence for archetypes
+      // Aspect-ratio aware scaling: wide letterform bounds for wordmark and map, spacious dot-matrix scale for archetypes
       const aIsWide = A.shape === 'wordmark' || A.shape === 'map' || A.shape === 'globe';
       const bIsWide = B.shape === 'wordmark' || B.shape === 'map' || B.shape === 'globe';
-      const aRx = aIsWide ? A.width * 0.50 : A.size * 0.52;
-      const aRy = aIsWide ? (A.shape === 'wordmark' ? A.height * 0.50 : A.width * 0.50) : A.size * 0.52;
-      const bRx = bIsWide ? B.width * 0.50 : B.size * 0.52;
-      const bRy = bIsWide ? (B.shape === 'wordmark' ? B.height * 0.50 : B.width * 0.50) : B.size * 0.52;
+      const aRx = aIsWide ? A.width * 0.50 : A.size * 0.56;
+      const aRy = aIsWide ? (A.shape === 'wordmark' ? A.height * 0.50 : A.width * 0.50) : A.size * 0.56;
+      const bRx = bIsWide ? B.width * 0.50 : B.size * 0.56;
+      const bRy = bIsWide ? (B.shape === 'wordmark' ? B.height * 0.50 : B.width * 0.50) : B.size * 0.56;
       const Rx = lerp(aRx, bRx, e);
       const Ry = lerp(aRy, bRy, e);
       const size = lerp(A.size, B.size, e);
@@ -1027,6 +797,7 @@ export const MorphObject: React.FC = () => {
         sy[k] = cy - y2 * persp * Ry;
         sz[k] = z2;
         sa[k] = lerp(fa.accent[k], fb.accent[k], e);
+        sw[k] = lerp(fa.weight[k], fb.weight[k], e);
       }
 
       order.sort((i, j) => sz[i] - sz[j]);
@@ -1035,18 +806,21 @@ export const MorphObject: React.FC = () => {
       const base = dark ? [255, 255, 255] : [100, 116, 139]; // white in dark mode, slate in light mode
       const scale = clamp(size / 380, 0.85, 1.35);
 
-      /* -------- Render Solid Crisp 3D Dots & Halos (Matching Hero Map) -------- */
+      /* -------- Render Minimalist Crisp 3D Dots & Halos -------- */
       for (let n = 0; n < N; n++) {
         const k = order[n];
+        const pw = sw[k];
+        if (pw <= 0.005) continue;
+
         const depth = clamp((sz[k] + 1.4) / 2.8);
         const acc = sa[k];
         const isGreen = acc > 0.75;
 
-        // Opacity matching Uzbekistan map (0.42 to 0.82)
-        const alpha = (0.46 + wordmarkWeight * 0.15 + depth * 0.36 + (isGreen ? 0.20 : 0)) * globalAlpha * dotVisibility;
+        // Opacity modulated by minimalist active weight `pw`
+        const alpha = (0.52 + wordmarkWeight * 0.15 + depth * 0.34 + (isGreen ? 0.22 : 0)) * globalAlpha * dotVisibility * pw;
 
-        // Exact radius matching Hero Map (1.85px baseline, 2.9px for green beacon nodes)
-        const rad = (1.85 + depth * 0.30 + (isGreen ? 1.05 : 0)) * scale * dotScale;
+        // Crisp minimalist dot radius (1.95px baseline, 3.05px for green beacon nodes)
+        const rad = (1.95 + depth * 0.28 + (isGreen ? 1.10 : 0)) * scale * dotScale * (0.4 + 0.6 * pw);
 
         // Exact colors: green is #0E9F6E, white is pure white in dark mode or slate in light mode
         const r = isGreen ? ACCENT[0] : base[0];
@@ -1054,7 +828,7 @@ export const MorphObject: React.FC = () => {
         const bl = isGreen ? ACCENT[2] : base[2];
 
         // Refined emerald aura for green nodes (matching Hero map hub halos)
-        if (isGreen && dotVisibility > 0.08) {
+        if (isGreen && dotVisibility * pw > 0.08) {
           ctx.fillStyle = `rgba(14,159,110,${(0.24 + depth * 0.12) * alpha * dotVisibility})`;
           ctx.beginPath();
           ctx.arc(sx[k], sy[k], rad * 2.4, 0, Math.PI * 2);
