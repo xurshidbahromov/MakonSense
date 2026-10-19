@@ -50,7 +50,7 @@ export const CompetitorsRadar: React.FC = () => {
   return (
     <div className="space-y-3">
       {/* Risk Summary Banner */}
-      <div className="bg-black/[0.025] dark:bg-white/[0.03] border border-black/[0.06] dark:border-white/[0.07] rounded-xl p-3.5 flex items-center justify-between">
+      <div className="spatial-glass-subcard rounded-2xl p-3.5 flex items-center justify-between">
         <div className="flex items-center gap-2.5">
           <div className="p-2 rounded-lg bg-amber-500/10 text-amber-500 border border-amber-500/25">
             <ShieldAlert className="w-4 h-4" />
@@ -86,7 +86,7 @@ export const CompetitorsRadar: React.FC = () => {
         </div>
 
         {competitors.length === 0 ? (
-          <div className="bg-black/[0.02] dark:bg-white/[0.02] border border-dashed border-black/[0.12] dark:border-white/[0.12] rounded-xl p-5 text-center space-y-1.5">
+          <div className="spatial-glass-subcard border-dashed rounded-2xl p-5 text-center space-y-1.5">
             <CheckCircle className="w-5 h-5 text-[#0E9F6E] mx-auto" />
             <div className="text-xs font-bold text-[#111111] dark:text-[#FDFDFD]">
               To‘g‘ridan-to‘g‘ri raqobatchi aniqlanmadi
@@ -110,7 +110,7 @@ export const CompetitorsRadar: React.FC = () => {
                     });
                   }
                 }}
-                className="bg-white dark:bg-[#161618] border border-black/[0.07] dark:border-white/[0.08] hover:border-[#0E9F6E]/50 rounded-xl p-3 flex items-center justify-between transition-colors cursor-pointer group"
+                className="spatial-glass-subcard hover:border-[#0E9F6E]/50 rounded-2xl p-3 flex items-center justify-between transition-colors cursor-pointer group"
               >
                 <div className="space-y-1 min-w-0 flex-1 pr-2">
                   <div className="flex items-center gap-2">

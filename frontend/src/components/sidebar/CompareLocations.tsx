@@ -44,7 +44,7 @@ export const CompareLocations: React.FC = () => {
   return (
     <div className="space-y-3.5">
       {/* Header + Interactive Map Pick & Swap Buttons */}
-      <div className="bg-black/[0.025] dark:bg-white/[0.03] border border-black/[0.06] dark:border-white/[0.07] rounded-xl p-3 flex items-center justify-between gap-2">
+      <div className="spatial-glass-subcard rounded-2xl p-3 flex items-center justify-between gap-2">
         <div className="flex items-center gap-2.5 min-w-0">
           <div className="p-2 rounded-lg bg-indigo-500/10 text-indigo-500 border border-indigo-500/25 shrink-0">
             <GitCompare className="w-4 h-4" />
@@ -101,10 +101,10 @@ export const CompareLocations: React.FC = () => {
                 type="button"
                 aria-pressed={isSelected}
                 onClick={() => setCompareCoords({ latitude: bm.lat, longitude: bm.lon })}
-                className={`press-scale px-2.5 py-1.5 rounded-lg text-[11px] font-medium text-left truncate cursor-pointer ${
+                className={`press-scale px-2.5 py-1.5 rounded-xl text-[11px] font-medium text-left truncate cursor-pointer ${
                   isSelected
                     ? 'bg-indigo-600 text-white font-semibold shadow-sm'
-                    : 'bg-white dark:bg-[#161618] text-[#525854] dark:text-[#D1D5DB] border border-black/[0.07] dark:border-white/[0.08] hover:border-indigo-500/50'
+                    : 'spatial-glass-subcard text-[#525854] dark:text-[#D1D5DB] hover:border-indigo-500/50'
                 }`}
               >
                 {bm.name}
@@ -115,7 +115,7 @@ export const CompareLocations: React.FC = () => {
       </div>
 
       {/* Head-to-Head Comparison Matrix */}
-      <div className="bg-white dark:bg-[#161618] border border-black/[0.07] dark:border-white/[0.08] rounded-xl overflow-hidden text-xs tabular-nums select-text">
+      <div className="spatial-glass-subcard rounded-2xl overflow-hidden text-xs tabular-nums select-text">
         <div className="grid grid-cols-3 bg-black/[0.03] dark:bg-white/[0.04] px-3 py-2.5 border-b border-black/[0.06] dark:border-white/[0.07] font-semibold text-[11px]">
           <div className="text-[#7A807C] dark:text-[#9CA3AF]">Mezon</div>
           <div className="text-center text-[#0E9F6E] truncate px-1">A: {labelA}</div>

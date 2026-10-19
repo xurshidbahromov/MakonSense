@@ -20,6 +20,9 @@ import {
   X,
   ArrowLeftRight,
   Undo2,
+  Plus,
+  Minus,
+  Compass,
 } from 'lucide-react';
 
 const OPENFREEMAP_LIGHT_STYLE = 'https://tiles.openfreemap.org/styles/positron';
@@ -175,7 +178,11 @@ export const MapView: React.FC = () => {
       attributionControl: false,
     });
 
-    map.addControl(new maplibregl.NavigationControl({ showCompass: true }), 'bottom-right');
+    // Apply optical padding on desktop so the selected pin centers in the visible map area
+    // to the left of the floating Analytics Island
+    if (window.innerWidth >= 768) {
+      map.setPadding({ top: 72, bottom: 24, left: 40, right: 450 });
+    }
 
     const deckOverlay = new MapboxOverlay({
       interleaved: false,
@@ -225,8 +232,12 @@ export const MapView: React.FC = () => {
 
   useEffect(() => {
     if (!mapRef.current) return;
+    const padRight = window.innerWidth >= 768 ? 450 : 0;
+    const padTop = window.innerWidth >= 768 ? 72 : 110;
+    const padBottom = window.innerWidth >= 768 ? 24 : Math.round(window.innerHeight * 0.44);
     mapRef.current.flyTo({
       center: [selectedCoords.longitude, selectedCoords.latitude],
+      padding: { top: padTop, bottom: padBottom, left: 24, right: padRight },
       speed: 1.25,
       curve: 1.35,
       essential: true,
@@ -235,8 +246,10 @@ export const MapView: React.FC = () => {
 
   useEffect(() => {
     if (!mapRef.current || !highlightedPoiCoords) return;
+    const padRight = window.innerWidth >= 768 ? 450 : 0;
     mapRef.current.easeTo({
       center: [highlightedPoiCoords.longitude, highlightedPoiCoords.latitude],
+      padding: { top: 72, bottom: 24, left: 24, right: padRight },
       zoom: Math.max(mapRef.current.getZoom(), 14.8),
       duration: 500,
     });
@@ -603,14 +616,14 @@ export const MapView: React.FC = () => {
       {/* MapLibre Canvas Container */}
       <div ref={mapContainerRef} className="w-full h-full" />
 
-      {/* Top-Left Quick City/Hub Jumper Bar + GPS Locate + Undo Button */}
-      <div className="absolute top-3.5 left-3.5 z-20 flex items-center gap-1.5 max-w-[calc(100%-290px)] overflow-x-auto no-scrollbar">
+      {/* Sub-Navbar Top-Left Floating Island: GPS + Undo + Quick City/Hub Jumper */}
+      <div className="hidden sm:flex absolute top-[72px] left-3 sm:left-4 z-20 items-center gap-1.5 max-w-[calc(100vw-480px)] overflow-x-auto no-scrollbar">
         <button
           type="button"
           onClick={handleGeolocate}
           title="Mening joylashuvim (GPS)"
           aria-label="Mening joylashuvimni aniqlash (GPS)"
-          className="press-scale flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-white/95 dark:bg-[#161618]/95 backdrop-blur-xl border border-black/[0.08] dark:border-white/[0.1] shadow-md text-[11px] font-semibold text-[#111111] dark:text-[#FDFDFD] hover:border-[#0E9F6E] shrink-0 cursor-pointer"
+          className="press-scale h-[38px] flex items-center gap-1.5 px-3 rounded-full spatial-glass-island text-[11px] font-semibold text-[#111111] dark:text-[#FDFDFD] hover:border-[#0E9F6E] shrink-0 cursor-pointer"
         >
           <LocateFixed className="w-3.5 h-3.5 text-[#0E9F6E]" aria-hidden="true" />
           <span className="hidden xl:inline">GPS</span>
@@ -622,14 +635,14 @@ export const MapView: React.FC = () => {
             onClick={goBackLocation}
             title="Oldingi ko'rilgan nuqtaga qaytish"
             aria-label="Oldingi nuqtaga qaytish"
-            className="press-scale flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-white/95 dark:bg-[#161618]/95 backdrop-blur-xl border border-black/[0.08] dark:border-white/[0.1] shadow-md text-[11px] font-semibold text-[#111111] dark:text-[#FDFDFD] hover:border-[#0E9F6E] shrink-0 cursor-pointer"
+            className="press-scale h-[38px] flex items-center gap-1 px-3 rounded-full spatial-glass-island text-[11px] font-semibold text-[#111111] dark:text-[#FDFDFD] hover:border-[#0E9F6E] shrink-0 cursor-pointer"
           >
             <Undo2 className="w-3.5 h-3.5 text-[#0E9F6E]" aria-hidden="true" />
             <span className="hidden xl:inline">Orqaga</span>
           </button>
         )}
 
-        <div className="hidden lg:flex items-center gap-1 bg-white/90 dark:bg-[#161618]/90 backdrop-blur-xl border border-black/[0.08] dark:border-white/[0.1] p-1 rounded-xl shadow-md">
+        <div className="hidden lg:flex items-center gap-1 spatial-glass-island h-[38px] p-1 rounded-full">
           {QUICK_JUMP_HUBS.map((hub) => {
             const isActive =
               Math.abs(selectedCoords.latitude - hub.lat) < 0.004 &&
@@ -639,9 +652,9 @@ export const MapView: React.FC = () => {
                 key={hub.label}
                 type="button"
                 onClick={() => setSelectedCoords({ latitude: hub.lat, longitude: hub.lon })}
-                className={`press-scale px-2.5 py-1 rounded-[8px] text-[10px] font-medium whitespace-nowrap cursor-pointer ${
+                className={`press-scale px-3 h-full rounded-full text-[11px] font-medium whitespace-nowrap cursor-pointer flex items-center ${
                   isActive
-                    ? 'bg-[#111111] text-white dark:bg-white dark:text-[#111111] font-semibold'
+                    ? 'bg-[#111111] text-white dark:bg-white dark:text-[#111111] font-semibold shadow-sm'
                     : 'text-[#525854] dark:text-[#9CA3AF] hover:text-[#111111] dark:hover:text-white'
                 }`}
               >
@@ -652,11 +665,11 @@ export const MapView: React.FC = () => {
         </div>
       </div>
 
-      {/* Interactive Mode Banner when Picking Location B on Map (Origin-aware, no infinite bounce) */}
+      {/* Interactive Mode Banner when Picking Location B on Map */}
       {isPickingCompareOnMap && (
         <div
           role="status"
-          className="popover-origin-tc absolute top-16 left-1/2 -translate-x-1/2 z-30 bg-indigo-600 text-white px-4 py-2 rounded-full shadow-2xl flex items-center gap-2.5 text-xs font-semibold"
+          className="popover-origin-tc absolute top-[74px] left-1/2 -translate-x-1/2 z-30 bg-indigo-600/95 backdrop-blur-2xl border border-indigo-400/30 text-white px-4 py-2 rounded-full shadow-2xl flex items-center gap-2.5 text-xs font-semibold"
         >
           <GitCompare className="w-4 h-4 shrink-0" aria-hidden="true" />
           <span>Solishtirish uchun xaritadan B nuqtani bosing (Esc — bekor qilish)</span>
@@ -671,13 +684,13 @@ export const MapView: React.FC = () => {
         </div>
       )}
 
-      {/* Floating HUD Layer Control */}
+      {/* Floating Left HUD Layer Control Island */}
       <LayerControl />
 
       {/* Floating Glass Hover Tooltip */}
       {hoverInfo && hoverInfo.object && (
         <div
-          className="absolute z-30 pointer-events-none transform -translate-x-1/2 -translate-y-full -mt-3 bg-white/95 dark:bg-[#161618]/95 backdrop-blur-xl border border-black/[0.08] dark:border-white/[0.1] px-3.5 py-2.5 rounded-xl shadow-2xl text-xs text-[#111111] dark:text-[#FDFDFD] max-w-xs space-y-1"
+          className="apple-glass-dropdown absolute z-30 pointer-events-none transform -translate-x-1/2 -translate-y-full -mt-3 px-3.5 py-2.5 rounded-2xl text-xs text-[#111111] dark:text-[#FDFDFD] max-w-xs space-y-1"
           style={{ left: hoverInfo.x, top: hoverInfo.y }}
         >
           {hoverInfo.type === 'transit' ? (
@@ -737,20 +750,58 @@ export const MapView: React.FC = () => {
         </div>
       )}
 
-      {/* Bottom Left Status & A/B Distance HUD */}
-      <div className="absolute bottom-3.5 left-3.5 z-20 flex flex-wrap items-center gap-2">
-        <div className="bg-white/95 dark:bg-[#161618]/95 backdrop-blur-xl border border-black/[0.08] dark:border-white/[0.1] px-3 py-1.5 rounded-xl text-[11px] text-[#111111] dark:text-[#FDFDFD] flex items-center gap-2 shadow-lg pointer-events-none">
+      {/* Bottom Left Zoom Controls & Live Status Island */}
+      <div className="hidden md:flex absolute bottom-3.5 left-3.5 sm:left-4 z-20 flex-wrap items-center gap-2 max-w-[calc(100vw-500px)]">
+        {/* Custom Frosted Glass Zoom & Compass Capsule */}
+        <div className="spatial-glass-island h-[38px] p-1 rounded-full flex items-center gap-0.5">
+          <button
+            type="button"
+            onClick={() => mapRef.current?.zoomIn({ duration: 250 })}
+            title="Yaqinlashtirish (+)"
+            aria-label="Xaritani yaqinlashtirish"
+            className="press-scale w-[30px] h-[30px] rounded-full flex items-center justify-center text-[#111111] dark:text-[#FDFDFD] hover:bg-black/[0.05] dark:hover:bg-white/[0.08] cursor-pointer"
+          >
+            <Plus className="w-3.5 h-3.5" />
+          </button>
+          <button
+            type="button"
+            onClick={() => mapRef.current?.zoomOut({ duration: 250 })}
+            title="Uzoqlashtirish (-)"
+            aria-label="Xaritani uzoqlashtirish"
+            className="press-scale w-[30px] h-[30px] rounded-full flex items-center justify-center text-[#111111] dark:text-[#FDFDFD] hover:bg-black/[0.05] dark:hover:bg-white/[0.08] cursor-pointer"
+          >
+            <Minus className="w-3.5 h-3.5" />
+          </button>
+          <button
+            type="button"
+            onClick={() =>
+              mapRef.current?.easeTo({
+                bearing: 0,
+                pitch: pitchMode === '3d' ? 42 : 0,
+                duration: 450,
+              })
+            }
+            title="Shimolga tekislash"
+            aria-label="Xaritani shimolga tekislash"
+            className="press-scale w-[30px] h-[30px] rounded-full flex items-center justify-center text-[#0E9F6E] hover:bg-black/[0.05] dark:hover:bg-white/[0.08] cursor-pointer"
+          >
+            <Compass className="w-3.5 h-3.5" />
+          </button>
+        </div>
+
+        {/* Live Status Pill Island */}
+        <div className="spatial-glass-island h-[38px] px-3.5 rounded-full text-[11px] text-[#111111] dark:text-[#FDFDFD] flex items-center gap-2 pointer-events-none">
           <span className="relative flex h-2 w-2" aria-hidden="true">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#0E9F6E] opacity-75" />
             <span className="relative inline-flex rounded-full h-2 w-2 bg-[#0E9F6E]" />
           </span>
-          <span className="font-medium">
+          <span className="font-medium truncate">
             Xaritadagi istalgan nuqtani bosing — MakonScore va ROI darhol yangilanadi
           </span>
         </div>
 
         {showComparePinOnMap && abDistanceMeters !== null && (
-          <div className="bg-indigo-600/95 backdrop-blur-xl text-white px-3 py-1.5 rounded-xl text-[11px] font-mono tabular-nums flex items-center gap-2 shadow-lg">
+          <div className="bg-indigo-600/90 backdrop-blur-2xl border border-indigo-400/30 text-white h-[38px] px-3.5 rounded-full text-[11px] font-mono tabular-nums flex items-center gap-2 shadow-lg">
             <span>
               A ↔ B masofa:{' '}
               <strong>
@@ -764,7 +815,7 @@ export const MapView: React.FC = () => {
               onClick={swapCompareLocations}
               title="A va B nuqtalarni almashtirish"
               aria-label="A va B nuqtalarni almashtirish"
-              className="press-scale p-0.5 rounded bg-white/15 hover:bg-white/25 cursor-pointer"
+              className="press-scale p-1 rounded-full bg-white/15 hover:bg-white/25 cursor-pointer"
             >
               <ArrowLeftRight className="w-3 h-3" />
             </button>
@@ -772,13 +823,13 @@ export const MapView: React.FC = () => {
         )}
 
         {highlightedPoiCoords && (
-          <div className="bg-amber-500/95 backdrop-blur-xl text-white px-3 py-1.5 rounded-xl text-[11px] font-medium flex items-center gap-2 shadow-lg">
+          <div className="bg-amber-500/90 backdrop-blur-2xl border border-amber-300/30 text-white h-[38px] px-3.5 rounded-full text-[11px] font-medium flex items-center gap-2 shadow-lg">
             <span>Tanlangan obyekt: {highlightedPoiCoords.name}</span>
             <button
               type="button"
               aria-label="Obyekt fokusini yopish"
               onClick={() => setHighlightedPoiCoords(null)}
-              className="press-scale p-0.5 rounded bg-white/20 hover:bg-white/30 cursor-pointer"
+              className="press-scale p-1 rounded-full bg-white/20 hover:bg-white/30 cursor-pointer"
             >
               <X className="w-3 h-3" />
             </button>

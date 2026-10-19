@@ -25,7 +25,7 @@ export const FootTrafficDynamics: React.FC = () => {
   return (
     <div className="space-y-3.5">
       {/* Header Banner + Weekday/Weekend Switcher */}
-      <div className="bg-black/[0.025] dark:bg-white/[0.03] border border-black/[0.06] dark:border-white/[0.07] rounded-xl p-3 flex items-center justify-between gap-2">
+      <div className="spatial-glass-subcard rounded-2xl p-3 flex items-center justify-between gap-2">
         <div className="flex items-center gap-2.5">
           <div className="p-2 rounded-lg bg-[#0E9F6E]/10 text-[#0E9F6E] border border-[#0E9F6E]/25">
             <Activity className="w-4 h-4" />
@@ -74,7 +74,7 @@ export const FootTrafficDynamics: React.FC = () => {
       </div>
 
       {/* Interactive Hourly Bar Chart */}
-      <div className="bg-white dark:bg-[#161618] border border-black/[0.07] dark:border-white/[0.08] rounded-xl p-3.5 space-y-3">
+      <div className="spatial-glass-subcard rounded-2xl p-3.5 space-y-3">
         <div className="flex items-center justify-between text-xs">
           <span className="font-semibold text-[#111111] dark:text-[#FDFDFD] flex items-center gap-1.5">
             <Clock className="w-3.5 h-3.5 text-[#0E9F6E]" />
@@ -135,7 +135,7 @@ export const FootTrafficDynamics: React.FC = () => {
 
         {/* Selected Slot Detail Strip */}
         {activeSlot && (
-          <div className="bg-black/[0.025] dark:bg-white/[0.03] border border-black/[0.05] dark:border-white/[0.06] rounded-lg p-2.5 flex items-center justify-between text-[11px]">
+          <div className="bg-black/[0.03] dark:bg-white/[0.04] border border-black/[0.05] dark:border-white/[0.06] rounded-xl p-2.5 flex items-center justify-between text-[11px]">
             <div className="flex items-center gap-2 min-w-0">
               <Flame className="w-3.5 h-3.5 text-amber-500 shrink-0" />
               <span className="text-[#525854] dark:text-[#D1D5DB] truncate font-medium">
@@ -152,7 +152,7 @@ export const FootTrafficDynamics: React.FC = () => {
       {/* Customer Funnel & Unit Economics Summary */}
       {fin && (
         <div className="grid grid-cols-2 gap-2.5 select-text">
-          <div className="bg-white dark:bg-[#161618] border border-black/[0.07] dark:border-white/[0.08] rounded-xl p-3 flex items-center gap-2.5">
+          <div className="spatial-glass-subcard rounded-2xl p-3 flex items-center gap-2.5">
             <div className="p-2 rounded-lg bg-[#0E9F6E]/10 text-[#0E9F6E]">
               <Users className="w-4 h-4" />
             </div>
@@ -166,7 +166,7 @@ export const FootTrafficDynamics: React.FC = () => {
             </div>
           </div>
 
-          <div className="bg-white dark:bg-[#161618] border border-black/[0.07] dark:border-white/[0.08] rounded-xl p-3 flex items-center gap-2.5">
+          <div className="spatial-glass-subcard rounded-2xl p-3 flex items-center gap-2.5">
             <div className="p-2 rounded-lg bg-indigo-500/10 text-indigo-500">
               <DollarSign className="w-4 h-4" />
             </div>

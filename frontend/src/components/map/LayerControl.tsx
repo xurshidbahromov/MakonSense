@@ -26,9 +26,9 @@ export const LayerControl: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false);
 
   return (
-    <div className=" absolute top-3.5 right-3.5 z-20 bg-white/95 dark:bg-[#161618]/95 backdrop-blur-2xl border border-black/[0.08] dark:border-white/[0.1] rounded-2xl p-3 shadow-xl space-y-2.5 select-none w-64">
+    <div className="hidden sm:block absolute top-[124px] left-3 sm:left-4 z-20 spatial-glass-island rounded-[22px] p-3 space-y-2.5 select-none w-60">
       {/* HUD Header */}
-      <div className="flex items-center justify-between pb-2 border-b border-black/[0.06] dark:border-white/[0.07]">
+      <div className="flex items-center justify-between pb-2 border-b border-black/[0.06] dark:border-white/[0.08]">
         <div className="flex items-center gap-2">
           <div className="w-6 h-6 rounded-[8px] bg-[#0E9F6E]/10 border border-[#0E9F6E]/25 flex items-center justify-center">
             <Layers className="w-3.5 h-3.5 text-[#0E9F6E]" aria-hidden="true" />

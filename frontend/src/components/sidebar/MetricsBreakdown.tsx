@@ -74,12 +74,12 @@ export const MetricsBreakdown: React.FC = () => {
   ];
 
   return (
-    <div className="bg-white dark:bg-[#141416] border border-black/[0.07] dark:border-white/[0.08] rounded-2xl p-3.5 sm:p-4 space-y-4 shadow-sm">
-      {/* 5-Tab Segmented Navigation — Concentric radius: outer rounded-xl (12px) - p-1 (4px) = inner rounded-[8px] */}
+    <div className="space-y-3.5">
+      {/* 5-Tab Segmented Navigation — Concentric radius: outer rounded-2xl (16px) - p-1 (4px) = inner rounded-xl (12px) */}
       <div
         role="tablist"
         aria-label="Fazoviy tahlil bo'limlari"
-        className="grid grid-cols-5 gap-1 bg-black/[0.04] dark:bg-white/[0.05] p-1 rounded-xl border border-black/[0.05] dark:border-white/[0.06] select-none"
+        className="grid grid-cols-5 gap-1 bg-black/[0.045] dark:bg-white/[0.06] p-1 rounded-2xl border border-black/[0.06] dark:border-white/[0.08] select-none"
       >
         {tabs.map((tab) => {
           const isActive = activeSidebarTab === tab.id;
@@ -90,7 +90,7 @@ export const MetricsBreakdown: React.FC = () => {
               role="tab"
               aria-selected={isActive}
               onClick={() => setActiveSidebarTab(tab.id)}
-              className={`press-scale flex items-center justify-center gap-1 py-1.5 px-1.5 rounded-[8px] text-[11px] font-semibold cursor-pointer ${
+              className={`press-scale flex items-center justify-center gap-1 py-1.5 px-1.5 rounded-xl text-[11px] font-semibold cursor-pointer ${
                 isActive
                   ? 'bg-[#111111] text-white dark:bg-white dark:text-[#111111] shadow-sm'
                   : 'text-[#6E7470] dark:text-[#9CA3AF] hover:text-[#111111] dark:hover:text-white'
@@ -107,7 +107,7 @@ export const MetricsBreakdown: React.FC = () => {
       {activeSidebarTab === 'factors' && (
         <div className="space-y-2.5">
           {/* 1. Transit Factor */}
-          <div className="bg-black/[0.02] dark:bg-white/[0.025] border border-black/[0.06] dark:border-white/[0.07] hover:border-[#0E9F6E]/40 rounded-xl p-3 space-y-2 transition-colors">
+          <div className="spatial-glass-subcard hover:border-[#0E9F6E]/40 rounded-2xl p-3 space-y-2 transition-colors">
             <div className="flex items-center justify-between text-xs">
               <div className="flex items-center gap-2">
                 <div className="p-1.5 rounded-lg bg-[#0E9F6E]/10 text-[#0E9F6E]">
@@ -162,7 +162,7 @@ export const MetricsBreakdown: React.FC = () => {
           </div>
 
           {/* 2. Anchor Magnets */}
-          <div className="bg-black/[0.02] dark:bg-white/[0.025] border border-black/[0.06] dark:border-white/[0.07] hover:border-[#0E9F6E]/40 rounded-xl p-3 space-y-2 transition-colors">
+          <div className="spatial-glass-subcard hover:border-[#0E9F6E]/40 rounded-2xl p-3 space-y-2 transition-colors">
             <div className="flex items-center justify-between text-xs">
               <div className="flex items-center gap-2">
                 <div className="p-1.5 rounded-lg bg-indigo-500/10 text-indigo-500">
@@ -223,7 +223,7 @@ export const MetricsBreakdown: React.FC = () => {
           </div>
 
           {/* 3. Competition Density */}
-          <div className="bg-black/[0.02] dark:bg-white/[0.025] border border-black/[0.06] dark:border-white/[0.07] hover:border-amber-500/40 rounded-xl p-3 space-y-2 transition-colors">
+          <div className="spatial-glass-subcard hover:border-amber-500/40 rounded-2xl p-3 space-y-2 transition-colors">
             <div className="flex items-center justify-between text-xs">
               <div className="flex items-center gap-2">
                 <div className="p-1.5 rounded-lg bg-amber-500/10 text-amber-500">
@@ -269,7 +269,7 @@ export const MetricsBreakdown: React.FC = () => {
           </div>
 
           {/* 4. Residential Density */}
-          <div className="bg-black/[0.02] dark:bg-white/[0.025] border border-black/[0.06] dark:border-white/[0.07] hover:border-[#0E9F6E]/40 rounded-xl p-3 space-y-2 transition-colors">
+          <div className="spatial-glass-subcard hover:border-[#0E9F6E]/40 rounded-2xl p-3 space-y-2 transition-colors">
             <div className="flex items-center justify-between text-xs">
               <div className="flex items-center gap-2">
                 <div className="p-1.5 rounded-lg bg-[#0E9F6E]/10 text-[#0E9F6E]">
@@ -304,7 +304,7 @@ export const MetricsBreakdown: React.FC = () => {
           </div>
 
           {/* 5. Interactive Commercial Space & Rent Simulator */}
-          <div className="bg-[#0E9F6E]/[0.05] dark:bg-[#0E9F6E]/[0.08] border border-[#0E9F6E]/25 rounded-xl p-3 space-y-2.5">
+          <div className="bg-[#0E9F6E]/[0.07] dark:bg-[#0E9F6E]/[0.1] border border-[#0E9F6E]/25 rounded-2xl p-3 space-y-2.5">
             <div className="flex items-center justify-between text-xs">
               <label
                 htmlFor="rent-area-slider"
@@ -376,7 +376,7 @@ export const MetricsBreakdown: React.FC = () => {
       {/* TAB 5: AI Top Hotspots Scanner */}
       {activeSidebarTab === 'hotspots' && (
         <div className="space-y-3">
-          <div className="bg-black/[0.025] dark:bg-white/[0.03] border border-black/[0.06] dark:border-white/[0.07] rounded-xl p-3 flex items-center justify-between gap-2">
+          <div className="spatial-glass-subcard rounded-2xl p-3 flex items-center justify-between gap-2">
             <div className="flex items-center gap-2.5">
               <div className="p-2 rounded-lg bg-[#0E9F6E]/10 text-[#0E9F6E] border border-[#0E9F6E]/25">
                 <Sparkles className="w-4 h-4" />
@@ -420,7 +420,7 @@ export const MetricsBreakdown: React.FC = () => {
               <div
                 key={spot.id}
                 onClick={() => setSelectedCoords(spot.coordinates)}
-                className="bg-white dark:bg-[#161618] border border-black/[0.07] dark:border-white/[0.08] hover:border-[#0E9F6E]/60 rounded-xl p-3 transition-colors cursor-pointer group space-y-1.5"
+                className="spatial-glass-subcard hover:border-[#0E9F6E]/60 rounded-2xl p-3 transition-colors cursor-pointer group space-y-1.5"
               >
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex items-center gap-2 min-w-0">

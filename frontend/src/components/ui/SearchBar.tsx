@@ -139,7 +139,7 @@ export const SearchBar: React.FC = () => {
         Manzil, metro, savdo markazi yoki GPS koordinata qidiruvi
       </label>
       <div className="relative flex items-center">
-        <Search className="w-3.5 h-3.5 text-[#7A807C] absolute left-3.5 pointer-events-none" aria-hidden="true" />
+        <Search className="w-3.5 h-3.5 text-[#0E9F6E] absolute left-3.5 pointer-events-none" aria-hidden="true" />
         <input
           id="makon-spatial-search"
           ref={inputRef}
@@ -184,7 +184,7 @@ export const SearchBar: React.FC = () => {
             setIsOpen(true);
           }}
           placeholder="Manzil, metro yoki GPS (41.312, 69.280)..."
-          className="w-full bg-[#F5F6F5] dark:bg-white/[0.05] border border-black/[0.08] dark:border-white/[0.09] focus:border-[#0E9F6E] dark:focus:border-[#0E9F6E] rounded-full pl-9 pr-14 py-1.5 text-base sm:text-xs text-[#111111] dark:text-[#FDFDFD] placeholder-[#8A908C] focus:outline-none focus:ring-2 focus:ring-[#0E9F6E]/15 transition-[border-color,box-shadow,background-color] duration-150 font-medium"
+          className="w-full h-[38px] bg-black/[0.04] dark:bg-white/[0.06] hover:bg-black/[0.06] dark:hover:bg-white/[0.09] focus:bg-white/80 dark:focus:bg-[#1C1C1F]/90 border border-black/[0.06] dark:border-white/[0.1] focus:border-[#0E9F6E] dark:focus:border-[#0E9F6E] rounded-full pl-9 pr-14 text-base sm:text-xs text-[#111111] dark:text-[#FDFDFD] placeholder-[#7A807C] dark:placeholder-[#9CA3AF] focus:outline-none focus:ring-2 focus:ring-[#0E9F6E]/20 transition-[border-color,box-shadow,background-color] duration-150 font-medium"
         />
         {query ? (
           <button
@@ -200,7 +200,7 @@ export const SearchBar: React.FC = () => {
             <X className="w-3.5 h-3.5" />
           </button>
         ) : (
-          <kbd className="hidden md:inline-flex items-center gap-0.5 px-1.5 py-0.5 text-[10px] font-mono font-medium text-[#7A807C] dark:text-[#9CA3AF] bg-black/[0.04] dark:bg-white/[0.06] border border-black/[0.06] dark:border-white/[0.08] rounded-md absolute right-2.5 pointer-events-none select-none">
+          <kbd className="hidden md:inline-flex items-center gap-0.5 px-1.5 py-0.5 text-[10px] font-mono font-medium text-[#7A807C] dark:text-[#9CA3AF] bg-white/70 dark:bg-white/[0.08] border border-black/[0.06] dark:border-white/[0.1] rounded-md absolute right-2.5 pointer-events-none select-none">
             ⌘K
           </kbd>
         )}
@@ -210,7 +210,7 @@ export const SearchBar: React.FC = () => {
         <div
           id="makon-search-listbox"
           role="listbox"
-          className="popover-origin-tc absolute top-full mt-2 left-0 w-full sm:w-[410px] bg-white/95 dark:bg-[#161618]/95 backdrop-blur-2xl border border-black/[0.08] dark:border-white/[0.1] rounded-2xl shadow-2xl overflow-hidden z-50"
+          className="popover-origin-tc apple-glass-dropdown absolute top-full mt-2.5 left-0 w-full sm:w-[430px] rounded-[24px] overflow-hidden z-50"
         >
           {/* Category Filter Pills */}
           <div className="px-3 py-2 border-b border-black/[0.06] dark:border-white/[0.06] flex items-center gap-1 overflow-x-auto no-scrollbar select-none">
